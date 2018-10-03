@@ -7,22 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $table = 'order';
-    protected $fillable = ['status_code', 'user_id'];
     protected $garded = ['id'];
 
     //set field to Carbon object
     protected $date = ['created_at', 'updated_at'];
 
     public function orderStatus(){
-        $this->belongsTo('App\OrderStatus');
+        return $this->belongsTo('App\OrderStatus', 'status_code');
     }
 
     public function user(){
-        $this->belongsTo('App\Users');
+        return $this->belongsTo('App\Users', 'user_id');
     }
 
     public function OrderMenus(){
-        $this->hasMany('App\OrderMenu');
+        return $this->hasMany('App\OrderMenu', 'order_id');
     }
 
     // //mutators

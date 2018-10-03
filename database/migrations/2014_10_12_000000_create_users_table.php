@@ -15,27 +15,21 @@ class CreateUsersTable extends Migration
     {
 
         Schema::create('provinces', function (Blueprint $table) {
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_unicode_ci';
             $table->increments('id');
             $table->string('name')->unique();
         });
 
         Schema::create('districts', function (Blueprint $table) {
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_unicode_ci';
             $table->increments('id');
-            $table->string('name')->unique();
+            $table->string('name');
             $table->integer('province_id')->unsigned();
             $table->foreign('province_id')->references('id')->on('provinces')->onDelete('cascade')->onUpdate('cascade');
         });
 
         Schema::create('sub_districts', function (Blueprint $table) {
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_unicode_ci';
             $table->increments('id');
-            $table->string('name')->unique();
-            $table->string('zip_code', 5)->unique();
+            $table->string('name');
+            $table->string('zip_code', 5);
             $table->integer('district_id')->unsigned();
             $table->foreign('district_id')->references('id')->on('districts')->onDelete('cascade')->onUpdate('cascade');
         });

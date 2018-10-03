@@ -7,15 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class District extends Model
 {
     protected $table = 'districts';
-    protected $fillable = ['name'];
     protected $garded = ['id'];
 
     public function province(){
-        $this->belongsTo('App\Province');
+        return $this->belongsTo('App\Province', 'province_id');
     }
 
     public function subDistricts(){
-        $this->hasMany('App\SubDistrict');
+        return $this->hasMany('App\SubDistrict', 'district_id');
     }
 
 

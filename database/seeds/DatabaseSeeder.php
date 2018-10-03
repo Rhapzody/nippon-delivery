@@ -11,6 +11,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+        $this->call([
+            TagSeeder::class,
+            MenuTypeSeeder::class,
+            MenuSeeder::class,
+            MenuTagSeeder::class,
+            MenuPictureSeeder::class,
+            ProvinceSeeder::class,
+            DistrictSeeder::class,
+            SubDistrictSeeder::class,
+            UserSeeder::class,
+            OrderStatusSeeder::class,
+            OrderMenuStatusSeeder::class,
+            OrderSeeder::class,
+            OrderMenuSeeder::class,
+            WhishListSeeder::class,
+            CartSeeder::class,
+            RoleSeeder::class
+        ]);
     }
 }

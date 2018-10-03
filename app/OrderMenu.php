@@ -7,17 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class OrderMenu extends Model
 {
     protected $table = 'order_menu';
-    protected $fillable = ['quantity'];
+    protected $fillable = ['quantity', 'menu_id', 'order_id', 'status_code'];
 
     public function orderMenuStatus(){
-        $this->belongsTo('App\OrderMenuStatus');
+        return $this->belongsTo('App\OrderMenuStatus', 'status_code');
     }
 
     public function menu(){
-        $this->belongsTo('App\Menu');
+        return $this->belongsTo('App\Menu', 'menu_id');
     }
 
     public function order(){
-        $this->belongsTo('App\Order');
+        return $this->belongsTo('App\Order', 'order_id');
     }
 }
