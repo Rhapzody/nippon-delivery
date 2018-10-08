@@ -7,14 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class SubDistrict extends Model
 {
     protected $table = 'sub_districts';
-    protected $fillable = ['name', 'zip_code'];
     protected $garded = ['id'];
 
     public function district(){
-        $this->belongsTo('App\District');
+        return $this->belongsTo('App\District', 'district_id');
     }
 
     public function users(){
-        $this->hasMany('App\User');
+        return $this->hasMany('App\User', 'sub_district_id');
     }
 }

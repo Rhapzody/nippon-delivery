@@ -14,34 +14,25 @@ class CreateBasedTable extends Migration
     public function up()
     {
         Schema::create('menu_type', function (Blueprint $table) {
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_unicode_ci';
             $table->increments('id');
             $table->string('name')->unique();
         });
 
         Schema::create('menu', function (Blueprint $table) {
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_unicode_ci';
             $table->increments('id');
             $table->string('name')->unique();
             $table->text('description')->nullable();
             $table->integer('type_id')->unsigned();
             $table->decimal('price', 8, 2);
-            $table->timestamps();
             $table->foreign('type_id')->references('id')->on('menu_type')->onDelete('restrict')->onUpdate('cascade');
         });
 
         Schema::create('tag', function (Blueprint $table) {
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_unicode_ci';
             $table->increments('id');
             $table->string('name')->unique();
         });
 
         Schema::create('menu_tag', function (Blueprint $table) {
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_unicode_ci';
             $table->integer('menu_id')->unsigned();
             $table->integer('tag_id')->unsigned();
             $table->primary(['menu_id', 'tag_id']);
@@ -50,17 +41,13 @@ class CreateBasedTable extends Migration
         });
 
         Schema::create('menu_picture', function (Blueprint $table) {
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_unicode_ci';
             $table->increments('id');
-            $table->string('path');
+            $table->string('name');
             $table->integer('menu_id')->unsigned();
             $table->foreign('menu_id')->references('id')->on('menu')->onDelete('cascade')->onUpdate('cascade');
         });
 
         Schema::create('cart', function (Blueprint $table) {
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_unicode_ci';
             $table->integer('menu_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->integer('quantity')->unsigned();
@@ -70,8 +57,6 @@ class CreateBasedTable extends Migration
         });
 
         Schema::create('whish_list', function (Blueprint $table) {
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_unicode_ci';
             $table->integer('menu_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->primary(['menu_id', 'user_id']);
@@ -80,22 +65,16 @@ class CreateBasedTable extends Migration
         });
 
         Schema::create('order_menu_status', function (Blueprint $table) {
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_unicode_ci';
             $table->increments('code');
             $table->string('name')->unique();
         });
 
         Schema::create('order_status', function (Blueprint $table) {
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_unicode_ci';
             $table->increments('code');
             $table->string('name')->unique();
         });
 
         Schema::create('order', function (Blueprint $table) {
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_unicode_ci';
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('status_code')->unsigned();
@@ -105,8 +84,6 @@ class CreateBasedTable extends Migration
         });
 
         Schema::create('order_menu', function (Blueprint $table) {
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_unicode_ci';
             $table->integer('menu_id')->unsigned();
             $table->integer('order_id')->unsigned();
             $table->integer('status_code')->unsigned();
@@ -118,8 +95,6 @@ class CreateBasedTable extends Migration
         });
 
         Schema::create('restaurant_detail', function (Blueprint $table) {
-            $table->charset = 'utf8';
-            $table->collation = 'utf8_unicode_ci';
             $table->increments('id');
             $table->json('detail');
             $table->timestamps();

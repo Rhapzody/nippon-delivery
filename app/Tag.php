@@ -7,10 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Tag extends Model
 {
     protected $table = 'tag';
-    protected $fillable = ['name'];
     protected $garded = ['id'];
 
     public function menus(){
-        $this->belongsToMany('App\Menu');
+        return $this->belongsToMany('App\Menu', 'menu_tag', 'tag_id', 'menu_id');
     }
 }
