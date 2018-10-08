@@ -7,18 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class Menu extends Model
 {
     protected $table = 'menu';
-    protected $fillable = ['name', 'description', 'price'];
     protected $garded = ['id'];
 
     public function menuType(){
-        $this->belongsTo('App\MenuType');
+        return $this->belongsTo('App\MenuType', 'type_id');
     }
 
     public function menuPictures(){
-        $this->hasMany('App\MenuPicture');
+        return $this->hasMany('App\MenuPicture', 'menu_id');
     }
 
     public function tags(){
-        $this->belongsToMany('App\Tag');
+        return $this->belongsToMany('App\Tag', 'menu_tag', 'menu_id', 'tag_id');
     }
 }

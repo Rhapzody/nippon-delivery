@@ -10,11 +10,11 @@ class Cart extends Model
     protected $fillable = ['menu_id', 'user_id', 'quantity'];
 
     public function user(){
-        $this->belongsTo('App\User');
+        return $this->belongsTo('App\User', 'user_id');
     }
 
     public function menu(){
-        $this->belongsTo('App\Menu');
+        return $this->belongsTo('App\Menu', 'menu_id');
     }
 
 }

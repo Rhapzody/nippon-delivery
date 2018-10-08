@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class MenuTag extends Model
 {
     protected $table = 'menu_tag';
+    protected $fillable = ['menu_id', 'tag_id'];
 
     public function menu(){
-        $this->belongsTo('App\Menu');
+        return $this->belongsTo('App\Menu', 'menu_id');
     }
 
     public function tag(){
-        $this->belongsTo('App\Tag');
+        return $this->belongsTo('App\Tag', 'tag_id');
     }
 }
