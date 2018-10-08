@@ -19,15 +19,16 @@ class DatabaseSeeder extends Seeder
             MenuPictureSeeder::class,
             ProvinceSeeder::class,
             DistrictSeeder::class,
+            BranchSeeder::class,
             SubDistrictSeeder::class,
+            RoleSeeder::class,
             UserSeeder::class,
             OrderStatusSeeder::class,
             OrderMenuStatusSeeder::class,
             OrderSeeder::class,
             OrderMenuSeeder::class,
             WhishListSeeder::class,
-            CartSeeder::class,
-            RoleSeeder::class
+            CartSeeder::class
         ]);
     }
 }

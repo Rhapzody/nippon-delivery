@@ -7382,5 +7382,10 @@ class SubDistrictSeeder extends Seeder
         ];
 
         SubDistrict::insert($subDistricts);
+        $subDistricts = App\District::find(62)->subDistricts;
+        $branch_id = App\Branch::find(1)->id;
+        foreach($subDistricts as $sub){
+            $sub->branch_id = $branch_id;
+        }
     }
 }

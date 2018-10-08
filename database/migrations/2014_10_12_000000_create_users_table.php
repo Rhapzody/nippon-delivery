@@ -24,6 +24,12 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->integer('province_id')->unsigned();
             $table->foreign('province_id')->references('id')->on('provinces')->onDelete('cascade')->onUpdate('cascade');
+
+        });
+
+        Schema::create('branch', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name')->unique();
         });
 
         Schema::create('sub_districts', function (Blueprint $table) {
@@ -32,6 +38,8 @@ class CreateUsersTable extends Migration
             $table->string('zip_code', 5);
             $table->integer('district_id')->unsigned();
             $table->foreign('district_id')->references('id')->on('districts')->onDelete('cascade')->onUpdate('cascade');
+            $table->integer('branch_id')->unsigned()->nullable();
+            $table->foreign('branch_id')->references('id')->on('branch')->onDelete('set null')->onUpdate('cascade');
         });
 
         Schema::create('users', function (Blueprint $table) {
@@ -65,5 +73,6 @@ class CreateUsersTable extends Migration
         Schema::dropIfExists('sub_districts');
         Schema::dropIfExists('districts');
         Schema::dropIfExists('provinces');
+        Schema::dropIfExists('branch');
     }
 }

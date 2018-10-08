@@ -22,7 +22,8 @@ class UserSeeder extends Seeder
         $user->village_number = 8;
         $user->house_number = '43/376';
         $user->sub_district_id = 5;
-        $user->assignRole('manager');
+        $role = Role::findByName('manager');
         $user->save();
+        $user->assignRole($role);
     }
 }
