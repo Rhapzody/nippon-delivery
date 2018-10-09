@@ -1,7 +1,7 @@
 @extends('back.layout.app')
 
 @section('content')
-    <h4 class="page-title">จัดการผู้ใช้งาน</h4>
+    <h4 class="page-title"><span class="la la-clipboard"></span> จัดการผู้ใช้งาน</h4>
     <div class="row">
         <div class="col-md-12 bg-light border border-primary rounded p-2">
 

@@ -18,3 +18,10 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/staff/user', 'UserBackController@user');
+Route::get('/staff/user/add', 'UserBackController@addUser');
+Route::post('/staff/user/add/process', 'UserBackController@addUserProcess');
+Route::get('/staff/user/edit', 'UserBackController@editUser');
+Route::get('/district_by_province_id', 'UserBackController@getDistrictsByProvinceId');
+Route::get('/sub_district_by_district_id', 'UserBackController@getSubDistrictsByProvinceId');
