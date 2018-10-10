@@ -140,7 +140,7 @@
                             @csrf
                             <div class="card-action">
                                 <input class="btn btn-success" type="submit" value=" เพิ่ม " id="my-submit">
-                                <input class="btn btn-danger" type="reset" value="ล้าง">
+                                <a class="btn btn-danger" href="#cl-but" onclick="clearConfirm(this)" style="color:white;" id="cl-but">ล้าง</a>
                             </div>
 
                         </form>
@@ -153,6 +153,7 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         $(document).ready(function() {
 
@@ -348,8 +349,28 @@
                 }
             });
 
-
         });
+        function clearConfirm(e){
+            swal({
+                title: "แน่ใจหรือไม่",
+                text: "ข้อมูลที่กรอกไว้จะถูกลบออกทั้งหมด",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    document.getElementById("add-user").reset();
+                    swal("เคลียร์ข้อมูลเรียบร้อย", {
+                        icon: "success"
+                    });
+                } else {
+                    swal("ข้อมูลยังคงอยู่",{
+                        icon: "success"
+                    });
+                }
+            });
+        }
     </script>
 
 @endsection

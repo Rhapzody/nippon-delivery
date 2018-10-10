@@ -44,4 +44,9 @@ class User extends Authenticatable
     public function whishLists(){
         return $this->hasMany('App\WhishList', 'user_id');
     }
+
+    public function subDistrict(){
+        return $this->belongsTo('App\SubDistrict', 'sub_district_id');
+    }
+
 }

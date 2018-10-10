@@ -13,7 +13,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link h6 {{($nav == 'edit')?'active':''}}" href={{ url('/staff/user/edit', []) }}>
+        <a class="nav-link h6 {{($nav == 'edit')?'active':''}}" href="#">
             <span class="la la-pencil-square"></span>
             แก้ไขผู้ใช้
         </a>
