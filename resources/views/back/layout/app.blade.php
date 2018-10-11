@@ -14,6 +14,9 @@
         .error {
             color :red;
         }
+        .big-icon {
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>

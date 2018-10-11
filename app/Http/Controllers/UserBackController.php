@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\District;
 use App\Http\Requests\AddUserRequest;
+use App\Http\Requests\EditUserRequest;
 use App\Province;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class UserBackController extends Controller
 {
@@ -120,9 +123,35 @@ class UserBackController extends Controller
         ]);
     }
 
-    public function editUserProcess()
+    public function editUserProcess(EditUserRequest $req)
     {
+        $user = User::with('roles')->find($req->input('user_id'));
+        if ($req->hasFile('image')) {
+            $image_filename = $req->file('image')->getClientOriginalName();
+            $image_name = date('Y_m_d_His_') . $image_filename;
+            $storage = '/storage/app/public/';
+            $destination = base_path() . $storage;
+            $req->file('image')->move($destination, $image_name);
+            File::delete(base_path().$storage.$user->picture_name);
+            $user->picture_name = $image_name;
+        }
+        $user->first_name = $req->input('first_name');
+        $user->last_name = $req->input('last_name');
+        $role = Role::find($req->input('role'));
+        foreach ($user->roles as $key => $value) {
+            $user->removeRole($value);
+        }
+        $user->assignRole($role);
+        $user->sub_district_id = $req->input('sub_district');
+        $user->road = $req->input('road');
+        $user->alley = $req->input('alley');
+        $user->tel_number = $req->input('tel_number');
+        $user->village_number = $req->input('village_number');
+        $user->house_number = $req->input('house_number');
+        $user->additional_address = $req->input('additional_address');
+        $user->save();
 
+        return \App::make('redirect')->back()->with('message', 'บันทึกสำเร็จ');
     }
 
     public function getDistrictsByProvinceId(Request $req)
@@ -192,8 +221,31 @@ class UserBackController extends Controller
             'pictureName' => $user->picture_name,
             'picturePath' => '/storage/',
         ];
-
         return response()->json($details);
+    }
+
+    public function editPassword(Request $req){
+        $validator = Validator::make($req->all(), [
+            'password_old' => 'required|min:6|max:255',
+            'password_1' => 'required|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/|max:255',
+            'password_2' => 'required|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/|max:255|same:password_1'
+        ]);
+
+        $user = User::find($req->input('user_id'));
+        $exist = Hash::check($req->input('password_old'), $user->password);
+
+        if ($validator->fails() || !$exist) {
+            return response()->json([
+                'status'=>'fail'
+            ]);
+        }else{
+            $user->password = Hash::make($req->input('password_1'));
+            $user->save();
+            return response()->json([
+                'status'=>'success'
+            ]);
+        }
+
     }
 
     public function deleteUser($id)

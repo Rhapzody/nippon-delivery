@@ -16,7 +16,10 @@
                             <div class="card-title">แก้ไขผู้ใช้งาน รหัส: {{$user->id}}</div>
                         </div>
                         <form class="card-body" action="{{url('/staff/user/edit/process')}}" method="POST" enctype="multipart/form-data" id="add-user">
-
+                            <input type="hidden" name="user_id" id="user_id" value="{{$user->id}}">
+                            @if(Session::has('message'))
+                                <p class="text-success">{{ Session::get('message') }}</p>
+                            @endif
                             <div class="form-group">
                                 <label for="first_name"><span class="text-danger">*</span>ชื่อ</label>
                                 <input value="{{$user->first_name}}" type="text" class="form-control" id="first_name" placeholder="ชื่อ" name="first_name">
@@ -27,28 +30,24 @@
                                 <input value="{{$user->last_name}}" type="text" class="form-control" id="last_name" placeholder="นามสกุล" name="last_name">
                             </div>
 
-                            <div class="form-group">
-                                <label for="email"><span class="text-danger">*</span>email</label>
-                                <input value="{{$user->email}}" type="email" class="form-control" id="email" placeholder="อีเมล" name="email">
-                            </div>
-
                             <div class="border border-primary rounded p-3">
-                            <form action="" method="POST" id="change-password">
-                                <h6>เปลี่ยนรหัสผ่าน</h6>
-                                <div class="form-group">
-                                    <label for="password_old"><span class="text-danger">*</span>password เดิม</label>
-                                    <input type="password" class="form-control" id="password_old" name="password_old" placeholder="รหัสผ่านเดิม">
+                                <div id="change-password">
+                                    <h6>เปลี่ยนรหัสผ่าน</h6>
+                                    <div class="form-group">
+                                        <label for="password_old"><span class="text-danger">*</span>password เดิม</label>
+                                        <input type="password" class="form-control" id="password_old" placeholder="รหัสผ่านเดิม">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password"><span class="text-danger">*</span>password ใหม่</label>
+                                        <input type="password" class="form-control" id="password_1" placeholder="รหัสผ่านใหม่">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password"><span class="text-danger">*</span>ยืนยัน password ใหม่</label>
+                                        <input type="password" class="form-control" id="password_2" placeholder="รหัสผ่านใหม่อีกครั้ง">
+                                    </div>
+                                    <button value="บันทึก" class="btn btn-success ml-2" id="change_pass_but">บันทึก</button>
+                                    <span class="" id="change_password_text"></span>
                                 </div>
-                                <div class="form-group">
-                                    <label for="password"><span class="text-danger">*</span>password ใหม่</label>
-                                    <input type="password" class="form-control" id="password_1" name="password_1" placeholder="รหัสผ่านใหม่">
-                                </div>
-                                <div class="form-group">
-                                    <label for="password"><span class="text-danger">*</span>ยืนยัน password ใหม่</label>
-                                    <input type="password" class="form-control" id="password_2" name="password_2"placeholder="รหัสผ่านใหม่อีกครั้ง">
-                                </div>
-                                <input type="submit" value="บันทึก" class="btn btn-success ml-2">
-                            </form>
                             </div>
 
                             <div class="form-group">
@@ -120,9 +119,7 @@
 
                             <div class="form-group">
                                 <label for="additional_address">รายละเอียดที่อยู่เพิ่มเติม</label>
-                                <textarea class="form-control" id="additional_address" rows="5" name="additional_address">
-                                    {{$user->additional_address}}
-                                </textarea>
+                                <textarea class="form-control" id="additional_address" rows="5" name="additional_address">{{$user->additional_address}}</textarea>
                             </div>
 
                             <div class="form-group">
@@ -155,36 +152,40 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             //get districts when province selected
-            $('#province').change(function(){
+            $('#province').change(function () {
                 $('#sub_district').empty().append(`<option value="-1">เลือกตำบล</option>`);
                 let provinceId = $(this).val();
-                if(provinceId >= 0){
+                if (provinceId >= 0) {
                     let url = "{{url('/district_by_province_id')}}";
-                    $.get(url+"?province_id="+provinceId, function(data, status){
+                    $.get(url + "?province_id=" + provinceId, function (data, status) {
                         let district = $('#district');
                         district.empty();
                         district.append(`<option value="-1">เลือกอำเภอ</option>`);
                         for (let index = 0; index < data.length; index++) {
-                            district.append(`<option value="${data[index].id}">${data[index].name}</option>`);
+                            district.append(
+                                `<option value="${data[index].id}">${data[index].name}</option>`
+                            );
                         }
                     });
                 }
             });
 
             //get sub districts when district selected
-            $('#district').change(function(){
+            $('#district').change(function () {
                 let districtId = $(this).val();
-                if(districtId >= 0){
+                if (districtId >= 0) {
                     let url = "{{url('/sub_district_by_district_id')}}";
-                    $.get(url+"?district_id="+districtId, function(data, status){
+                    $.get(url + "?district_id=" + districtId, function (data, status) {
                         let subDistrict = $('#sub_district');
                         subDistrict.empty();
                         subDistrict.append(`<option value="-1">เลือกตำบล</option>`);
                         for (let index = 0; index < data.length; index++) {
-                            subDistrict.append(`<option value="${data[index].id}">${data[index].name}</option>`);
+                            subDistrict.append(
+                                `<option value="${data[index].id}">${data[index].name}</option>`
+                            );
                         }
                     });
                 }
@@ -198,14 +199,13 @@
                     reader.readAsDataURL(this.files[0]);
                 }
             });
+
             function imageIsLoaded(e) {
                 $('#blah').attr('src', e.target.result);
             };
 
-        });
+            //validate
 
-        //validate
-        console.log('1');
             $('#add-user').validate({ // initialize the plugin
 
                 rules: {
@@ -217,42 +217,60 @@
                         required: true,
                         maxlength: 255
                     },
+                    user_name: {
+                        required: true,
+                        maxlength: 255,
+                        minlength: 6,
+                    },
                     email: {
                         required: true,
                         maxlength: 255,
-                        email:true
+                        email: true
                     },
-                    role:{
-                        required:true,
-                        pattern:/^[+]?\d+([.]\d+)?$/
+                    password_1: {
+                        required: true,
+                        minlength: 6,
+                        maxlength: 255,
+                        pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/
                     },
-                    province:{
-                        required:true,
-                        pattern:/^[+]?\d+([.]\d+)?$/
+                    password_2: {
+                        required: true,
+                        minlength: 6,
+                        maxlength: 255,
+                        pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+                        equalTo: '#password_1'
                     },
-                    district:{
-                        required:true,
-                        pattern:/^[+]?\d+([.]\d+)?$/
+                    role: {
+                        required: true,
+                        pattern: /^[+]?\d+([.]\d+)?$/
                     },
-                    sub_district:{
-                        required:true,
-                        pattern:/^[+]?\d+([.]\d+)?$/
+                    province: {
+                        required: true,
+                        pattern: /^[+]?\d+([.]\d+)?$/
                     },
-                    village_number:{
-                        required:true,
-                        maxlength:3
+                    district: {
+                        required: true,
+                        pattern: /^[+]?\d+([.]\d+)?$/
                     },
-                    house_number:{
-                        required:true,
-                        maxlength:10
+                    sub_district: {
+                        required: true,
+                        pattern: /^[+]?\d+([.]\d+)?$/
                     },
-                    tel_number:{
-                        required:true,
-                        minlength:10,
-                        maxlength:10,
-                        pattern:/^\d{10}$/
+                    village_number: {
+                        required: true,
+                        maxlength: 3
                     },
-                    image:{
+                    house_number: {
+                        required: true,
+                        maxlength: 10
+                    },
+                    tel_number: {
+                        required: true,
+                        minlength: 10,
+                        maxlength: 10,
+                        pattern: /^\d{10}$/
+                    },
+                    image: {
                         extension: "png|jpeg|jpg"
                     }
 
@@ -266,55 +284,115 @@
                         required: "อย่าลืมใส่นามสกุล",
                         maxlength: "มากสุด 255 ตัวอักษร"
                     },
+                    user_name: {
+                        required: "อย่าลืมใส่ชื่อผู้ใช้",
+                        maxlength: "มากสุด 255 ตัวอักษร",
+                        minlength: "น้อยสุด 6 ตัวอักษร",
+                    },
                     email: {
                         required: "อย่าลืมใส่อีเมลแอดเดรส",
                         maxlength: "มากสุด 255 ตัวอักษร",
                         email: "ใส่อีเมลให้ถูกต้อง"
-                    } ,
-                    role:{
-                        required:"เลือกบทบาท",
-                        pattern:"เลือกบทบาท"
                     },
-                    province:{
-                        required:"เลือกจังหวัด",
-                        pattern:"เลือกจังหวัด",
+                    password_1: {
+                        required: "อย่าลืมกำหนดรหัสผ่าน",
+                        minlength: "น้อยสุด 6 ตัวอักษร",
+                        maxlength: "มากสุด 255 ตัวอักษร",
+                        pattern: "ต้องมี A-Z อย่างน้อย 1 ตัว a-z อย่างน้อย 1 ตัว และตัวเลขอย่างน้อย 1 ตัว"
                     },
-                    district:{
-                        required:"เลือกอำเภอ/เขต",
-                        pattern:"เลือกอำเภอ/เขต"
+                    password_2: {
+                        required: "อย่าลืมกำหนดรหัสผ่าน",
+                        minlength: "น้อยสุด 6 ตัวอักษร",
+                        maxlength: "มากสุด 255 ตัวอักษร",
+                        pattern: "ต้องมี A-Z อย่างน้อย 1 ตัว a-z อย่างน้อย 1 ตัว และตัวเลขอย่างน้อย 1 ตัว",
+                        equalTo: "ยืนยันรหัสผ่าน ไม่ตรงกัน"
                     },
-                    sub_district:{
-                        required:"เลือกตำบล",
-                        pattern:"เลือกตำบล"
+                    role: {
+                        required: "เลือกบทบาท",
+                        pattern: "เลือกบทบาท"
                     },
-                    village_number:{
-                        required:"อย่าลืมใส่หมู่ที่",
-                        maxlength:"หมู่ที่ ไม่ถูกต้อง"
+                    province: {
+                        required: "เลือกจังหวัด",
+                        pattern: "เลือกจังหวัด",
                     },
-                    house_number:{
-                        required:"อย่าลืมใส่บ้านเลขที่",
-                        maxlength:"บ้านเลขที่ไม่ถูกต้อง *ขนาดยาวเกินไป"
+                    district: {
+                        required: "เลือกอำเภอ/เขต",
+                        pattern: "เลือกอำเภอ/เขต"
                     },
-                    tel_number:{
-                        required:"อย่าลืมใส่หมายเลขโทรศัทพ์มือถือ",
-                        minlength:"น้อยสุด 10 ตัวอักษร",
-                        maxlength:"มากสุด 10 ตัวอักษร",
-                        pattern:"ใส่หมายเลข 10 หลักให้ถูกต้อง"
+                    sub_district: {
+                        required: "เลือกตำบล",
+                        pattern: "เลือกตำบล"
                     },
-                    image:{
+                    village_number: {
+                        required: "อย่าลืมใส่หมู่ที่",
+                        maxlength: "หมู่ที่ ไม่ถูกต้อง"
+                    },
+                    house_number: {
+                        required: "อย่าลืมใส่บ้านเลขที่",
+                        maxlength: "บ้านเลขที่ไม่ถูกต้อง *ขนาดยาวเกินไป"
+                    },
+                    tel_number: {
+                        required: "อย่าลืมใส่หมายเลขโทรศัทพ์มือถือ",
+                        minlength: "น้อยสุด 10 ตัวอักษร",
+                        maxlength: "มากสุด 10 ตัวอักษร",
+                        pattern: "ใส่หมายเลข 10 หลักให้ถูกต้อง"
+                    },
+                    image: {
                         extension: "รองรับไฟล์ png jpeg jpg เท่านั้น"
                     }
                 },
                 errorClass: "is-invalid error",
                 validClass: "is-valid valid",
-                highlight: function( element, errorClass, validClass ) {
+                highlight: function (element, errorClass, validClass) {
                     $(element).addClass(errorClass).removeClass(validClass);
                 },
-                unhighlight: function( element, errorClass, validClass ) {
+                unhighlight: function (element, errorClass, validClass) {
                     $(element).removeClass(errorClass).addClass(validClass);
                 }
             });
-            console.log('1');
+
+            $('#change_pass_but').click(function (e) {
+                e.preventDefault();
+                swal({
+                    title: "แน่ใจหรือไม่",
+                    text: "รหัสผ่านของท่านจะถูกเปลี่ยน",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        let oldPass = $('#password_old').val();
+                        let firstPass = $('#password_1').val();
+                        let secondPass = $('#password_2').val();
+                        let userId = $('#user_id').val();
+                        $.post("{{url('/staff/user/edit/changePassword')}}",{
+                            user_id:userId,
+                            password_old:oldPass,
+                            password_1:firstPass,
+                            password_2:secondPass,
+                            _token:"{{csrf_token()}}"
+                        },function (data) {
+                            if(data.status === "success"){
+                                $('#change_password_text')
+                                    .html("เปลี่ยนรหัสผ่านเรียบร้อย")
+                                    .attr('class','text-success');
+                            }else{
+                                $('#change_password_text')
+                                    .html("ไม่สามารถเปลี่ยนรหัสผ่านได้ อาจเนื่องจาก รหัสผ่านเดิมไม่ถูกต้อง หรือรหัสผ่านไม่ตรงกัน หรือรหัสผ่านไม่ตรงตามข้อกำหนด")
+                                    .attr('class','text-danger');
+                                $('#password_old').addClass("is-invalid");
+                                $('#password_1').addClass("is-invalid");
+                                $('#password_2').addClass("is-invalid");
+                            }
+                        });
+                    }
+                });
+
+            });
+        });
+
+
     </script>
 
 @endsection

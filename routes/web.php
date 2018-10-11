@@ -27,6 +27,7 @@ Route::get('/staff/user/{search_mode?}/{search_text?}', 'UserBackController@sear
 Route::get('/staff/user/add', 'UserBackController@addUser');
 Route::post('/staff/user/add/process', 'UserBackController@addUserProcess');
 Route::get('/staff/user/edit/{id}', 'UserBackController@editUser')->where(['id'=>'[0-9]+']);
+Route::post('/staff/user/edit/changePassword', 'UserBackController@editPassword');
 Route::post('/staff/user/edit/process', 'UserBackController@editUserProcess');
 Route::delete('/staff/user/{id}', 'UserBackController@deleteUser')->where(['id'=>'[0-9]+']);
 Route::get('/district_by_province_id', 'UserBackController@getDistrictsByProvinceId');

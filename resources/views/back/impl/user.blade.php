@@ -53,13 +53,13 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    <button class="btn btn-success btn-s" onclick="getUserDetail({{$user->id}})"><span class="la la-search-plus"></span></button>
+                                    <button class="btn btn-success btn-s big-icon" onclick="getUserDetail({{$user->id}})"><span class="la la-search-plus"></span></button>
                                 </td>
                                 <td>
-                                    <a href={{url('/staff/user/edit/') . "/" . $user->id}} class="btn btn-primary btn-s" ><span class="la la-pencil-square"></span></a href={{url('/staff/user/edit/') . $user->id}}>
+                                    <a href={{url('/staff/user/edit/') . "/" . $user->id}} class="btn btn-primary btn-s big-icon" ><span class="la la-pencil-square"></span></a href={{url('/staff/user/edit/') . $user->id}}>
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger btn-s" onclick="deleteConfirm({{$user->id}})"><span class="la la-trash"></span></button>
+                                    <button class="btn btn-danger btn-s big-icon" onclick="deleteConfirm({{$user->id}})"><span class="la la-trash"></span></button>
                                 </td>
                             </tr>
                         @endforeach
@@ -177,19 +177,19 @@
                 let rootUrl = "{{url('/')}}";
                 $.get(url+"?user_id="+id, function(data, status){
                     $('#modal-image').attr('src', rootUrl + data.picturePath + data.pictureName);
-                    $('#modal-name').html(data.firstName + " " + data.lastName);
+                    $('#modal-name').html(sanitarize(data.firstName) + " " + sanitarize(data.lastName));
                     $('#modal-id').html(data.id);
-                    $('#modal-username').html(data.username);
-                    $('#modal-email').html(data.email);
+                    $('#modal-username').html(sanitarize(data.username));
+                    $('#modal-email').html(sanitarize(data.email));
                     $('#modal-province').html(data.province);
                     $('#modal-district').html(data.district);
                     $('#modal-sub-district').html(data.subDistrict);
-                    $('#modal-road').html(data.road);
-                    $('#modal-alley').html(data.alley);
-                    $('#modal-village').html(data.villageNumber);
-                    $('#modal-house').html(data.houseNumber);
+                    $('#modal-road').html(sanitarize(data.road));
+                    $('#modal-alley').html(sanitarize(data.alley));
+                    $('#modal-village').html(sanitarize(data.villageNumber));
+                    $('#modal-house').html(sanitarize(data.houseNumber));
                     $('#modal-role').html(...data.roles);
-                    $('#modal-add').html(data.additionalAddress);
+                    $('#modal-add').html(sanitarize(data.additionalAddress));
                     $('#modal-del-but').attr('onclick',`deleteConfirm(${data.id})`);
                     $('#modal-edit-but').attr('href', "{{url('/staff/user/edit/')}}" + `/${data.id}`);
                     $('#my-modal').modal();
@@ -233,6 +233,23 @@
             });
 
         });
+
+        function sanitarize(string) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#x27;',
+                "/": '&#x2F;',
+            };
+            const reg = /[&<>"'/]/ig;
+            if (string) {
+                return string.replace(reg, (match)=>(map[match]));
+            } else {
+                return null;
+            }
+        }
     </script>
 
 @endsection
