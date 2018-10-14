@@ -76,10 +76,10 @@ class CreateBasedTable extends Migration
 
         Schema::create('order', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned();
+            $table->integer('user_id')->unsigned()->nullable();
             $table->integer('status_code')->unsigned();
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
             $table->foreign('status_code')->references('code')->on('order_status')->onDelete('restrict')->onUpdate('cascade');
         });
 
