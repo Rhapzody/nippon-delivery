@@ -8,15 +8,16 @@ use App\Http\Requests\EditUserRequest;
 use App\Province;
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
 
 class UserBackController extends Controller
 {
 
-    public function searchUser($search_mode = null, $search_text = null){
+    public function searchUser($search_mode = null, $search_text = null)
+    {
         switch ($search_mode) {
             case '0':
                 $users = User::with('roles')
@@ -32,7 +33,11 @@ class UserBackController extends Controller
 
             case '2':
                 $role = Role::where('name', 'like', $search_text . '%')->first();
-                $users = $role->users()->with('roles')->paginate(5);
+                if ($role == null) {
+                    $users = User::with('roles')->where('id', '=', -99)->paginate(5);
+                }else{
+                    $users = $role->users()->with('roles')->paginate(5);
+                }
                 break;
 
             case '3':
@@ -46,14 +51,14 @@ class UserBackController extends Controller
             default:
                 $users = User::with('roles')->paginate(5);
                 break;
-            }
+        }
 
-            return view('back.impl.user', [
-                'nav' => 'show',
-                'users' => $users,
-                'search_mode'=>$search_mode,
-                'search_text'=>$search_text
-            ]);
+        return view('back.impl.user', [
+            'nav' => 'show',
+            'users' => $users,
+            'search_mode' => $search_mode,
+            'search_text' => $search_text,
+        ]);
 
     }
 
@@ -102,7 +107,9 @@ class UserBackController extends Controller
         $role = Role::find($req->input('role'));
         $user->assignRole($role);
 
-        return redirect('/staff/user');
+        $req->session()->flash('add-user-status', 'เพิ่มผู้ใช้งานใหม่ สำเร็จ!!!');
+
+        return redirect('staff/user?nav=show');
 
     }
 
@@ -132,7 +139,7 @@ class UserBackController extends Controller
             $storage = '/storage/app/public/';
             $destination = base_path() . $storage;
             $req->file('image')->move($destination, $image_name);
-            File::delete(base_path().$storage.$user->picture_name);
+            File::delete(base_path() . $storage . $user->picture_name);
             $user->picture_name = $image_name;
         }
         $user->first_name = $req->input('first_name');
@@ -224,11 +231,12 @@ class UserBackController extends Controller
         return response()->json($details);
     }
 
-    public function editPassword(Request $req){
+    public function editPassword(Request $req)
+    {
         $validator = Validator::make($req->all(), [
             'password_old' => 'required|min:6|max:255',
             'password_1' => 'required|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/|max:255',
-            'password_2' => 'required|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/|max:255|same:password_1'
+            'password_2' => 'required|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/|max:255|same:password_1',
         ]);
 
         $user = User::find($req->input('user_id'));
@@ -236,13 +244,13 @@ class UserBackController extends Controller
 
         if ($validator->fails() || !$exist) {
             return response()->json([
-                'status'=>'fail'
+                'status' => 'fail',
             ]);
-        }else{
+        } else {
             $user->password = Hash::make($req->input('password_1'));
             $user->save();
             return response()->json([
-                'status'=>'success'
+                'status' => 'success',
             ]);
         }
 

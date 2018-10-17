@@ -45,7 +45,7 @@
                                         <label for="password"><span class="text-danger">*</span>ยืนยัน password ใหม่</label>
                                         <input type="password" class="form-control" id="password_2" placeholder="รหัสผ่านใหม่อีกครั้ง">
                                     </div>
-                                    <button value="บันทึก" class="btn btn-success ml-2" id="change_pass_but">บันทึก</button>
+                                    <button value="บันทึก" class="btn btn-outline-success" ml-2" id="change_pass_but">บันทึก</button>
                                     <span class="" id="change_password_text"></span>
                                 </div>
                             </div>
