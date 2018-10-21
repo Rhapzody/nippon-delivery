@@ -53,19 +53,20 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    <button class="btn btn-success btn-s big-icon" onclick="getUserDetail({{$user->id}})"><span class="la la-search-plus"></span></button>
+                                    <button class="btn btn-outline-success big-icon" btn-s big-icon" onclick="getUserDetail({{$user->id}})"><span class="la la-search-plus"></span></button>
                                 </td>
                                 <td>
-                                    <a href={{url('/staff/user/edit/') . "/" . $user->id}} class="btn btn-primary btn-s big-icon" ><span class="la la-pencil-square"></span></a href={{url('/staff/user/edit/') . $user->id}}>
+                                    <a href={{url('/staff/user/edit/') . "/" . $user->id}} class="btn btn-outline-primary btn-s big-icon" ><span class="la la-pencil-square"></span></a>
                                 </td>
                                 <td>
-                                    <button class="btn btn-danger btn-s big-icon" onclick="deleteConfirm({{$user->id}})"><span class="la la-trash"></span></button>
+                                    <button class="btn btn-outline-danger btn-s big-icon" onclick="deleteConfirm({{$user->id}})"><span class="la la-trash"></span></button>
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
                 {{ $users->links() }}
+                <input type="hidden" name="noti_status" id="noti_status" value="{{Session::has('add-user-status')}}">
             </div>
 
             {{-- modal --}}
@@ -231,6 +232,35 @@
                 let searchText = $('#search_text').val();
                 window.location.href = "{{url('/staff/user')}}" + `/${searchMode}/${searchText}`;
             });
+
+            //notify when add success
+            let check = $('#noti_status').val() || false;
+            if(check){
+                var placementFrom = "bottom";
+                var placementAlign = "right";
+                var state = "success";
+                var style = "withicon";
+                var content = {};
+
+                content.message = '{{Session::get("add-user-status")}}';
+                content.title = 'สำเร็จ!!!';
+                if (style == "withicon") {
+                    content.icon = 'la la-bell';
+                } else {
+                    content.icon = 'none';
+                }
+                content.url = '/';
+                content.target = '_blank';
+
+                $.notify(content,{
+                    type: state,
+                    placement: {
+                        from: placementFrom,
+                        align: placementAlign
+                    },
+                    time: 1000,
+                });
+            }
 
         });
 

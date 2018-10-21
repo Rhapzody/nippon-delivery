@@ -363,23 +363,19 @@
 
     function clearConfirm(e) {
         swal({
-                title: "แน่ใจหรือไม่",
-                text: "ข้อมูลที่กรอกไว้จะถูกลบออกทั้งหมด",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    document.getElementById("add-user").reset();
-                    swal("เคลียร์ข้อมูลเรียบร้อย", {
-                        icon: "success"
-                    });
-                } else {
-                    swal("ข้อมูลยังคงอยู่", {
-                        icon: "success"
-                    });
-                }
+            title: "แน่ใจหรือไม่",
+            text: "ข้อมูลที่กรอกไว้จะถูกลบออกทั้งหมด",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                document.getElementById("add-user").reset();
+                swal("เคลียร์ข้อมูลเรียบร้อย", {
+                    icon: "success"
+                });
+            }
         });
     }
 

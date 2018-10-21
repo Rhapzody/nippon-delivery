@@ -8,7 +8,7 @@
     </li>
     <li class="nav-item">
         <a class="nav-link h6 {{($nav == 'add')?'active':''}}" href={{ url('/staff/user/add') }}>
-            <span class="la la-plus"></span>
+            <span class="la la-user-plus"></span>
             เพิ่มผู้ใช้
         </a>
     </li>

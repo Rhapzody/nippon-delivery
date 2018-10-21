@@ -8,6 +8,7 @@ class Menu extends Model
 {
     protected $table = 'menu';
     protected $garded = ['id'];
+    public $timestamps = false;
 
     public function menuType(){
         return $this->belongsTo('App\MenuType', 'type_id');
