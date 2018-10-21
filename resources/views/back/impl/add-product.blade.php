@@ -53,7 +53,7 @@
                         <form class="card-body" id="add-product" action="{{url('staff/product', ['add', 'process'])}}" method="POST" enctype="multipart/form-data">
 
                             <div class="form-group">
-                                <label for="email">ชื่อสินค้า</label>
+                                <label for="name">ชื่อสินค้า</label>
                                 <input type="text" class="form-control" id="name" name="name" placeholder="ชื่อสินค้า">
                             </div>
 
@@ -134,7 +134,7 @@
         let deleteImg;
 
         $(function() {
-            //show image
+            //image
             let imgArr = [];
             $("#menu_image").change(function () {
                 $('.product-image').remove();
@@ -176,7 +176,7 @@
             //tag
             let tagsObj = [];
             $('#add-tag').click(function(params) {
-                let tagName = $('#tag').val();
+                let tagName = sanitarize($('#tag').val());
                 let tagId = $('#tags option').filter(function() {
                     return this.value == tagName;
                 }).data('tagid');
@@ -187,14 +187,18 @@
                 });
                 if(check.length == 0){ tagsObj.push([tagId,tagName]);}
                 $('#show-tags').append(`<span class="badge badge-info" id="${tagId}-${tagName}" tagId="${tagId}">${tagName} <a href="#add-tag" onclick="deleteTag(${tagId},'${tagName}')" class="la la-close"></a></span>`);
-                $('#tag_data').val(JSON.stringify(tagsObj));
+                $('#tag_data').val(JSON.stringify(tagsObj.filter(v=>(v!=null))));
             });
 
             deleteTag = function(id, name){
-                delete tagsObj[name];
+                tagsObj.forEach((ele,index) => {
+                    if(ele[0] == id && ele[1] == name){
+                        delete tagsObj[index];
+                    }
+                });
                 let idTag = `#${id}-${name}`;
                 $(idTag).remove();
-                $('#tag_data').val(JSON.stringify(tagsObj));
+                $('#tag_data').val(JSON.stringify(tagsObj.filter(v=>(v!=null))));
             }
 
             //validate

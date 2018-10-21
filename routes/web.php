@@ -45,3 +45,6 @@ Route::get('staff/product/edit', 'ProductBackController@editProduct');
 Route::delete('staff/product/{id}', 'ProductBackController@deleteProduct')->where(['id'=>'[0-9]+']);
 Route::get('staff/product/product_detail_by_id', 'ProductBackController@getProductDetailById');
 Route::get('staff/product/edit/{id}', 'ProductBackController@editProduct')->where(['id'=>'[0-9]+']);
+Route::post('staff/product/edit/process', 'ProductBackController@editProductProcess');
+Route::get('staff/product/product_tags_by_id','ProductBackController@getProductTagsById');
+Route::get('staff/product/product_pictures_by_id','ProductBackController@getProductPicturesById');

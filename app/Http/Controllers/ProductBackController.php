@@ -146,14 +146,75 @@ class ProductBackController extends Controller
 
     }
 
-    public function editProduct()
+    public function editProduct($id)
     {
         $menu = Menu::with('tags', 'menuPictures', 'menuType')->find($id);
+        $types = MenuType::all();
+        $tags = Tag::all();
 
         return view('back.impl.edit-product', [
+            'tags'=>$tags,
+            'types'=>$types,
             'menu'=>$menu,
             'nav' => 'edit'
         ]);
+    }
+
+    public function editProductProcess(Request $req){
+        $id = $req->input('id');
+        $menu = Menu::with('tags', 'menuPictures', 'menuType')->find($id);
+        $menu->name = $req->input('name');
+        $menu->price = $req->input('price');
+        $menu->type_id = $req->input('type');
+        $menu->description = $req->input('description');
+        $menu->save();
+
+        $picName = json_decode($req->input('image_name'));
+        $tagData = json_decode($req->input('tag_data'));
+
+        $newTags = [];
+        $oldTags = [];
+        if ($tagData) {
+            foreach ($tagData as $value) {
+                if ($value[0] == 0) {
+                    $myTag = new Tag();
+                    $myTag->name = $value[1];
+                    $newTags[] = $myTag;
+                } elseif ($value[0] > 0) {
+                    $oldTags[] = $value[0];
+                }
+            }
+        }
+
+        $menu->tags()->sync($oldTags);
+        $menu->tags()->saveMany($newTags);
+
+        if ($req->hasFile('menu_image')) {
+            foreach ($req->file('menu_image') as $file) {
+                $image_filename = $file->getClientOriginalName();
+                if (in_array($image_filename, $picName)) {
+                    $image_name = date('Y_m_d_His_') . $image_filename;
+                    $storage = '/storage/app/public/';
+                    $destination = base_path() . $storage;
+                    $file->move($destination, $image_name);
+                    $new_img = new MenuPicture();
+                    $new_img->name = $image_name;
+                    $menu->menuPictures()->saveMany([$new_img]);
+                }
+            }
+        }
+
+        $oldImageId = json_decode($req->input('old_image_id'));
+        foreach ($oldImageId as $key => $value) {
+            $img = MenuPicture::find($value);
+            $name = $img->name;
+            if($name != 'man.png'){
+                File::delete(base_path() . $storage . $name);
+            }
+            $img->delete();
+        }
+
+        return \App::make('redirect')->back()->with('message', 'บันทึกสำเร็จ');
     }
 
     public function deleteProduct($id){
@@ -166,6 +227,24 @@ class ProductBackController extends Controller
             abort(404);
         }
         $menu = Menu::with('tags', 'menuPictures', 'menuType')->find($id);
+        return response()->json($menu->toArray());
+    }
+
+    public function getProductTagsById(Request $req){
+        $id = $req->input('productId');
+        if ($id <= 0 || !is_numeric($id)) {
+            abort(404);
+        }
+        $menu = Menu::with('tags')->find($id);
+        return response()->json($menu->toArray());
+    }
+
+    public function getProductPicturesById(Request $req){
+        $id = $req->input('productId');
+        if ($id <= 0 || !is_numeric($id)) {
+            abort(404);
+        }
+        $menu = Menu::with('menuPictures')->find($id);
         return response()->json($menu->toArray());
     }
 }

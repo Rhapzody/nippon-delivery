@@ -49,7 +49,7 @@
                             <td><a href="{{url('staff/product',['2',$menu->menuType->name])}}">{{$menu->menuType->name}}</a></td>
                             <td>
                                 @foreach ($menu->tags as $tag)
-                                    <a href="{{url('staff/product',['4',$tag->name])}}">{{$tag->name}}, </a>
+                                    <a href="{{url('staff/product',['4',$tag->name])}}">{!!$tag->name!!}, </a>
                                 @endforeach
                             </td>
                             <td>
