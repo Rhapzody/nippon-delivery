@@ -189,14 +189,16 @@
 								<p>ผู้ใช้</p>
 								<span class="badge badge-count">14</span>
 							</a>
-						</li>
-						<li class="nav-item">
-							<a href={{url('/staff/product/')}}>
-								<i class="la la-shopping-cart"></i>
-								<p>สินค้า</p>
-								<span class="badge badge-count">14</span>
-							</a>
-						</li>
+                        </li>
+                        @hasrole('เจ้าของร้าน')
+                            <li class="nav-item">
+                                <a href={{url('/staff/product/')}}>
+                                    <i class="la la-shopping-cart"></i>
+                                    <p>สินค้า</p>
+                                    <span class="badge badge-count">14</span>
+                                </a>
+                            </li>
+                        @endhasrole
 						<li class="nav-item">
 							<a href="forms.html">
 								<i class="la la-book"></i>
@@ -212,7 +214,7 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="notifications.html">
+							<a href={{url('staff/detail')}}>
 								<i class="la la-database"></i>
 								<p>ข้อมูลร้าน</p>
 								<span class="badge badge-success">3</span>
