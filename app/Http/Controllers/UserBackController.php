@@ -35,7 +35,7 @@ class UserBackController extends Controller
                 $role = Role::where('name', 'like', $search_text . '%')->first();
                 if ($role == null) {
                     $users = User::with('roles')->where('id', '=', -99)->paginate(5);
-                }else{
+                } else {
                     $users = $role->users()->with('roles')->paginate(5);
                 }
                 break;

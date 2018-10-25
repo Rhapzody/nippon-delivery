@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-		<title>Electro - HTML Ecommerce Template</title>
+		<!-- CSRF Token -->
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <title>{{ config('app.name', 'Laravel') }}</title>
 
  		<!-- Google font -->
  		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
@@ -45,10 +48,34 @@
 						<li><a href="#"><i class="fa fa-phone"></i> +021-95-51-84</a></li>
 						<li><a href="#"><i class="fa fa-envelope-o"></i> email@email.com</a></li>
 						<li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>
-					</ul>
+                    </ul>
 					<ul class="header-links pull-right">
-						<li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
-						<li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
+                        @guest
+                            <li><a href="#"><i class="fa fa-money"></i> บาท</a></li>
+                            <li class="nav-item">
+                                <i class="fa fa-unlock" aria-hidden="true"></i>
+                                <a class="nav-link" href="{{ route('login') }}">{{ __('เข้าสู่ระบบ') }}</a>
+                            </li>
+                            <li class="nav-item">
+                                @if (Route::has('register'))
+                                    <i class="fa fa-id-card-o" aria-hidden="true"></i>
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('ลงทะเบียน') }}</a>
+                                @endif
+                            </li>
+                        @else
+                            <li><a href="#"><i class="fa fa-user-o"></i>{{ Auth::user()->email}}</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
+                                                    document.getElementById('logout-form').submit();">
+                                    <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+                                    {{ __('ออกจากระบบ') }}
+                                </a>
+                            </li>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        @endguest
 					</ul>
 				</div>
 			</div>
@@ -61,13 +88,14 @@
 					<!-- row -->
 					<div class="row">
 						<!-- LOGO -->
-						<div class="col-md-3">
+						<div class="col-md-2">
 							<div class="header-logo">
 								<a href="#" class="logo">
-									<img src="./img/logo.png" alt="">
-								</a>
+                                    <img style="position: relative;left: 25px;" src={{url('favicon.ico')}} alt="nippon-delivery" width="75px" height="65px" class="">
+                                    <span style="color:white;">Nippon delivery</span>
+                                </a>
 							</div>
-						</div>
+                        </div>
 						<!-- /LOGO -->
 
 						<!-- SEARCH BAR -->
@@ -79,8 +107,8 @@
 										<option value="1">Category 01</option>
 										<option value="1">Category 02</option>
 									</select>
-									<input class="input" placeholder="Search here">
-									<button class="search-btn">Search</button>
+									<input class="input" placeholder="ค้นหาสินค้าที่นี่">
+									<button class="search-btn">ค้นหา</button>
 								</form>
 							</div>
 						</div>
@@ -93,7 +121,7 @@
 								<div>
 									<a href="#">
 										<i class="fa fa-heart-o"></i>
-										<span>Your Wishlist</span>
+										<span>รายการที่ชอบ</span>
 										<div class="qty">2</div>
 									</a>
 								</div>
@@ -103,7 +131,7 @@
 								<div class="dropdown">
 									<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 										<i class="fa fa-shopping-cart"></i>
-										<span>Your Cart</span>
+										<span>ตะกร้าสินค้า</span>
 										<div class="qty">3</div>
 									</a>
 									<div class="cart-dropdown">

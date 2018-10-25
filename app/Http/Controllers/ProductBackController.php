@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\AddProductRequest;
+use App\Http\Requests\EditProductRequest;
 use App\Menu;
 use App\MenuPicture;
 use App\MenuType;
 use App\Tag;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
 class ProductBackController extends Controller
 {
+
     public function searchProduct($search_mode = null, $search_text = null)
     {
 
@@ -20,10 +22,10 @@ class ProductBackController extends Controller
                 $menus = Menu::with('tags', 'menuPictures', 'menuType')
                     ->where('name', 'like', $search_text . '%')
                     ->orWhere('id', '=', $search_text)
-                    ->orWhereHas('tags', function($q) use($search_text){
+                    ->orWhereHas('tags', function ($q) use ($search_text) {
                         $q->where('name', 'like', $search_text . '%');
                     })
-                    ->orWhereHas('menuType', function($q) use($search_text){
+                    ->orWhereHas('menuType', function ($q) use ($search_text) {
                         $q->where('name', 'like', $search_text . '%');
                     })
                     ->paginate(5);
@@ -153,14 +155,15 @@ class ProductBackController extends Controller
         $tags = Tag::all();
 
         return view('back.impl.edit-product', [
-            'tags'=>$tags,
-            'types'=>$types,
-            'menu'=>$menu,
-            'nav' => 'edit'
+            'tags' => $tags,
+            'types' => $types,
+            'menu' => $menu,
+            'nav' => 'edit',
         ]);
     }
 
-    public function editProductProcess(Request $req){
+    public function editProductProcess(EditProductRequest $req)
+    {
         $id = $req->input('id');
         $menu = Menu::with('tags', 'menuPictures', 'menuType')->find($id);
         $menu->name = $req->input('name');
@@ -208,7 +211,7 @@ class ProductBackController extends Controller
         foreach ($oldImageId as $key => $value) {
             $img = MenuPicture::find($value);
             $name = $img->name;
-            if($name != 'man.png'){
+            if ($name != 'man.png') {
                 File::delete(base_path() . $storage . $name);
             }
             $img->delete();
@@ -217,11 +220,13 @@ class ProductBackController extends Controller
         return \App::make('redirect')->back()->with('message', 'บันทึกสำเร็จ');
     }
 
-    public function deleteProduct($id){
+    public function deleteProduct($id)
+    {
         Menu::find($id)->delete();
     }
 
-    public function getProductDetailById(Request $req){
+    public function getProductDetailById(Request $req)
+    {
         $id = $req->input('product_id');
         if ($id <= 0 || !is_numeric($id)) {
             abort(404);
@@ -230,7 +235,8 @@ class ProductBackController extends Controller
         return response()->json($menu->toArray());
     }
 
-    public function getProductTagsById(Request $req){
+    public function getProductTagsById(Request $req)
+    {
         $id = $req->input('productId');
         if ($id <= 0 || !is_numeric($id)) {
             abort(404);
@@ -239,7 +245,8 @@ class ProductBackController extends Controller
         return response()->json($menu->toArray());
     }
 
-    public function getProductPicturesById(Request $req){
+    public function getProductPicturesById(Request $req)
+    {
         $id = $req->input('productId');
         if ($id <= 0 || !is_numeric($id)) {
             abort(404);
