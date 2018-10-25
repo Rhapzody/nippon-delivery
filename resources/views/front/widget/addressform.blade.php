@@ -4,10 +4,10 @@
     <div class="container">
         <!-- row -->
         <div class="row">
-            <form class="card-body" action="{{url('/staff/user/add/process')}}" method="POST" enctype="multipart/form-data"
+            <form class="card-body" action="{{ route('register') }}" method="POST" enctype="multipart/form-data"
                 id="add-user">
 
-                <div class="col-md-8">
+                <div class="col-md-9">
 
                     <div class="form-group">
                         <label for="first_name"><span class="text-danger">*</span>ชื่อ</label>
@@ -97,13 +97,12 @@
                         </div>
                     </div>
 
-
                     <div class="form-group">
                         <label for="additional_address">รายละเอียดที่อยู่เพิ่มเติม</label>
                         <textarea class="form-control" id="additional_address" rows="5" name="additional_address"></textarea>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
 
                     <div class="form-group">
                         <label for="user_image">รูปประจำตัว </label>
@@ -112,10 +111,12 @@
                     </div>
 
                     <div class="input-checkbox">
-                        <input type="checkbox" id="terms">
+                        <input type="checkbox" id="terms" name="terms">
                         <label for="terms">
                             <span></span>
-                            I've read and accept the <a href="#">terms &amp; conditions</a>
+                            คุณได้อ่าน และยอมรับเงื่อนไขข้อตกลง
+                            <br>
+                            <a href="#">terms &amp; conditions</a>
                         </label>
                     </div>
 
@@ -138,3 +139,219 @@
     <!-- /container -->
 </div>
 <!-- /SECTION -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
+<script>
+    $(function () {
+        //get all province to select box
+        let province = $('#province');
+        $.get("{{url('provinces')}}", function (data) {
+            data.forEach(ele => {
+                province.append(`<option value="${ele.id}">${ele.name}</option>`);
+            });
+        })
+
+        //get districts when province selected
+        $('#province').change(function () {
+            $('#sub_district').empty().append(`<option value="-1">เลือกตำบล</option>`);
+            let provinceId = $(this).val();
+            if (provinceId >= 0) {
+                let url = "{{url('/district_by_province_id')}}";
+                $.get(url + "?province_id=" + provinceId, function (data, status) {
+                    let district = $('#district');
+                    district.empty();
+                    district.append(`<option value="-1">เลือกอำเภอ</option>`);
+                    for (let index = 0; index < data.length; index++) {
+                        district.append(
+                            `<option value="${data[index].id}">${data[index].name}</option>`
+                        );
+                    }
+                });
+            }
+        });
+
+        //get sub districts when district selected
+        $('#district').change(function () {
+            let districtId = $(this).val();
+            if (districtId >= 0) {
+                let url = "{{url('/sub_district_by_district_id')}}";
+                $.get(url + "?district_id=" + districtId, function (data, status) {
+                    let subDistrict = $('#sub_district');
+                    subDistrict.empty();
+                    subDistrict.append(`<option value="-1">เลือกตำบล</option>`);
+                    for (let index = 0; index < data.length; index++) {
+                        subDistrict.append(
+                            `<option value="${data[index].id}">${data[index].name}</option>`
+                        );
+                    }
+                });
+            }
+        });
+
+        //show image
+        $("#user_image").change(function () {
+            if (this.files && this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = imageIsLoaded;
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+
+        function imageIsLoaded(e) {
+            $('#blah').attr('src', e.target.result);
+        };
+
+        //validate
+        $('#add-user').validate({ // initialize the plugin
+
+            rules: {
+                terms: {
+                    required: true
+                },
+                first_name: {
+                    required: true,
+                    maxlength: 255
+                },
+                last_name: {
+                    required: true,
+                    maxlength: 255
+                },
+                user_name: {
+                    required: true,
+                    maxlength: 255,
+                    minlength: 6,
+                },
+                email: {
+                    required: true,
+                    maxlength: 255,
+                    email: true
+                },
+                password_1: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 255,
+                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/
+                },
+                password_2: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 255,
+                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+                    equalTo: '#password_1'
+                },
+                role: {
+                    required: true,
+                    pattern: /^[+]?\d+([.]\d+)?$/
+                },
+                province: {
+                    required: true,
+                    pattern: /^[+]?\d+([.]\d+)?$/
+                },
+                district: {
+                    required: true,
+                    pattern: /^[+]?\d+([.]\d+)?$/
+                },
+                sub_district: {
+                    required: true,
+                    pattern: /^[+]?\d+([.]\d+)?$/
+                },
+                village_number: {
+                    required: true,
+                    maxlength: 3
+                },
+                house_number: {
+                    required: true,
+                    maxlength: 10
+                },
+                tel_number: {
+                    required: true,
+                    minlength: 10,
+                    maxlength: 10,
+                    pattern: /^\d{10}$/
+                },
+                image: {
+                    extension: "png|jpeg|jpg"
+                }
+
+            },
+            messages: {
+                terms :{
+                    required: 'กรุณาอ่าน และยอมรับเงื่อนไขข้อตกลงก่อน'
+                },
+                first_name: {
+                    required: "กรุณาใส่ชื่อจริง",
+                    maxlength: "มากสุด 255 ตัวอักษร"
+                },
+                last_name: {
+                    required: "กรุณาใส่นามสกุล",
+                    maxlength: "มากสุด 255 ตัวอักษร"
+                },
+                user_name: {
+                    required: "กรุณาใส่ชื่อผู้ใช้",
+                    maxlength: "มากสุด 255 ตัวอักษร",
+                    minlength: "น้อยสุด 6 ตัวอักษร",
+                },
+                email: {
+                    required: "กรุณาใส่อีเมลแอดเดรส",
+                    maxlength: "มากสุด 255 ตัวอักษร",
+                    email: "ใส่อีเมลให้ถูกต้อง"
+                },
+                password_1: {
+                    required: "กรุณากำหนดรหัสผ่าน",
+                    minlength: "น้อยสุด 6 ตัวอักษร",
+                    maxlength: "มากสุด 255 ตัวอักษร",
+                    pattern: "ต้องมี A-Z อย่างน้อย 1 ตัว a-z อย่างน้อย 1 ตัว และตัวเลขอย่างน้อย 1 ตัว"
+                },
+                password_2: {
+                    required: "กรุณายืนยันรหัสผ่าน",
+                    minlength: "น้อยสุด 6 ตัวอักษร",
+                    maxlength: "มากสุด 255 ตัวอักษร",
+                    pattern: "ต้องมี A-Z อย่างน้อย 1 ตัว a-z อย่างน้อย 1 ตัว และตัวเลขอย่างน้อย 1 ตัว",
+                    equalTo: "ยืนยันรหัสผ่าน ไม่ตรงกัน"
+                },
+                role: {
+                    required: "เลือกบทบาท",
+                    pattern: "เลือกบทบาท"
+                },
+                province: {
+                    required: "เลือกจังหวัด",
+                    pattern: "เลือกจังหวัด",
+                },
+                district: {
+                    required: "เลือกอำเภอ/เขต",
+                    pattern: "เลือกอำเภอ/เขต"
+                },
+                sub_district: {
+                    required: "เลือกตำบล",
+                    pattern: "เลือกตำบล"
+                },
+                village_number: {
+                    required: "อย่าลืมใส่หมู่ที่",
+                    maxlength: "หมู่ที่ ไม่ถูกต้อง"
+                },
+                house_number: {
+                    required: "อย่าลืมใส่บ้านเลขที่",
+                    maxlength: "บ้านเลขที่ไม่ถูกต้อง *ขนาดยาวเกินไป"
+                },
+                tel_number: {
+                    required: "กรุณาระบุหมายเลขโทรศัทพ์",
+                    minlength: "น้อยสุด 10 ตัวอักษร",
+                    maxlength: "มากสุด 10 ตัวอักษร",
+                    pattern: "ใส่หมายเลข 10 หลักให้ถูกต้อง"
+                },
+                image: {
+                    extension: "รองรับไฟล์ png jpeg jpg เท่านั้น"
+                }
+            },
+            errorClass: "is-invalid error",
+            validClass: "is-valid valid",
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass(errorClass).removeClass(validClass);
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass(errorClass).addClass(validClass);
+            }
+        });
+    });
+</script>

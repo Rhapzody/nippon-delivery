@@ -213,7 +213,6 @@
         };
 
         //validate
-
         $('#add-user').validate({ // initialize the plugin
 
             rules: {

@@ -15,27 +15,38 @@
  		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
 
  		<!-- Bootstrap -->
- 		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
+ 		<link type="text/css" rel="stylesheet" href="{{url('css/bootstrap.min.css') . '?' . http_build_query(['v'=>'0.1'])}}"/>
 
  		<!-- Slick -->
- 		<link type="text/css" rel="stylesheet" href="css/slick.css"/>
- 		<link type="text/css" rel="stylesheet" href="css/slick-theme.css"/>
+ 		<link type="text/css" rel="stylesheet" href="{{url('css/slick.css') . '?' . http_build_query(['v'=>'0.1'])}}"/>
+ 		<link type="text/css" rel="stylesheet" href="{{url('css/slick-theme.css') . '?' . http_build_query(['v'=>'0.1'])}}"   />
 
  		<!-- nouislider -->
- 		<link type="text/css" rel="stylesheet" href="css/nouislider.min.css"/>
+ 		<link type="text/css" rel="stylesheet" href="{{url('css/nouislider.min.css') . '?' . http_build_query(['v'=>'0.1'])}}"/>
 
  		<!-- Font Awesome Icon -->
- 		<link rel="stylesheet" href="css/font-awesome.min.css">
+ 		<link rel="stylesheet" href="{{url('css/font-awesome.min.css') . '?' . http_build_query(['v'=>'0.1'])}}">
 
  		<!-- Custom stlylesheet -->
- 		<link type="text/css" rel="stylesheet" href="css/style.css"/>
+        <link type="text/css" rel="stylesheet" href="{{url('css/style.css') . '?' . http_build_query(['v'=>'0.1'])}}"/>
+
+        <!-- jq -->
+        <script src="{{url('js/jquery.min.js') . '?' . http_build_query(['v'=>'0.1'])}}"></script>
 
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 		<!--[if lt IE 9]>
 		  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-		<![endif]-->
+        <![endif]-->
+        <style>
+            .error {
+                color :red;
+            }
+            .big-icon {
+                font-size: 18px;
+            }
+        </style>
 
     </head>
 	<body>
@@ -63,7 +74,7 @@
                                 @endif
                             </li>
                         @else
-                            <li><a href="#"><i class="fa fa-user-o"></i>{{ Auth::user()->email}}</a></li>
+                            <li><a href={{url('user/edit')}}><i class="fa fa-user-o"></i>{{ Auth::user()->email}}</a></li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
@@ -315,12 +326,11 @@
         <!-- /FOOTER -->
 
 		<!-- jQuery Plugins -->
-		<script src="js/jquery.min.js"></script>
-		<script src="js/bootstrap.min.js"></script>
-		<script src="js/slick.min.js"></script>
-		<script src="js/nouislider.min.js"></script>
-		<script src="js/jquery.zoom.min.js"></script>
-		<script src="js/main.js"></script>
+		<script src="{{url('js/bootstrap.min.js') . '?' . http_build_query(['v'=>'20181025190455'])}}"></script>
+		<script src="{{url('js/slick.min.js') . '?' . http_build_query(['v'=>'20181025190455'])}}"></script>
+		<script src="{{url('js/nouislider.min.js') . '?' . http_build_query(['v'=>'20181025190455'])}}"></script>
+		<script src="{{url('js/jquery.zoom.min.js') . '?' . http_build_query(['v'=>'20181025190455'])}}"></script>
+		<script src="{{url('js/main.js') . '?' . http_build_query(['v'=>'20181025190455'])}}"></script>
 
 	</body>
 </html>

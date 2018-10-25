@@ -24,12 +24,12 @@ class AddUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_name'=>'required|max:255|min:6',
+            'user_name'=>'required|max:255|min:6|string',
             'first_name'=>'required|max:255',
             'last_name'=>'required|max:255',
             'email'=>'required|max:255|email|unique:users,email',
-            'password_1'=>'required|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/|max:255',
-            'password_2'=>'required|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/|max:255|same:password_1',
+            'password_1'=>'required|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/|max:255|string',
+            'password_2'=>'required|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/|max:255|same:password_1|string',
             'role'=>'required|regex:/^[+]?\d+([.]\d+)?$/',
             'province'=>'required|regex:/^[+]?\d+([.]\d+)?$/',
             'district'=>'required|regex:/^[+]?\d+([.]\d+)?$/',

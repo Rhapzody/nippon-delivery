@@ -28,10 +28,11 @@ Route::group(['middleware' => []], function () {
     Route::post('staff/user/edit/changePassword', 'UserBackController@editPassword');
     Route::post('staff/user/edit/process', 'UserBackController@editUserProcess');
     Route::delete('staff/user/{id}', 'UserBackController@deleteUser')->where(['id' => '[0-9]+']);
-    Route::get('district_by_province_id', 'UserBackController@getDistrictsByProvinceId');
-    Route::get('sub_district_by_district_id', 'UserBackController@getSubDistrictsByProvinceId');
     Route::get('user_detail_by_id', 'UserBackController@getUserDetailById');
 });
+Route::get('district_by_province_id', 'UserBackController@getDistrictsByProvinceId');
+Route::get('sub_district_by_district_id', 'UserBackController@getSubDistrictsByProvinceId');
+Route::get('provinces', 'UserBackController@getAllProvinces');
 
 // product management
 Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน']], function () {
@@ -72,3 +73,6 @@ Route::get('cart', 'CartController@cart');
 
 //whish list
 Route::get('whish', 'WhishListController@whish');
+
+//user
+Route::get('user/edit', 'UserFrontController@edit')->middleware('auth');
