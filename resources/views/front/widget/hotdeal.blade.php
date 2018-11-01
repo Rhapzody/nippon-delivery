@@ -9,32 +9,28 @@
                     <ul class="hot-deal-countdown">
                         <li>
                             <div>
-                                <h3>02</h3>
-                                <span>Days</span>
+                                <h3>ถึง</h3>
                             </div>
                         </li>
                         <li>
                             <div>
-                                <h3>10</h3>
-                                <span>Hours</span>
+                                <h3 title="วัน">05</h3>
                             </div>
                         </li>
                         <li>
                             <div>
-                                <h3>34</h3>
-                                <span>Mins</span>
+                                <h3 title="เดือน">07</h3>
                             </div>
                         </li>
                         <li>
                             <div>
-                                <h3>60</h3>
-                                <span>Secs</span>
+                                <h3>2019</h3>
                             </div>
                         </li>
                     </ul>
-                    <h2 class="text-uppercase">hot deal this week</h2>
-                    <p>New Collection Up to 50% OFF</p>
-                    <a class="primary-btn cta-btn" href="#">Shop now</a>
+                    <h1 class="text-uppercase">ฉลอง เปิด ร้าน ใหม่</h1>
+                    <p>> > > ส่ง ฟรี เมื่อ ซื้อ ครบ 500 บาท < < <</p>
+                    <a class="primary-btn cta-btn h3" href="{{url('store')}}">สั่งเลย!</a>
                 </div>
             </div>
         </div>

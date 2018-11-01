@@ -170,6 +170,7 @@ class ProductBackController extends Controller
         $menu->price = $req->input('price');
         $menu->type_id = $req->input('type');
         $menu->description = $req->input('description');
+        $menu->touch();
         $menu->save();
 
         $picName = json_decode($req->input('image_name'));

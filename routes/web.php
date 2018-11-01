@@ -30,6 +30,7 @@ Route::group(['middleware' => []], function () {
     Route::delete('staff/user/{id}', 'UserBackController@deleteUser')->where(['id' => '[0-9]+']);
     Route::get('user_detail_by_id', 'UserBackController@getUserDetailById');
 });
+Route::post('staff/user/edit/changePassword', 'UserBackController@editPassword')->middleware('auth');
 Route::get('district_by_province_id', 'UserBackController@getDistrictsByProvinceId');
 Route::get('sub_district_by_district_id', 'UserBackController@getSubDistrictsByProvinceId');
 Route::get('provinces', 'UserBackController@getAllProvinces');
@@ -60,19 +61,22 @@ Route::get('staff/detail', 'StoreDetailController@detail');
 Route::get('home', 'IndexController@index')->name('home');
 
 //store
-Route::get('store', 'StoreController@store');
+Route::get('store/{type?}', 'StoreController@store');
 
 //product
-Route::get('product', 'ProductController@product');
+Route::get('product/{id}', 'ProductController@product');
 
 //checkout
 Route::get('checkout', 'CheckoutController@checkout');
 
 //cart
-Route::get('cart', 'CartController@cart');
+Route::get('cart', 'CartController@cart')->middleware('auth');
+Route::post('cart/add/{id}', 'CartController@add')->middleware('auth');
 
 //whish list
-Route::get('whish', 'WhishListController@whish');
+Route::get('whish', 'WhishListController@whish')->middleware('auth');
+Route::post('whish/add/{id}', 'WhishListController@add')->middleware('auth');
 
 //user
 Route::get('user/edit', 'UserFrontController@edit')->middleware('auth');
+Route::post('user/edit/process', 'UserFrontController@editProcess')->middleware('auth');

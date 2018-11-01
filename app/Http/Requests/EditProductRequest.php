@@ -25,7 +25,7 @@ class EditProductRequest extends FormRequest
     {
         return [
             'id'=>'required|numeric|min:1',
-            'name'=>'required|max:255|unique:menu,name',
+            'name'=>'required|max:255',
             'price'=>'required|numeric|min:0',
             'type'=>'required|numeric|min:1|exists:menu_type,id',
             'menu_image.*'=>'max:3000|mimes:png,jpeg,jpg'
