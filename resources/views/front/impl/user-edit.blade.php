@@ -1,161 +1,154 @@
-@extends('back.layout.app')
+@extends('front.layout.app')
 
 @section('content')
-<h4 class="page-title"><span class="la la-clipboard"></span> จัดการผู้ใช้งาน</h4>
-<div class="row">
-    <div class="col-md-12 bg-light border border-primary rounded p-2">
 
-        @include('back.widget.nav-user')
+<!-- BREADCRUMB -->
+@include('front.widget.breadcrumb',[
+'header'=>$header
+])
 
-        <hr>
-
+<div class="section">
+    <div class="container">
         <div class="row">
-            <div class="col-md-11 mx-auto">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">เพิ่มผู้ใช้งาน</div>
-                    </div>
-                    <form class="card-body" action="{{url('/staff/user/add/process')}}" method="POST" enctype="multipart/form-data"
-                        id="add-user">
+            <div id="aside" class="col-md-3">
+                {{-- Nav user --}}
+                @include('front.widget.nav-user',[
 
+                ])
+            </div>
+            <div id="store" class="col-md-9">
+                {{-- content --}}
+                <div class="card">
+                    <form class="card-body" action="{{url('user/edit/process')}}" method="POST" enctype="multipart/form-data"
+                        id="add-user">
+                        <input type="hidden" name="user_id" id="user_id" value="{{$user->id}}">
+                        @if(Session::has('message'))
+                        <p class="text-success">{{ Session::get('message') }}</p>
+                        @endif
                         <div class="form-group">
                             <label for="first_name"><span class="text-danger">*</span>ชื่อ</label>
-                            <input type="text" class="form-control" id="first_name" placeholder="ชื่อ" name="first_name">
-                            <span class="text-danger" id="first_name_text"></span>
+                            <input value="{{$user->first_name}}" type="text" class="form-control" id="first_name"
+                                placeholder="ชื่อ" name="first_name">
                         </div>
 
                         <div class="form-group">
                             <label for="last_name"><span class="text-danger">*</span>นามสกุล</label>
-                            <input type="text" class="form-control" id="last_name" placeholder="นามสกุล" name="last_name">
-                            <span class="text-danger" id="last_name_text"></span>
+                            <input value="{{$user->last_name}}" type="text" class="form-control" id="last_name"
+                                placeholder="นามสกุล" name="last_name">
                         </div>
 
-                        <div class="form-group">
-                            <label for="user_name"><span class="text-danger">*</span>User name (ตัวอักษรอย่างน้อย 6
-                                ตัว)</label>
-                            <input type="text" class="form-control" id="user_name" placeholder="ชื่อผู้ใช้งาน" name="user_name">
-                            <span class="text-danger" id="user_ame_text"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="email"><span class="text-danger">*</span>email</label>
-                            <input type="email" class="form-control" id="email" placeholder="อีเมล" name="email">
-                            <span class="text-danger" id="email_text"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="password"><span class="text-danger">*</span>password (A-Z, a-z, 0-9
-                                อย่างน้อยอย่างละ 1 ตัว ความยาว 6 ตัวอักษร)</label>
-                            <input type="password" class="form-control" id="password_1" name="password_1" placeholder="รหัสผ่าน">
-                            <span class="text-danger" id="password_1_text"></span>
-                        </div>
-                        <div class="form-group">
-                            <label for="password"><span class="text-danger">*</span>ยืนยัน password</label>
-                            <input type="password" class="form-control" id="password_2" name="password_2" placeholder="รหัสผ่านอีกครั้ง">
-                            <span class="text-danger" id="password_2_text"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="role"><span class="text-danger">*</span>หน้าที่</label>
-                            <select name="role" id="role" class="form-control">
-                                <option value="-1">เลือกตำแหน่ง</option>
-                                @foreach ($roles as $role)
-                                    <option value={{$role->id}}>{{$role->name}}</option>
-                                @endforeach
-                            </select>
-                            <span class="text-danger" id="role_text"></span>
+                        <div class="rounded p-3 panel panel-primary">
+                            <div class="panel-heading">
+                                เปลี่ยนรหัสผ่าน
+                            </div>
+                            <div id="change-password" class="panel-body">
+                                <div class="form-group">
+                                    <label for="password_old"><span class="text-danger">*</span>password เดิม</label>
+                                    <input type="password" class="form-control" id="password_old" placeholder="รหัสผ่านเดิม">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password"><span class="text-danger">*</span>password ใหม่</label>
+                                    <input type="password" class="form-control" id="password_1" placeholder="รหัสผ่านใหม่">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password"><span class="text-danger">*</span>ยืนยัน password ใหม่</label>
+                                    <input type="password" class="form-control" id="password_2" placeholder="รหัสผ่านใหม่อีกครั้ง">
+                                </div>
+                                <button value="บันทึก" class="btn btn-primary ml-2" id="change_pass_but">บันทึก</button>
+                                <span class="" id="change_password_text"></span>
+                            </div>
                         </div>
 
                         <div class="form-row mx-1">
                             <div class="form-group col-md-3">
                                 <label for="tel_number"><span class="text-danger">*</span>เบอร์โทรศัพท์</label>
-                                <input type="text" maxlength="10" minlength="10" name="tel_number" id="tel_number"
-                                    class="form-control">
+                                <input value="{{$user->tel_number}}" type="text" maxlength="10" minlength="10" name="tel_number"
+                                    id="tel_number" class="form-control">
                                 <span class="text-danger" id="tel_number_text"></span>
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="province"><span class="text-danger">*</span>จังหวัด</label>
                                 <select name="province" id="province" class="form-control">
                                     <option value="-1">เลือกจังหวัด</option>
-                                    @foreach ($provinces as $province)
-                                        <option value={{$province->id}}>{{$province->name}}</option>
+                                    @foreach ($provinces as $item)
+                                    @if ($user->subDistrict->district->province->id == $item->id)
+                                    <option selected value="{{$item->id}}">{{$item->name}}</option>
+                                    @else
+                                    <option value="{{$item->id}}">{{$item->name}}</option>
+                                    @endif
                                     @endforeach
                                 </select>
-                                <span class="text-danger" id="province_text"></span>
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="district"><span class="text-danger">*</span>อำเภอ</label>
                                 <select name="district" id="district" class="form-control">
-                                    <option value="-1">เลือกอำเภอ</option>
+                                    <option value="{{$user->subDistrict->district->id}}">{{$user->subDistrict->district->name}}</option>
                                 </select>
-                                <span class="text-danger" id="district_text"></span>
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="sub_district"><span class="text-danger">*</span>ตำบล</label>
                                 <select name="sub_district" id="sub_district" class="form-control">
-                                    <option value="-1">เลือกตำบล</option>
+                                    <option value="{{$user->subDistrict->id}}">{{$user->subDistrict->name}}</option>
                                 </select>
-                                <span class="text-danger" id="sub_district_text"></span>
                             </div>
                         </div>
 
                         <div class="form-row mx-1">
                             <div class="form-group col-md-3">
                                 <label for="road">ถนน</label>
-                                <input type="text" class="form-control" name="road" id="road" placeholder="ถนน">
+                                <input value="{{$user->road}}" type="text" class="form-control" name="road" id="road"
+                                    placeholder="ถนน">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="alley">ตรอก/ซอย</label>
-                                <input type="text" class="form-control" name="alley" id="alley" placeholder="ตรอก/ซอย">
+                                <input value="{{$user->alley}}" type="text" class="form-control" name="alley" id="alley"
+                                    placeholder="ตรอก/ซอย">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="village_number"><span class="text-danger">*</span>หมู่</label>
-                                <input type="text" class="form-control" name="village_number" id="village_number"
-                                    placeholder="หมู่ที่">
-                                <span class="text-danger" id="village_number_text"></span>
+                                <input value="{{$user->village_number}}" type="text" class="form-control" name="village_number"
+                                    id="village_number" placeholder="หมู่ที่">
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="house_number"><span class="text-danger">*</span>บ้านเลขที่</label>
-                                <input type="text" class="form-control" name="house_number" id="house_number"
-                                    placeholder="บ้านเลขที่">
-                                <span class="text-danger" id="house_number_text"></span>
+                                <input value="{{$user->house_number}}" type="text" class="form-control" name="house_number"
+                                    id="house_number" placeholder="บ้านเลขที่">
                             </div>
                         </div>
 
 
                         <div class="form-group">
                             <label for="additional_address">รายละเอียดที่อยู่เพิ่มเติม</label>
-                            <textarea class="form-control" id="additional_address" rows="5" name="additional_address"></textarea>
+                            <textarea class="form-control" id="additional_address" rows="5" name="additional_address">{{$user->additional_address}}</textarea>
                         </div>
 
                         <div class="form-group">
                             <label for="user_image">รูปประจำตัว </label>
                             <input type="file" name="image" id="user_image" accept="image/png, image/jpeg">
-                            <img id="blah" src="{{url('/storage/man.png')}}" alt="your image" width="256px" height="256px" />
+                            <img id="blah" src="{{url('/storage/') . "/" . $user->picture_name}}" alt="your image"
+                                width="256px" height="256px" />
                         </div>
 
                         @if($errors->any())
                         <ul class="alert alert-danger">
                             @foreach($errors->all() as $error)
-                             <li>{{ $error }}</li>
+                            <li>{{ $error }}</li>
                             @endforeach
                         </ul>
                         @endif
                         @csrf
                         <div class="card-action">
-                            <input class="btn btn-success" type="submit" value=" เพิ่ม " id="my-submit">
-                            <a class="btn btn-danger" href="#cl-but" onclick="clearConfirm(this)" style="color:white;"
-                                id="cl-but">ล้าง</a>
+                            <input class="primary-btn order-submit" type="submit" value=" บันทึก " id="my-submit">
                         </div>
 
                     </form>
                 </div>
             </div>
+
         </div>
-
-
     </div>
 </div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -213,6 +206,7 @@
         };
 
         //validate
+
         $('#add-user').validate({ // initialize the plugin
 
             rules: {
@@ -246,10 +240,6 @@
                     maxlength: 255,
                     pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
                     equalTo: '#password_1'
-                },
-                role: {
-                    required: true,
-                    pattern: /^[+]?\d+([.]\d+)?$/
                 },
                 province: {
                     required: true,
@@ -314,10 +304,6 @@
                     pattern: "ต้องมี A-Z อย่างน้อย 1 ตัว a-z อย่างน้อย 1 ตัว และตัวเลขอย่างน้อย 1 ตัว",
                     equalTo: "ยืนยันรหัสผ่าน ไม่ตรงกัน"
                 },
-                role: {
-                    required: "เลือกบทบาท",
-                    pattern: "เลือกบทบาท"
-                },
                 province: {
                     required: "เลือกจังหวัด",
                     pattern: "เลือกจังหวัด",
@@ -342,7 +328,7 @@
                     required: "อย่าลืมใส่หมายเลขโทรศัทพ์มือถือ",
                     minlength: "น้อยสุด 10 ตัวอักษร",
                     maxlength: "มากสุด 10 ตัวอักษร",
-                    pattern: "ใส่หมายเลข 10 หลักให้ถูกต้อง"
+                    pattern: "ใส่หมายเลขให้ถูกต้อง"
                 },
                 image: {
                     extension: "รองรับไฟล์ png jpeg jpg เท่านั้น"
@@ -358,25 +344,47 @@
             }
         });
 
+        $('#change_pass_but').click(function (e) {
+            e.preventDefault();
+            swal({
+                title: "แน่ใจหรือไม่",
+                text: "รหัสผ่านของท่านจะถูกเปลี่ยน",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    let oldPass = $('#password_old').val();
+                    let firstPass = $('#password_1').val();
+                    let secondPass = $('#password_2').val();
+                    let userId = $('#user_id').val();
+                    $.post("{{url('/staff/user/edit/changePassword')}}",{
+                        user_id:userId,
+                        password_old:oldPass,
+                        password_1:firstPass,
+                        password_2:secondPass,
+                        _token:"{{csrf_token()}}"
+                    },function (data) {
+                        if(data.status === "success"){
+                            $('#change_password_text')
+                                .html("เปลี่ยนรหัสผ่านเรียบร้อย")
+                                .attr('class','text-success');
+                        }else{
+                            $('#change_password_text')
+                                .html("ไม่สามารถเปลี่ยนรหัสผ่านได้ อาจเนื่องจาก รหัสผ่านเดิมไม่ถูกต้อง หรือรหัสผ่านไม่ตรงกัน หรือรหัสผ่านไม่ตรงตามข้อกำหนด")
+                                .attr('class','text-danger');
+                            $('#password_old').addClass("is-invalid");
+                            $('#password_1').addClass("is-invalid");
+                            $('#password_2').addClass("is-invalid");
+                        }
+                    });
+                }
+            });
+
+        });
     });
 
-    function clearConfirm(e) {
-        swal({
-            title: "แน่ใจหรือไม่",
-            text: "ข้อมูลที่กรอกไว้จะถูกลบออกทั้งหมด",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        })
-        .then((willDelete) => {
-            if (willDelete) {
-                document.getElementById("add-user").reset();
-                swal("เคลียร์ข้อมูลเรียบร้อย", {
-                    icon: "success"
-                });
-            }
-        });
-    }
 
 </script>
 

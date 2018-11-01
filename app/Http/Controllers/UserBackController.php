@@ -139,7 +139,9 @@ class UserBackController extends Controller
             $storage = '/storage/app/public/';
             $destination = base_path() . $storage;
             $req->file('image')->move($destination, $image_name);
-            File::delete(base_path() . $storage . $user->picture_name);
+            if($user->picture_name != 'man.png'){
+                File::delete(base_path() . $storage . $user->picture_name);
+            }
             $user->picture_name = $image_name;
         }
         $user->first_name = $req->input('first_name');
@@ -195,6 +197,10 @@ class UserBackController extends Controller
             $subDistricts[] = $temp;
         }
         return response()->json($subDistricts);
+    }
+
+    public function getAllProvinces(){
+        return response(Province::all());
     }
 
     public function getUserDetailById(Request $req)

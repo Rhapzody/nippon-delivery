@@ -9,33 +9,47 @@
 		<!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
+        {{-- Auth token --}}
+        <meta name="auth-check" content="{{Auth::check()}}">
+
         <title>{{ config('app.name', 'Laravel') }}</title>
 
  		<!-- Google font -->
  		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
 
  		<!-- Bootstrap -->
- 		<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
+ 		<link type="text/css" rel="stylesheet" href="{{url('css/bootstrap.min.css') . '?' . http_build_query(['v'=>'0.1'])}}"/>
 
  		<!-- Slick -->
- 		<link type="text/css" rel="stylesheet" href="css/slick.css"/>
- 		<link type="text/css" rel="stylesheet" href="css/slick-theme.css"/>
+ 		<link type="text/css" rel="stylesheet" href="{{url('css/slick.css') . '?' . http_build_query(['v'=>'0.1'])}}"/>
+ 		<link type="text/css" rel="stylesheet" href="{{url('css/slick-theme.css') . '?' . http_build_query(['v'=>'0.1'])}}"   />
 
  		<!-- nouislider -->
- 		<link type="text/css" rel="stylesheet" href="css/nouislider.min.css"/>
+ 		<link type="text/css" rel="stylesheet" href="{{url('css/nouislider.min.css') . '?' . http_build_query(['v'=>'0.1'])}}"/>
 
  		<!-- Font Awesome Icon -->
- 		<link rel="stylesheet" href="css/font-awesome.min.css">
+ 		<link rel="stylesheet" href="{{url('css/font-awesome.min.css') . '?' . http_build_query(['v'=>'0.1'])}}">
 
  		<!-- Custom stlylesheet -->
- 		<link type="text/css" rel="stylesheet" href="css/style.css"/>
+        <link type="text/css" rel="stylesheet" href="{{url('css/style.css') . '?' . http_build_query(['v'=>'0.1'])}}"/>
+
+        <!-- jq -->
+        <script src="{{url('js/jquery.min.js') . '?' . http_build_query(['v'=>'0.1'])}}"></script>
 
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 		<!--[if lt IE 9]>
 		  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-		<![endif]-->
+        <![endif]-->
+        <style>
+            .error {
+                color :red;
+            }
+            .big-icon {
+                font-size: 18px;
+            }
+        </style>
 
     </head>
 	<body>
@@ -63,7 +77,7 @@
                                 @endif
                             </li>
                         @else
-                            <li><a href="#"><i class="fa fa-user-o"></i>{{ Auth::user()->email}}</a></li>
+                            <li><a href={{url('user/edit')}}><i class="fa fa-user-o"></i>{{ Auth::user()->email}}</a></li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
@@ -101,86 +115,106 @@
 						<!-- SEARCH BAR -->
 						<div class="col-md-6">
 							<div class="header-search">
-								<form>
-									<select class="input-select">
-										<option value="0">All Categories</option>
-										<option value="1">Category 01</option>
-										<option value="1">Category 02</option>
+								<form action="{{url('store')}}" method="get" >
+									<select class="input-select" name="typeId">
+                                        @if (isset($search_type_id))
+                                            <option value="0" {{($search_type_id == 0)?"selected":""}}>ทุกประเภท</option>
+                                            @foreach (App\MenuType::all() as $type)
+                                                <option value="{{$type->id}}" {{($search_type_id == $type->id)?"selected":""}}>{{$type->name}}</option>
+                                            @endforeach
+                                        @else
+                                            <option value="0" >ทุกประเภท</option>
+                                            @foreach (App\MenuType::all() as $type)
+                                                <option value="{{$type->id}}">{{$type->name}}</option>
+                                            @endforeach
+                                        @endif
 									</select>
-									<input class="input" placeholder="ค้นหาสินค้าที่นี่">
+									<input class="input" placeholder="ค้นหาสินค้าที่นี่" name="search" value="{{isset($search)?$search:''}}">
 									<button class="search-btn">ค้นหา</button>
 								</form>
 							</div>
 						</div>
 						<!-- /SEARCH BAR -->
 
-						<!-- ACCOUNT -->
-						<div class="col-md-3 clearfix">
-							<div class="header-ctn">
-								<!-- Wishlist -->
-								<div>
-									<a href="#">
-										<i class="fa fa-heart-o"></i>
-										<span>รายการที่ชอบ</span>
-										<div class="qty">2</div>
-									</a>
-								</div>
-								<!-- /Wishlist -->
+						@auth
+                            <!-- ACCOUNT -->
+						    <div class="col-md-4 clearfix">
+                                <div class="header-ctn">
+                                    <!-- Wishlist -->
+                                    <div>
+                                        <a href="#">
+                                            <i class="fa fa-heart-o"></i>
+                                            <span>รายการที่ชอบ</span>
+                                            <div class="qty">2</div>
+                                        </a>
+                                    </div>
+                                    <!-- /Wishlist -->
 
-                                <!-- Cart -->
-								<div class="dropdown">
-									<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-										<i class="fa fa-shopping-cart"></i>
-										<span>ตะกร้าสินค้า</span>
-										<div class="qty">3</div>
-									</a>
-									<div class="cart-dropdown">
-										<div class="cart-list">
-											<div class="product-widget">
-												<div class="product-img">
-													<img src="./img/product01.png" alt="">
-												</div>
-												<div class="product-body">
-													<h3 class="product-name"><a href="#">product name goes here</a></h3>
-													<h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
-												</div>
-												<button class="delete"><i class="fa fa-close"></i></button>
-											</div>
+                                    <!-- Cart -->
+                                    <div class="dropdown">
+                                        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                            <i class="fa fa-shopping-cart"></i>
+                                            <span>ตะกร้าสินค้า</span>
+                                            <div class="qty">3</div>
+                                        </a>
+                                        <div class="cart-dropdown">
+                                            <div class="cart-list">
+                                                <div class="product-widget">
+                                                    <div class="product-img">
+                                                        <img src="./img/product01.png" alt="">
+                                                    </div>
+                                                    <div class="product-body">
+                                                        <h3 class="product-name"><a href="#">product name goes here</a></h3>
+                                                        <h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
+                                                    </div>
+                                                    <button class="delete"><i class="fa fa-close"></i></button>
+                                                </div>
 
-											<div class="product-widget">
-												<div class="product-img">
-													<img src="./img/product02.png" alt="">
-												</div>
-												<div class="product-body">
-													<h3 class="product-name"><a href="#">product name goes here</a></h3>
-													<h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
-												</div>
-												<button class="delete"><i class="fa fa-close"></i></button>
-											</div>
-										</div>
-										<div class="cart-summary">
-											<small>3 Item(s) selected</small>
-											<h5>SUBTOTAL: $2940.00</h5>
-										</div>
-										<div class="cart-btns">
-											<a href="#">View Cart</a>
-											<a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
-										</div>
-									</div>
-								</div>
-								<!-- /Cart -->
+                                                <div class="product-widget">
+                                                    <div class="product-img">
+                                                        <img src="./img/product02.png" alt="">
+                                                    </div>
+                                                    <div class="product-body">
+                                                        <h3 class="product-name"><a href="#">product name goes here</a></h3>
+                                                        <h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
+                                                    </div>
+                                                    <button class="delete"><i class="fa fa-close"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="cart-summary">
+                                                <small>3 Item(s) selected</small>
+                                                <h5>SUBTOTAL: $2940.00</h5>
+                                            </div>
+                                            <div class="cart-btns">
+                                                <a href="#">View Cart</a>
+                                                <a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /Cart -->
 
-								<!-- Menu Toogle -->
-								<div class="menu-toggle">
-									<a href="#">
-										<i class="fa fa-bars"></i>
-										<span>Menu</span>
-									</a>
-								</div>
-								<!-- /Menu Toogle -->
-							</div>
-						</div>
-						<!-- /ACCOUNT -->
+                                    @unlessrole('ลูกค้า')
+                                        <div>
+                                            <a href="{{url('staff/user')}}">
+                                                <i class="fa fa-cogs"></i>
+                                                <span>หลังร้าน</span>
+                                            </a>
+                                        </div>
+                                    @else
+                                    @endunlessrole
+
+                                    <!-- Menu Toogle -->
+                                    <div class="menu-toggle">
+                                        <a href="#">
+                                            <i class="fa fa-bars"></i>
+                                            <span>Menu</span>
+                                        </a>
+                                    </div>
+                                    <!-- /Menu Toogle -->
+                                </div>
+                            </div>
+                            <!-- /ACCOUNT -->
+                        @endauth
 					</div>
 					<!-- row -->
 				</div>
@@ -198,13 +232,13 @@
 				<div id="responsive-nav">
 					<!-- NAV -->
 					<ul class="main-nav nav navbar-nav">
-						<li class="active"><a href="#">Home</a></li>
-						<li><a href="#">Hot Deals</a></li>
-						<li><a href="#">Categories</a></li>
-						<li><a href="#">Laptops</a></li>
-						<li><a href="#">Smartphones</a></li>
-						<li><a href="#">Cameras</a></li>
-						<li><a href="#">Accessories</a></li>
+                        <li class="{{((isset($nav) ? $nav : 'Default') == 'home')?"active":""}} h4"><a href="{{url('/')}}">หน้าแรก</a></li>
+						<li class="{{((isset($nav) ? $nav : 'Default') == 'all')?"active":""}} h4"><a href="{{url('/store/all')}}">ทั้งหมด</a></li>
+						@foreach (App\MenuType::all() as $type)
+                            <li class="{{((isset($nav) ? $nav : 'Default') == $type->name)?"active":""}} h4">
+                                <a href="{{url('/store',[$type->name])}}">{{$type->name}}</a>
+                            </li>
+                        @endforeach
 					</ul>
 					<!-- /NAV -->
 				</div>
@@ -315,12 +349,11 @@
         <!-- /FOOTER -->
 
 		<!-- jQuery Plugins -->
-		<script src="js/jquery.min.js"></script>
-		<script src="js/bootstrap.min.js"></script>
-		<script src="js/slick.min.js"></script>
-		<script src="js/nouislider.min.js"></script>
-		<script src="js/jquery.zoom.min.js"></script>
-		<script src="js/main.js"></script>
+		<script src="{{url('js/bootstrap.min.js') . '?' . http_build_query(['v'=>'20181025190455'])}}"></script>
+		<script src="{{url('js/slick.min.js') . '?' . http_build_query(['v'=>'20181025190455'])}}"></script>
+		<script src="{{url('js/nouislider.min.js') . '?' . http_build_query(['v'=>'20181025190455'])}}"></script>
+		<script src="{{url('js/jquery.zoom.min.js') . '?' . http_build_query(['v'=>'20181025190455'])}}"></script>
+		<script src="{{url('js/main.js') . '?' . http_build_query(['v'=>'20181025190455'])}}"></script>
 
 	</body>
 </html>
