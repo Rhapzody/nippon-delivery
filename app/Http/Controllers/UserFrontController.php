@@ -6,6 +6,7 @@ use App\District;
 use App\Http\Requests\ChangeUserDetailRequest;
 use App\Province;
 use App\User;
+use App\MenuType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -21,7 +22,7 @@ class UserFrontController extends Controller
         return view('front.impl.user-edit',[
             'provinces' => $provinces,
             'header'=>'ข้อมูลผู้ใช้งาน',
-            'nav'=>'edit',
+            'unav'=>'edit',
             'user'=>Auth::user(),
             'types'=>$types
         ]);

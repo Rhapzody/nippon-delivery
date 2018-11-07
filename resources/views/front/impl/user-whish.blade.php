@@ -17,6 +17,7 @@
                 ])
             </div>
             <div id="store" class="col-md-9">
+                    @include('front.widget.whish-product')
             </div>
 
         </div>

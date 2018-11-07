@@ -70,13 +70,18 @@ Route::get('product/{id}', 'ProductController@product');
 Route::get('checkout', 'CheckoutController@checkout');
 
 //cart
-Route::get('cart', 'CartController@cart')->middleware('auth');
+Route::get('cart', 'CartController@cartList')->middleware('auth');
 Route::post('cart/add/{id}', 'CartController@add')->middleware('auth');
+Route::post('cart/delete/{id}', 'CartController@delete')->middleware('auth');
 
 //whish list
 Route::get('whish', 'WhishListController@whish')->middleware('auth');
 Route::post('whish/add/{id}', 'WhishListController@add')->middleware('auth');
+Route::post('whish/delete/{id}', 'WhishListController@delete')->middleware('auth');
+Route::get('whish/count', 'WhishListController@count')->middleware('auth');
 
 //user
 Route::get('user/edit', 'UserFrontController@edit')->middleware('auth');
 Route::post('user/edit/process', 'UserFrontController@editProcess')->middleware('auth');
+Route::get('user/whishlist', 'WhishListController@whish')->middleware('auth');
+Route::get('user/cart', 'CartController@cart')->middleware('auth');

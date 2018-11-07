@@ -20,4 +20,8 @@ class Menu extends Model
     public function tags(){
         return $this->belongsToMany('App\Tag', 'menu_tag', 'menu_id', 'tag_id');
     }
+
+    public function whishLists(){
+        return $this->hasMany('App\WhishList', 'menu_id');
+    }
 }
