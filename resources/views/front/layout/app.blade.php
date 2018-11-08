@@ -167,8 +167,9 @@
                                             </div>
                                             <div class="cart-btns">
                                                 <a href="{{url('user/cart?unav=cart')}}">ดูรายละเอียด</a>
-                                                <a href="{{url('user/checkout?unav=check')}}">สั่งเลย  <i class="fa fa-arrow-circle-right"></i></a>
+                                                <a href="#" onclick="document.getElementById('cart-in-layout').submit();">สั่งเลย  <i class="fa fa-arrow-circle-right"></i></a>
                                             </div>
+                                            <form id="cart-in-layout" action="{{url('user/checkout?unav=check')}}" method="POST"></form>
                                         </div>
                                     </div>
                                     <!-- /Cart -->

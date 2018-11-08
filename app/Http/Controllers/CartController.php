@@ -10,12 +10,28 @@ use Illuminate\Support\Facades\DB;
 class CartController extends Controller
 {
     public function cart(){
-
-
+        $user_id = Auth::user()->id;
+        $product = Cart::with(['menu', 'menu.menuPictures'])
+        ->where('user_id', '=', $user_id)
+        ->get();
+        $sum_qty = 0;
+        $sum_price = 0;
+        $ship_cost = 60;
+        $is_cart_empty = false;
+        if($product->isEmpty()) $is_cart_empty = true;
+        if($sum_price <= 500) $ship_cost = 0;
+        foreach ($product as $key => $value) {
+            $sum_qty += $value->quantity;
+            $sum_price += $value->menu->price * $value->quantity;
+        }
         return view('front.impl.cart',[
             'unav'=>'cart',
             'header'=>'สินค้าในตะกร้า',
-
+            'menus'=>$product,
+            'sum_qty'=>$sum_qty,
+            'sum_price'=>$sum_price,
+            'ship_cost'=>$ship_cost,
+            'is_cart_empty'=>$is_cart_empty
         ]);
     }
 
@@ -63,6 +79,26 @@ class CartController extends Controller
                 ->where('user_id', $auth_user->id)
                 ->where('menu_id', $id)
                 ->delete();
+            }
+            return response()->json([
+                'status'=>'success'
+            ]);
+        }else{
+            return response()->json([
+                'status'=>'fail'
+            ]);
+        }
+    }
+
+    public function plus($id, Request $req){
+        $auth_user = Auth::user();
+        $cart_list = $auth_user->carts()->where('menu_id','=', $id)->first();
+        if ($cart_list != null){
+            if(is_numeric($req->input('quantity'))){
+                DB::table('cart')
+                ->where('user_id', $auth_user->id)
+                ->where('menu_id', $id)
+                ->increment('quantity', ceil($req->input('quantity')));
             }
             return response()->json([
                 'status'=>'success'

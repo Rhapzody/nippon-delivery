@@ -72,6 +72,7 @@ Route::get('checkout', 'CheckoutController@checkout');
 //cart
 Route::get('cart', 'CartController@cartList')->middleware('auth');
 Route::post('cart/add/{id}', 'CartController@add')->middleware('auth');
+Route::post('cart/plus/{id}', 'CartController@plus')->middleware('auth');
 Route::post('cart/delete/{id}', 'CartController@delete')->middleware('auth');
 
 //whish list
