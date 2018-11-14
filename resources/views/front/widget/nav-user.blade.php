@@ -1,5 +1,5 @@
 <!-- aside Widget -->
-<div class="aside">
+<div class="aside" style="padding-bottom:20px;">
     <ul class="nav nav-pills nav-stacked">
         <li role="presentation" class="{{($unav == 'edit')?'active':''}}"><a href="{{url('user/edit?unav=edit')}}">แก้ไขข้อมูล</a></li>
         <li role="presentation" class="{{($unav == 'whish')?'active':''}}"><a href="{{url('user/whishlist?unav=whish')}}">รายการที่ชอบ</a></li>

@@ -64,6 +64,7 @@
                             <h4>ค่าจัดส่ง: <span class="pull-right">{{$ship_cost}} บาท</span></h4>
                             <h4>รวมทั้งสิ้น: <span class="pull-right">{{$ship_cost + $sum_price}} บาท</span></h4>
                             <form action="{{url('user/checkout?unav=check')}}" method="POST">
+                                @csrf
                                 <button class="primary-btn order-submit pull-right" type="submit">
                                     <span class="fa fa-arrow-circle-o-right" style="font-size:170%"> ดำเนินการต่อ</span>
                                 </button>

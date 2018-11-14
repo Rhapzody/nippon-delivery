@@ -19,11 +19,11 @@ class CartController extends Controller
         $ship_cost = 60;
         $is_cart_empty = false;
         if($product->isEmpty()) $is_cart_empty = true;
-        if($sum_price <= 500) $ship_cost = 0;
         foreach ($product as $key => $value) {
             $sum_qty += $value->quantity;
             $sum_price += $value->menu->price * $value->quantity;
         }
+        if($sum_price >= 500) $ship_cost = 0;
         return view('front.impl.cart',[
             'unav'=>'cart',
             'header'=>'สินค้าในตะกร้า',

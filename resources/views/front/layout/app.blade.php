@@ -167,9 +167,11 @@
                                             </div>
                                             <div class="cart-btns">
                                                 <a href="{{url('user/cart?unav=cart')}}">ดูรายละเอียด</a>
-                                                <a href="#" onclick="document.getElementById('cart-in-layout').submit();">สั่งเลย  <i class="fa fa-arrow-circle-right"></i></a>
+                                                <a href="#" onclick="document.getElementById('cart-in-layout').submit();">ดำเนินการต่อ  <i class="fa fa-arrow-circle-right"></i></a>
                                             </div>
-                                            <form id="cart-in-layout" action="{{url('user/checkout?unav=check')}}" method="POST"></form>
+                                            <form id="cart-in-layout" action="{{url('user/checkout?unav=check')}}" method="POST">
+                                                @csrf
+                                            </form>
                                         </div>
                                     </div>
                                     <!-- /Cart -->
