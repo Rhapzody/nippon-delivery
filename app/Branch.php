@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Branch extends Model
 {
     protected $table = 'branch';
-    protected $garded = ['id'];
+    protected $guarded = ['id'];
+    public $timestamps = false;
 
-    public function subDistricts(){
-        return $this->hasMany('App\SubDistrict', 'branch_id');
+    public function subDistrict(){
+        return $this->hasOne('App\SubDistrict', 'branch_id');
     }
 }

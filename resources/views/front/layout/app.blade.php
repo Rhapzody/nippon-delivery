@@ -12,7 +12,7 @@
         {{-- Auth token --}}
         <meta name="auth-check" content="{{Auth::check()}}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name') }}</title>
 
  		<!-- Google font -->
  		<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
@@ -142,10 +142,10 @@
                                 <div class="header-ctn">
                                     <!-- Wishlist -->
                                     <div>
-                                        <a href="#">
+                                        <a href="{{url('user/whishlist')}}">
                                             <i class="fa fa-heart-o"></i>
                                             <span>รายการที่ชอบ</span>
-                                            <div class="qty">2</div>
+                                            <div class="qty" id="whish-qty"></div>
                                         </a>
                                     </div>
                                     <!-- /Wishlist -->
@@ -155,40 +155,23 @@
                                         <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
                                             <i class="fa fa-shopping-cart"></i>
                                             <span>ตะกร้าสินค้า</span>
-                                            <div class="qty">3</div>
+                                            <div class="qty" id="cart-qty"></div>
                                         </a>
                                         <div class="cart-dropdown">
-                                            <div class="cart-list">
-                                                <div class="product-widget">
-                                                    <div class="product-img">
-                                                        <img src="./img/product01.png" alt="">
-                                                    </div>
-                                                    <div class="product-body">
-                                                        <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                                        <h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
-                                                    </div>
-                                                    <button class="delete"><i class="fa fa-close"></i></button>
-                                                </div>
-
-                                                <div class="product-widget">
-                                                    <div class="product-img">
-                                                        <img src="./img/product02.png" alt="">
-                                                    </div>
-                                                    <div class="product-body">
-                                                        <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                                        <h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
-                                                    </div>
-                                                    <button class="delete"><i class="fa fa-close"></i></button>
-                                                </div>
+                                            <div class="cart-list" id="cart-list">
+                                                <!-- List -->
                                             </div>
                                             <div class="cart-summary">
-                                                <small>3 Item(s) selected</small>
-                                                <h5>SUBTOTAL: $2940.00</h5>
+                                                <small id="cart-sum-qty"></small>
+                                                <h5 id="cart-price"></h5>
                                             </div>
                                             <div class="cart-btns">
-                                                <a href="#">View Cart</a>
-                                                <a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
+                                                <a href="{{url('user/cart?unav=cart')}}">ดูรายละเอียด</a>
+                                                <a href="#" onclick="document.getElementById('cart-in-layout').submit();">ดำเนินการต่อ  <i class="fa fa-arrow-circle-right"></i></a>
                                             </div>
+                                            <form id="cart-in-layout" action="{{url('user/checkout?unav=check')}}" method="POST">
+                                                @csrf
+                                            </form>
                                         </div>
                                     </div>
                                     <!-- /Cart -->
@@ -293,7 +276,7 @@
                                 <ul class="footer-links">
                                     <li><a href="#">About Us</a></li>
                                     <li><a href="#">Contact Us</a></li>
-                                    <li><a href="#">Privacy Policy</a></li>
+                                    <li><a href="#">Privacy Policy</a></li>/
                                     <li><a href="#">Orders and Returns</a></li>
                                     <li><a href="#">Terms & Conditions</a></li>
                                 </ul>
@@ -353,7 +336,97 @@
 		<script src="{{url('js/slick.min.js') . '?' . http_build_query(['v'=>'20181025190455'])}}"></script>
 		<script src="{{url('js/nouislider.min.js') . '?' . http_build_query(['v'=>'20181025190455'])}}"></script>
 		<script src="{{url('js/jquery.zoom.min.js') . '?' . http_build_query(['v'=>'20181025190455'])}}"></script>
-		<script src="{{url('js/main.js') . '?' . http_build_query(['v'=>'20181025190455'])}}"></script>
+        <script src="{{url('js/main.js') . '?' . http_build_query(['v'=>'20181025190455'])}}"></script>
+
+        <script>
+
+            let removeFromCart;
+
+            $(function() {
+
+                if ($('meta[name="auth-check"]').attr('content')) {
+                    $.get("{{url('whish/count')}}", function(data) {
+                        $('#whish-qty').html(data.count);
+                    });
+
+                    let sumPrice = 0;
+                    let sumQty = 0;
+                    let storageUrl = "{{url('storage')}}" + "/";
+                    let productUrl = "{{url('product')}}" + "/";
+
+                    function getCart(data) {
+                        $('#cart-list').html("");
+                        data.forEach(ele => {
+                            let element =`
+                                <div class="product-widget">
+                                    <div class="product-img">
+                                        <img src=${storageUrl+ele.menu.menu_pictures[0].name} alt="">
+                                    </div>
+                                    <div class="product-body">
+                                        <h3 class="product-name"><a href=${productUrl+ele.menu.id}>${ele.menu.name}</a></h3>
+                                        <h4 class="product-price"><span class="qty">${ele.quantity}x</span>${ele.menu.price} บาท</h4>
+                                    </div>
+                                    <button class="delete" onclick="removeFromCart(${ele.menu.id}, ${ele.quantity}, '${ele.menu.name}');"><i class="fa fa-close"></i></button>
+                                </div>
+                            `
+                            $('#cart-list').append(element);
+                            sumQty += ele.quantity;
+                            sumPrice += ele.quantity * ele.menu.price;
+                        });
+
+                        $('#cart-qty').html(sumQty);
+                        $('#cart-sum-qty').html('จำนวนรวม: ' + sumQty + ' ชิ้น');
+                        $('#cart-price').html('ราคารวม: ' + sumPrice + ' บาท');
+                        sumPrice = 0;
+                        sumQty = 0;
+                    }
+
+                    $.get("{{url('cart')}}", getCart);
+
+                    removeFromCart = function (id, qty, name) {
+                        swal({
+                            title: 'ลบรายการ "' + name +'"',
+                            text: 'กรุณาระบุจำนวนที่ต้องการลบ',
+                            content: {
+                                element: "input",
+                                attributes: {
+                                    placeholder: "1 - " + qty,
+                                    type: "number",
+                                    min:0,
+                                    max:qty
+                                },
+                            },
+                            button: {
+                                text:"ลบ"
+                            },
+                        })
+                        .then(input => {
+                            if (input >= qty) {
+                                input = qty;
+                            }else if (input == 0 || input == null || input < 0) {
+                                return false;
+                            }
+
+                            $.post("{{url('cart/delete')}}" + "/" + id, {
+                                quantity:input,
+                                _token:"{{csrf_token()}}"
+                            },function(data) {
+                                if (data.status === 'success') {
+                                    swal("ลบสำเร็จ", "ลบ " + name + " จำนวน " + input + "ชิ้น", "success");
+                                    $.get("{{url('cart')}}", getCart);
+                                }else{
+                                    swal("ลบไม่สำเร็จ", "มีข้อผิดพลาดบางประการ", "error");
+                                }
+                            });
+
+                        });
+                    }
+
+                }
+
+
+            })
+        </script>
 
 	</body>
 </html>

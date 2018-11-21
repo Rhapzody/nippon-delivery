@@ -18,5 +18,6 @@ class RoleSeeder extends Seeder
         Role::create(['name'=>'พ่อครัว/แม่ครัว']);
         Role::create(['name'=>'คนส่งสินค้า']);
         Role::create(['name'=>'ลูกค้า']);
+        Role::create(['name'=>'ผู้จัดการสาขา']);
     }
 }
