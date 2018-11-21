@@ -23,8 +23,9 @@
 	<div class="wrapper">
 		<div class="main-header">
 			<div class="logo-header">
-				<a href="index.html" class="logo">
-					Ready Dashboard
+                <a href="{{url('/')}}" class="logo">
+                    <i class="la la-angle-left"> </i>
+					กลับไปหน้าร้าน
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
@@ -33,29 +34,7 @@
 			</div>
 			<nav class="navbar navbar-header navbar-expand-lg">
 				<div class="container-fluid">
-
-					<form class="navbar-left navbar-form nav-search mr-md-3" action="">
-						<div class="input-group">
-							<input type="text" placeholder="Search ..." class="form-control">
-							<div class="input-group-append">
-								<span class="input-group-text">
-									<i class="la la-search search-icon"></i>
-								</span>
-							</div>
-						</div>
-					</form>
 					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
-						<li class="nav-item dropdown hidden-caret">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="la la-envelope"></i>
-							</a>
-							<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<a class="dropdown-item" href="#">Action</a>
-								<a class="dropdown-item" href="#">Another action</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="#">Something else here</a>
-							</div>
-						</li>
 						<li class="nav-item dropdown hidden-caret">
 							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<i class="la la-bell"></i>
@@ -113,24 +92,23 @@
 							</ul>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="/assets/img/profile.jpg" alt="user-img" width="36" class="img-circle"><span >Hizrian</span></span> </a>
+							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="{{url('storage',[Auth::user()->picture_name])}}" alt="user-img" width="36" class="img-circle"><span >{{ Auth::user()->first_name}} {{ Auth::user()->last_name}}</span></span> </a>
 							<ul class="dropdown-menu dropdown-user">
 								<li>
 									<div class="user-box">
-										<div class="u-img"><img src="/assets/img/profile.jpg" alt="user"></div>
+										<div class="u-img"><img src="{{url('storage',[Auth::user()->picture_name])}}" alt="user"></div>
 										<div class="u-text">
-											<h4>Hizrian</h4>
-											<p class="text-muted">hello@themekita.com</p><a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
+											<h4>{{ Auth::user()->first_name}} {{ Auth::user()->last_name}}</h4>
+											<p class="text-muted">{{ Auth::user()->email}}</p></div>
 										</div>
 									</li>
 									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="#"><i class="ti-user"></i> My Profile</a>
-									<a class="dropdown-item" href="#"></i> My Balance</a>
-									<a class="dropdown-item" href="#"><i class="ti-email"></i> Inbox</a>
+									<a class="dropdown-item" href={{url('user/edit')}}><i class="ti-user"></i> แก้ไขโปรไฟล์</a>
 									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="#"><i class="ti-settings"></i> Account Setting</a>
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="#"><i class="fa fa-power-off"></i> Logout</a>
+                                    <a class="dropdown-item" href="#" onclick="document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> ออกจากระบบ</a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
 								</ul>
 								<!-- /.dropdown-user -->
 							</li>
@@ -142,13 +120,13 @@
 				<div class="scrollbar-inner sidebar-wrapper">
 					<div class="user">
 						<div class="photo">
-							<img src="/assets/img/profile.jpg">
+							<img src="{{url('storage',[Auth::user()->picture_name])}}">
 						</div>
 						<div class="info">
 							<a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
 								<span>
-									Hizrian
-									<span class="user-level">Administrator</span>
+                                    {{ Auth::user()->first_name}} {{ Auth::user()->last_name}}
+									<span class="user-level">{{ Auth::user()->roles[0]->name}}</span>
 									<span class="caret"></span>
 								</span>
 							</a>
@@ -157,18 +135,8 @@
 							<div class="collapse in" id="collapseExample" aria-expanded="true" style="">
 								<ul class="nav">
 									<li>
-										<a href="#profile">
-											<span class="link-collapse">My Profile</span>
-										</a>
-									</li>
-									<li>
-										<a href="#edit">
-											<span class="link-collapse">Edit Profile</span>
-										</a>
-									</li>
-									<li>
-										<a href="#settings">
-											<span class="link-collapse">Settings</span>
+										<a href={{url('user/edit')}}>
+											<span class="link-collapse">แก้ไขโปรไฟล์</span>
 										</a>
 									</li>
 								</ul>
@@ -176,56 +144,69 @@
 						</div>
 					</div>
 					<ul class="nav">
-						<li class="nav-item active">
-							<a href="index.html">
-								<i class="la la-home"></i>
-								<p>ภาพรวม</p>
-								<span class="badge badge-count">5</span>
-							</a>
-                        </li>
-                        <li class="nav-item">
-							<a href={{url('/staff/user/')}}>
-								<i class="la la-group"></i>
-								<p>ผู้ใช้</p>
-								<span class="badge badge-count">14</span>
-							</a>
-                        </li>
-                        @hasrole('เจ้าของร้าน')
-                            <li class="nav-item">
+                        @hasanyrole('เจ้าของร้าน|ผู้จัดการสาขา')
+                            <li class="nav-item {{($unav=='user')?'active':''}}">
+                                <a href={{url('/staff/user/')}}>
+                                    <i class="la la-group"></i>
+                                    <p>ผู้ใช้</p>
+                                </a>
+                            </li>
+                            <li class="nav-item {{($unav=='product')?'active':''}}">
                                 <a href={{url('/staff/product/')}}>
                                     <i class="la la-shopping-cart"></i>
                                     <p>สินค้า</p>
-                                    <span class="badge badge-count">14</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{($unav=='sales')?'active':''}}">
+                                <a href="tables.html">
+                                    <i class="la la-area-chart"></i>
+                                    <p>ยอดขาย</p>
+                                    <span class="badge badge-count">6</span>
+                                </a>
+                            </li>
+                        @endhasanyrole
+                        @hasanyrole('เจ้าของร้าน|ผู้จัดการสาขา|พ่อครัว/แม่ครัว')
+                            <li class="nav-item {{($unav=='history')?'active':''}}">
+                                <a href="forms.html">
+                                    <i class="la la-book"></i>
+                                    <p>ประวิติการสั่งซื้อ</p>
+                                    <span class="badge badge-count">50</span>
+                                </a>
+                            </li>
+                        @endhasanyrole
+                        @hasrole('พ่อครัว/แม่ครัว')
+                            <li class="nav-item {{($unav=='order')?'active':''}}">
+                                <a href="tables.html">
+                                    <i class="la la-file-text"></i>
+                                    <p>การรับออเดอร์</p>
+                                    <span class="badge badge-count">6</span>
                                 </a>
                             </li>
                         @endhasrole
-						<li class="nav-item">
-							<a href="forms.html">
-								<i class="la la-book"></i>
-								<p>ประวิติการสั่งซื้อ</p>
-								<span class="badge badge-count">50</span>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href="tables.html">
-								<i class="la la-area-chart"></i>
-								<p>ยอดขาย</p>
-								<span class="badge badge-count">6</span>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a href={{url('staff/detail')}}>
-								<i class="la la-database"></i>
-								<p>ข้อมูลร้าน</p>
-								<span class="badge badge-success">3</span>
-							</a>
-						</li>
-						<li class="nav-item update-pro">
-							<button  data-toggle="modal" data-target="#modalUpdate">
-								<i class="la la-hand-pointer-o"></i>
-								<p>Update To Pro</p>
-							</button>
-						</li>
+                        @hasrole('คนส่งสินค้า')
+                            <li class="nav-item {{($unav=='deliver')?'active':''}}">
+                                <a href="tables.html">
+                                    <i class="la la-truck"></i>
+                                    <p>การจัดส่ง</p>
+                                    <span class="badge badge-count">6</span>
+                                </a>
+                            </li>
+                        @endhasrole
+                        @hasrole('เจ้าของร้าน')
+                            <li class="nav-item {{($unav=='detail')?'active':''}}">
+                                <a href={{url('staff/detail')}}>
+                                    <i class="la la-database"></i>
+                                    <p>ข้อมูลร้าน</p>
+                                    <span class="badge badge-success">3</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{($unav=='branch')?'active':''}}">
+                                <a href={{url('staff/branch')}}>
+                                    <i class="la la-map-marker"></i>
+                                    <p>สาขา</p>
+                                </a>
+                            </li>
+                        @endhasrole
 					</ul>
 				</div>
             </div>

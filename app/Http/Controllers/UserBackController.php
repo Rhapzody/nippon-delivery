@@ -54,6 +54,7 @@ class UserBackController extends Controller
         }
 
         return view('back.impl.user', [
+            'unav'=>'user',
             'nav' => 'show',
             'users' => $users,
             'search_mode' => $search_mode,
@@ -68,6 +69,7 @@ class UserBackController extends Controller
         $provinces = Province::all();
 
         return view('back.impl.add-user', [
+            'unav'=>'user',
             'nav' => 'add',
             'roles' => $roles,
             'provinces' => $provinces,
@@ -122,6 +124,7 @@ class UserBackController extends Controller
         $my_role = ($user->roles)[0];
 
         return view('back.impl.edit-user', [
+            'unav'=>'user',
             'nav' => 'edit',
             'user' => $user,
             'provinces' => $provinces,

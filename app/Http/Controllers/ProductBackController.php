@@ -63,6 +63,7 @@ class ProductBackController extends Controller
         }
 
         return view('back.impl.product', [
+            'unav'=>'product',
             'menus' => $menus,
             'nav' => 'show',
             'search_text' => $search_text,
@@ -77,6 +78,7 @@ class ProductBackController extends Controller
         $tags = Tag::all();
 
         return view('back.impl.add-product', [
+            'unav'=>'product',
             'types' => $types,
             'tags' => $tags,
             'nav' => 'add',
@@ -155,6 +157,7 @@ class ProductBackController extends Controller
         $tags = Tag::all();
 
         return view('back.impl.edit-product', [
+            'unav'=>'product',
             'tags' => $tags,
             'types' => $types,
             'menu' => $menu,

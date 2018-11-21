@@ -16,6 +16,7 @@ class HistoryController extends Controller
         $status = OrderStatus::orderBy('code', 'asc')->get();
         $orders = Order::with(['orderStatus'])
             ->where('user_id', '=', $user_id)
+            ->orderBy('created_at', 'DESC')
             ->paginate(10);
 
         return view('front.impl.history',[
@@ -35,6 +36,7 @@ class HistoryController extends Controller
                 $query->where('code', '=', $code);
             })
             ->where('user_id', '=', $user_id)
+            ->orderBy('created_at', 'DESC')
             ->paginate(10);
 
         return view('front.impl.history',[

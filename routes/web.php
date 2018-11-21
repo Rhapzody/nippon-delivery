@@ -17,7 +17,7 @@ Route::get('/', function () {
 Auth::routes();
 
 //user management
-Route::group(['middleware' => []], function () {
+Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน|ผู้จัดการสาขา']], function () {
     Route::get('staff/user/{search_mode?}/{search_text?}', 'UserBackController@searchUser')->where([
         'search_mode' => '[0-9]+',
         'search_text' => '.*',
@@ -36,7 +36,7 @@ Route::get('sub_district_by_district_id', 'UserBackController@getSubDistrictsByP
 Route::get('provinces', 'UserBackController@getAllProvinces');
 
 // product management
-Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน']], function () {
+Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน|ผู้จัดการสาขา']], function () {
     Route::get('staff/product/{search_mode?}/{search_text?}', 'ProductBackController@searchProduct')->where([
         'search_mode' => '[0-9]+',
         'search_text' => '.*',
@@ -54,6 +54,15 @@ Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน']
 
 // store detail
 Route::get('staff/detail', 'StoreDetailController@detail');
+
+// store branch
+Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน']], function () {
+    Route::get('staff/branch', 'BranchController@detail');
+    Route::post('staff/branch/close', 'BranchController@close');
+    Route::post('staff/branch/open', 'BranchController@open');
+    Route::post('staff/branch/create', 'BranchController@create');
+});
+Route::get('staff/branch/all', 'BranchController@all');
 
 //front
 
