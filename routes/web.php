@@ -16,6 +16,11 @@ Route::get('/', function () {
 
 Auth::routes();
 
+//staff dispatcher
+Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน|ผู้จัดการสาขา|พ่อครัว/แม่ครัว|คนส่งสินค้า']], function () {
+    Route::get('staff/dispatch', 'IndexController@staffDispatch');
+});
+
 //user management
 Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน|ผู้จัดการสาขา']], function () {
     Route::get('staff/user/{search_mode?}/{search_text?}', 'UserBackController@searchUser')->where([
@@ -64,6 +69,32 @@ Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน']
 });
 Route::get('staff/branch/all', 'BranchController@all');
 
+// order reception
+Route::group(['middleware' => ['auth', 'role:พ่อครัว/แม่ครัว']], function () {
+    Route::get('staff/order', 'OrderReceptionController@showPage');
+    Route::post('staff/order/1to2', 'OrderReceptionController@oneToTwo');
+    Route::post('staff/order/2to3', 'OrderReceptionController@twoToThree');
+    Route::post('staff/order/addToBranch', 'OrderReceptionController@addToBranch');
+    Route::post('staff/order/return', 'OrderReceptionController@remove');
+});
+
+//sales
+Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน|ผู้จัดการสาขา']], function () {
+    Route::get('staff/sales', 'SalesController@show');
+});
+
+//history
+Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน|ผู้จัดการสาขา']], function () {
+    Route::get('staff/history', 'HistoryBackController@show');
+});
+
+//delivery
+Route::group(['middleware' => ['auth', 'role:คนส่งสินค้า']], function () {
+    Route::get('staff/deliver', 'DeliverController@show');
+    Route::post('staff/deliver/3to4', 'DeliverController@threeToFour');
+    Route::post('staff/deliver/4to5', 'DeliverController@fourToFive');
+});
+
 //front
 
 //index
@@ -101,3 +132,6 @@ Route::post('user/edit/process', 'UserFrontController@editProcess')->middleware(
 Route::get('user/whishlist', 'WhishListController@whish')->middleware('auth');
 Route::get('user/cart', 'CartController@cart')->middleware('auth');
 Route::get('user/history', 'HistoryController@history')->middleware('auth');
+
+//notification
+Route::get('noti/test', 'NotificationController@testTriggerNoti'); //->middleware('auth');

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $table = 'order';
-    protected $fillable = ['user_id', 'status_code', 'address', 'sub_district_id'];
+    protected $fillable = ['user_id', 'status_code', 'address', 'sub_district_id' ,'branch_id'];
 
     //set field to Carbon object
     protected $date = ['created_at', 'updated_at'];
@@ -18,6 +18,10 @@ class Order extends Model
 
     public function user(){
         return $this->belongsTo('App\User', 'user_id');
+    }
+
+    public function subDistrict(){
+        return $this->belongsTo('App\SubDistrict', 'sub_district_id');
     }
 
     public function orderMenus(){

@@ -387,17 +387,19 @@
 
             $.get("{{url('staff/branch/all')}}", function(data) {
                 data.forEach(ele => {
-                    let tempMarker = new google.maps.Marker({
-                        position: new google.maps.LatLng(ele.lat, ele.long),
-                        map: tempMap,
-                        title: 'สาขา: ' + ele.name
-                    });
+                    if (ele.status === 1) {
+                        let tempMarker = new google.maps.Marker({
+                            position: new google.maps.LatLng(ele.lat, ele.long),
+                            map: tempMap,
+                            title: 'สาขา: ' + ele.name
+                        });
 
-                    // Update lat/long value of div when the marker is clicked
-                    tempMarker.addListener('dblclick', function(event) {
-                        $('#latclicked').val(event.latLng.lat());
-                        $('#longclicked').val(event.latLng.lng());
-                    });
+                        // Update lat/long value of div when the marker is clicked
+                        tempMarker.addListener('dblclick', function(event) {
+                            $('#latclicked').val(event.latLng.lat());
+                            $('#longclicked').val(event.latLng.lng());
+                        });
+                    }
                 });
             });
 

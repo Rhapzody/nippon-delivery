@@ -8,7 +8,7 @@ class StoreDetailController extends Controller
 {
     public function detail(){
         return view('back.impl.store-detail',[
-
+            'unav'=>'detail'
         ]);
     }
 }

@@ -13,6 +13,7 @@ use App\OrderMenu;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Validator;
+use Log;
 
 class CheckoutController extends Controller
 {
@@ -70,11 +71,24 @@ class CheckoutController extends Controller
         $insert = [];
 
         if ($req->input('address_option') == "origin") {
+            $sub_district = SubDistrict::find($req->input('sub_district_id'));
+            $branch_id;
+            if($sub_district->branch_id != null){
+                if ($sub_district->branch->status == 1) {
+                    $branch_id = $sub_district->branch_id;
+                }else{
+                    $branch_id = null;
+                }
+            }else{
+                $branch_id = null;
+            }
+
             $address = $req->input('origin_address');
             $order = Order::create([
                 "user_id"=>$user_id,
                 "status_code"=>1,
                 "address"=>$address,
+                "branch_id"=>$branch_id,
                 "sub_district_id"=>$req->input('sub_district_id')
             ]);
             foreach ($product as $key => $menu) {
@@ -100,6 +114,17 @@ class CheckoutController extends Controller
                 return redirect('/');
             }
 
+            $sub_district = SubDistrict::find($req->input('sub_district'));
+            $branch_id;
+            if($sub_district->branch_id != null){
+                if ($sub_district->branch->status == 1) {
+                    $branch_id = $sub_district->branch_id;
+                }else{
+                    $branch_id = null;
+                }
+            }else{
+                $branch_id = null;
+            }
             $address = (
                 "บ้านเลขที่ " . $req->input('house_number') . ", " .
                 "หมู่ที่ " . $req->input('village_number') . ", " .
@@ -114,6 +139,7 @@ class CheckoutController extends Controller
                 "user_id"=>$user_id,
                 "status_code"=>1,
                 "address"=>$address,
+                "branch_id"=>$branch_id,
                 "sub_district_id"=>$req->input('sub_district')
             ]);
             foreach ($product as $key => $menu) {

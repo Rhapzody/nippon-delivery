@@ -153,7 +153,6 @@
                                 <h6>ที่อยู่เพิ่มเติม : <span id="modal-add"></span></h6>
                             </div>
                         </div>
-                        <a href="#" class="btn btn-primary">ประวัติการสั่งซื้อ</a>
                         <a href="#" class="btn btn-success" id="modal-edit-but">แก้ไขข้อมูลผู้ใช้งาน</a>
                         <a href="#" class="btn btn-danger" id="modal-del-but">ลบผู้ใช้งาน</a>
                     </div>
