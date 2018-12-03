@@ -135,13 +135,6 @@
                             </li>
                         @endhasrole
                         @hasrole('เจ้าของร้าน')
-                            <li class="nav-item {{($unav=='detail')?'active':''}}">
-                                <a href={{url('staff/detail')}}>
-                                    <i class="la la-database"></i>
-                                    <p>ข้อมูลร้าน</p>
-                                    <span class="badge badge-success"></span>
-                                </a>
-                            </li>
                             <li class="nav-item {{($unav=='branch')?'active':''}}">
                                 <a href={{url('staff/branch')}}>
                                     <i class="la la-map-marker"></i>

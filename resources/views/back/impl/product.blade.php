@@ -107,8 +107,12 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <pre id="modal-data">
-                            </pre>
+                            <h6 id="m-id"></h6>
+                            <h6 id="m-name"></h6>
+                            <h6 id="m-detail"></h6>
+                            <h6 id="m-price"></h6>
+                            <h6 id="m-type"></h6>
+                            <h6 id="m-tag"></h6>
                         </div>
                     </div>
                 </div>
@@ -201,22 +205,38 @@
                     let name = sanitarize(data.name);
                     let descript = sanitarize(data.description);
                     let price = data.price;
-                    let tags = data.tags; //[] .id .name
+                    let tags = []; //[] .id .name
+                    data.tags.forEach(element => {
+                        tags.push(element.name);
+                    });
                     let pictures = data.menu_pictures; //[] .id .name
                     let type = data.menu_type; //.id .name
                     let picEle = $('#modal-image');
                     let indiEle = $('#modal-indicator');
-                    let dataEle = $('#modal-data');
+                    let mId = $('#m-id');
+                    let mDetail = $('#m-detail');
+                    let mName = $('#m-name');
+                    let mPrice = $('#m-price');
+                    let mTag = $('#m-tag');
+                    let mType = $('#m-type');
                     picEle.html("");
                     indiEle.html("");
-                    dataEle.html(`
-                        รหัสสินค้า ${id}
-                        ชื่อสินค้า ${name}
-                        คำอธิบายสินค้า ${descript}
-                        ราคา ${price} บาท
-                        ชนิดสิรค้า ${type.name}
-                        แท็ก
-                    `);
+                    mId.html(`รหัสสินค้า: ${id}`);
+                    mDetail.html(`คำอธิบายสินค้า: ${descript}`);
+                    mName.html(`ชื่อสินค้า: ${name}`);
+                    mPrice.html(`ราคา: ${price} บาท`);
+                    console.log(tags)
+                    mTag.html(`แท็ก: ${tags}`);
+                    mType.html(`ชนิดสินค้า: ${type.name}`);
+                    // dataEle.html(`
+                    //     รหัสสินค้า ${id}
+                    //     ชื่อสินค้า ${name}
+                    //     คำอธิบายสินค้า ${descript}
+                    //     ราคา ${price} บาท
+                    //     ชนิดสิรค้า ${type.name}
+                    //     แท็ก
+                    // `);
+
                     pictures.forEach((ele, index) => {
                         let isActive = (index == 0)?"active":"";
                         picEle.append(`

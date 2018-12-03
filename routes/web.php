@@ -57,9 +57,6 @@ Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน|�
     Route::get('staff/product/product_pictures_by_id', 'ProductBackController@getProductPicturesById');
 });
 
-// store detail
-Route::get('staff/detail', 'StoreDetailController@detail');
-
 // store branch
 Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน']], function () {
     Route::get('staff/branch', 'BranchController@detail');
@@ -81,11 +78,16 @@ Route::group(['middleware' => ['auth', 'role:พ่อครัว/แม่ค�
 //sales
 Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน|ผู้จัดการสาขา']], function () {
     Route::get('staff/sales', 'SalesController@show');
+    Route::get('staff/sales/data', 'SalesController@data');
+    Route::get('staff/sales/todayStat', 'SalesController@todayStat');
 });
 
 //history
 Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน|ผู้จัดการสาขา']], function () {
     Route::get('staff/history', 'HistoryBackController@show');
+    Route::get('staff/history/find', 'HistoryBackController@find');
+    Route::get('staff/history/{branch_id}/{status_code}/{from}/{to}', 'HistoryBackController@search');
+    Route::get('staff/history/order/{id}', 'HistoryBackController@order');
 });
 
 //delivery
