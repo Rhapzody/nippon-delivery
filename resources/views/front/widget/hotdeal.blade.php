@@ -29,7 +29,7 @@
                         </li>
                     </ul>
                     <h1 class="text-uppercase">ฉลอง เปิด ร้าน ใหม่</h1>
-                    <p>> > > ส่ง ฟรี เมื่อ ซื้อ ครบ 500 บาท < < <</p>
+                    <p>> > > ส่ง ฟรี 24 ชั่วโมง< < <</p>
                     <a class="primary-btn cta-btn h3" href="{{url('store')}}">สั่งเลย!</a>
                 </div>
             </div>

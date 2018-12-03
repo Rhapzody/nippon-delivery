@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title>Nippon Delivery : Staff Only</title>
+    <title>Nippon Delivery</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
 	<link rel="stylesheet" href={{url("/assets/css/bootstrap.min.css")}}>
@@ -10,12 +10,11 @@
 	<link rel="stylesheet" href={{url("/assets/css/ready.css")}}>
     <link rel="stylesheet" href={{url("/assets/css/demo.css")}}>
     <script src={{url("/assets/js/core/jquery.3.2.1.min.js")}}></script>
-    <style>
-        .error {
-            color :red;
-        }
-        .big-icon {
-            font-size: 18px;
+    <script src="https://js.pusher.com/4.3/pusher.min.js"></script>
+    <style type="text/css" media="print">
+        @page {
+            size: auto;   /* auto is the initial value */
+            margin: 0;  /* this affects the margin in the printer settings */
         }
     </style>
 </head>
@@ -35,62 +34,7 @@
 			<nav class="navbar navbar-header navbar-expand-lg">
 				<div class="container-fluid">
 					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
-						<li class="nav-item dropdown hidden-caret">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="la la-bell"></i>
-								<span class="notification">3</span>
-							</a>
-							<ul class="dropdown-menu notif-box" aria-labelledby="navbarDropdown">
-								<li>
-									<div class="dropdown-title">You have 4 new notification</div>
-								</li>
-								<li>
-									<div class="notif-center">
-										<a href="#">
-											<div class="notif-icon notif-primary"> <i class="la la-user-plus"></i> </div>
-											<div class="notif-content">
-												<span class="block">
-													New user registered
-												</span>
-												<span class="time">5 minutes ago</span>
-											</div>
-										</a>
-										<a href="#">
-											<div class="notif-icon notif-success"> <i class="la la-comment"></i> </div>
-											<div class="notif-content">
-												<span class="block">
-													Rahmad commented on Admin
-												</span>
-												<span class="time">12 minutes ago</span>
-											</div>
-										</a>
-										<a href="#">
-											<div class="notif-img">
-												<img src="/assets/img/profile2.jpg" alt="Img Profile">
-											</div>
-											<div class="notif-content">
-												<span class="block">
-													Reza send messages to you
-												</span>
-												<span class="time">12 minutes ago</span>
-											</div>
-										</a>
-										<a href="#">
-											<div class="notif-icon notif-danger"> <i class="la la-heart"></i> </div>
-											<div class="notif-content">
-												<span class="block">
-													Farrah liked Admin
-												</span>
-												<span class="time">17 minutes ago</span>
-											</div>
-										</a>
-									</div>
-								</li>
-								<li>
-									<a class="see-all" href="javascript:void(0);"> <strong>See all notifications</strong> <i class="la la-angle-right"></i> </a>
-								</li>
-							</ul>
-						</li>
+
 						<li class="nav-item dropdown">
 							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="{{url('storage',[Auth::user()->picture_name])}}" alt="user-img" width="36" class="img-circle"><span >{{ Auth::user()->first_name}} {{ Auth::user()->last_name}}</span></span> </a>
 							<ul class="dropdown-menu dropdown-user">
@@ -158,48 +102,39 @@
                                 </a>
                             </li>
                             <li class="nav-item {{($unav=='sales')?'active':''}}">
-                                <a href="tables.html">
+                                <a href={{url('/staff/sales/')}}>
                                     <i class="la la-area-chart"></i>
                                     <p>ยอดขาย</p>
-                                    <span class="badge badge-count">6</span>
+                                    <span class="badge badge-count"></span>
                                 </a>
                             </li>
-                        @endhasanyrole
-                        @hasanyrole('เจ้าของร้าน|ผู้จัดการสาขา|พ่อครัว/แม่ครัว')
                             <li class="nav-item {{($unav=='history')?'active':''}}">
-                                <a href="forms.html">
+                                <a href={{url('/staff/history/')}}>
                                     <i class="la la-book"></i>
                                     <p>ประวิติการสั่งซื้อ</p>
-                                    <span class="badge badge-count">50</span>
+                                    <span class="badge badge-count"></span>
                                 </a>
                             </li>
                         @endhasanyrole
                         @hasrole('พ่อครัว/แม่ครัว')
                             <li class="nav-item {{($unav=='order')?'active':''}}">
-                                <a href="tables.html">
+                                <a href={{url('/staff/order/')}}>
                                     <i class="la la-file-text"></i>
                                     <p>การรับออเดอร์</p>
-                                    <span class="badge badge-count">6</span>
+                                    <span class="badge badge-count"></span>
                                 </a>
                             </li>
                         @endhasrole
                         @hasrole('คนส่งสินค้า')
                             <li class="nav-item {{($unav=='deliver')?'active':''}}">
-                                <a href="tables.html">
+                                <a href={{url('/staff/deliver/')}}>
                                     <i class="la la-truck"></i>
                                     <p>การจัดส่ง</p>
-                                    <span class="badge badge-count">6</span>
+                                    <span class="badge badge-count"></span>
                                 </a>
                             </li>
                         @endhasrole
                         @hasrole('เจ้าของร้าน')
-                            <li class="nav-item {{($unav=='detail')?'active':''}}">
-                                <a href={{url('staff/detail')}}>
-                                    <i class="la la-database"></i>
-                                    <p>ข้อมูลร้าน</p>
-                                    <span class="badge badge-success">3</span>
-                                </a>
-                            </li>
                             <li class="nav-item {{($unav=='branch')?'active':''}}">
                                 <a href={{url('staff/branch')}}>
                                     <i class="la la-map-marker"></i>
