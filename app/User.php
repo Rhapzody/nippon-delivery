@@ -5,10 +5,12 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use Notifiable;
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +18,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'first_name',
+        'last_name', 'road', 'alley','village_number',
+        'house_number', 'additional_address','sub_district_id',
+        'picture_name','tel_number'
     ];
 
     /**
@@ -27,4 +32,21 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function orders(){
+        return $this->hasMany('App\Order', 'user_id');
+    }
+
+    public function carts(){
+        return $this->hasMany('App\Cart', 'user_id');
+    }
+
+    public function whishLists(){
+        return $this->hasMany('App\WhishList', 'user_id');
+    }
+
+    public function subDistrict(){
+        return $this->belongsTo('App\SubDistrict', 'sub_district_id');
+    }
+
 }
