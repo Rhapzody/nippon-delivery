@@ -14,11 +14,11 @@ class AddAddressBranch extends Migration
     public function up()
     {
         Schema::table('branch', function (Blueprint $table) {
-            $table->text('additional_address');
-            $table->string('road');
-            $table->string('alley');
-            $table->string('village_number');
-            $table->string('house_number');
+            $table->text('additional_address')->nullable();
+            $table->string('road')->nullable();
+            $table->string('alley')->nullable();
+            $table->string('village_number')->nullable();
+            $table->string('house_number')->nullable();
         });
     }
 
