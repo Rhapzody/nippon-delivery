@@ -14,7 +14,7 @@ class AddSubdistrictToOrder extends Migration
     public function up()
     {
         Schema::table('order', function (Blueprint $table) {
-            $table->integer('sub_district_id')->unsigned();
+            $table->integer('sub_district_id')->unsigned()->nullable();
         });
     }
 
