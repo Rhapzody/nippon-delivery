@@ -1,5 +1,5 @@
 @extends('back.layout.app')
-
+{{-- img image --}}
 @section('content')
     <h4 class="page-title"> <span class="la la-clipboard"></span>จัดการสินค้า</h4>
     <div class="row">
@@ -241,7 +241,7 @@
                         let isActive = (index == 0)?"active":"";
                         picEle.append(`
                             <div class="carousel-item ${isActive}">
-                                <img src="${rootUrl + '/storage/' + ele.name}" alt="" style="display: block;margin-left: auto;margin-right: auto;width:480px;height:480px;"
+                                <img src="${getUrl(ele.name)}" alt="" style="display: block;margin-left: auto;margin-right: auto;width:480px;height:480px;"
                             </div>
                         `);
                         indiEle.append(`

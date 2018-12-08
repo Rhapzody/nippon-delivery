@@ -1,5 +1,5 @@
 @extends('back.layout.app')
-
+{{-- img --}}
 @section('content')
 
 <h4 class="page-title"><span class="la la-file-text"></span> การสั่งซื้อ</h4>

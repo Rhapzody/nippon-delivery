@@ -1,5 +1,5 @@
 @extends('back.layout.app')
-
+{{-- img --}}
 @section('content')
 
     <style>

@@ -1,7 +1,15 @@
 @extends('front.layout.app')
-
+{{-- img --}}
 @section('content')
-
+@php
+    function getUrl($file_name){
+        if(env('APP_ENV') == 'production'){
+            return env('AWS_URL') . '/public' . '/' . $file_name;
+        }else {
+            return url('storage', $file_name);
+        }
+    }
+@endphp
 <!-- BREADCRUMB -->
 @include('front.widget.breadcrumb',[
 'header'=>$header
@@ -125,7 +133,7 @@
                         <div class="form-group">
                             <label for="user_image">รูปประจำตัว </label>
                             <input type="file" name="image" id="user_image" accept="image/png, image/jpeg">
-                            <img id="blah" src="{{url('/storage/') . "/" . $user->picture_name}}" alt="your image"
+                            <img id="blah" src="{{ getUrl($user->picture_name) }}" alt="your image"
                                 width="256px" height="256px" />
                         </div>
 

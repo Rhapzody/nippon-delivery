@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 	<head>
+        @php
+            $disk = (env('APP_ENV') == 'production')?'s3':'local';
+        @endphp
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -50,7 +53,15 @@
                 font-size: 18px;
             }
         </style>
-
+        <script>
+            function getUrl(image_name) {
+                if('{{env('APP_ENV')}}' == 'production'){
+                    return '{{env('AWS_URL')}}' + '/public' + '/' + image_name;
+                }else {
+                    return '{{url('storage')}}' + '/' + image_name;
+                }
+            }
+        </script>
     </head>
 	<body>
 		<!-- HEADER -->
@@ -328,7 +339,7 @@
                             let element =`
                                 <div class="product-widget">
                                     <div class="product-img">
-                                        <img src=${storageUrl+ele.menu.menu_pictures[0].name} alt="">
+                                        <img src="${getUrl(ele.menu.menu_pictures[0].name)}" alt="">
                                     </div>
                                     <div class="product-body">
                                         <h3 class="product-name"><a href=${productUrl+ele.menu.id}>${ele.menu.name}</a></h3>

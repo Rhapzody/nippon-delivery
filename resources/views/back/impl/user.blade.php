@@ -1,5 +1,5 @@
 @extends('back.layout.app')
-
+{{-- img --}}
 @section('content')
     <h4 class="page-title"><span class="la la-clipboard"></span> จัดการผู้ใช้งาน</h4>
     <div class="row">
@@ -176,7 +176,7 @@
                 let url = "{{url('/user_detail_by_id')}}";
                 let rootUrl = "{{url('/')}}";
                 $.get(url+"?user_id="+id, function(data, status){
-                    $('#modal-image').attr('src', rootUrl + data.picturePath + data.pictureName);
+                    $('#modal-image').attr('src', getUrl(data.pictureName);
                     $('#modal-name').html(sanitarize(data.firstName) + " " + sanitarize(data.lastName));
                     $('#modal-id').html(data.id);
                     $('#modal-username').html(sanitarize(data.username));

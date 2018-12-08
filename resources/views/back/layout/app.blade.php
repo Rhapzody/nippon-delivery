@@ -17,6 +17,15 @@
             margin: 0;  /* this affects the margin in the printer settings */
         }
     </style>
+    <script>
+        function getUrl(image_name) {
+            if('{{env('APP_ENV')}}' == 'production'){
+                return '{{env('AWS_URL')}}' + '/public' + '/' + image_name;
+            }else {
+                return '{{url('storage')}}' + '/' + image_name;
+            }
+        }
+    </script>
 </head>
 <body>
 	<div class="wrapper">

@@ -7,7 +7,7 @@
         @foreach ($new_menu as $menu)
             <div class="product-widget">
                 <div class="product-img">
-                    <img src="{{url('/storage',[$menu->menuPictures[0]->name])}}" alt="">
+                    <img src="{{ getUrl($menu->menuPictures[0]->name) }}" alt="">
                 </div>
                 <div class="product-body">
                     <p class="product-category">ประเภท: {{$menu->menuType->name}}</p>
@@ -25,7 +25,7 @@
         @foreach ($top_menu as $menu)
             <div class="product-widget">
                 <div class="product-img">
-                    <img src="{{url('/storage',[$menu->menuPictures[0]->name])}}" alt="">
+                    <img src="{{ getUrl($menu->menuPictures[0]->name) }}" alt="">
                 </div>
                 <div class="product-body">
                     <p class="product-category">ประเภท: {{$menu->menuType->name}}</p>
