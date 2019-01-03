@@ -1,6 +1,15 @@
 @extends('back.layout.app')
 {{-- img --}}
 @section('content')
+@php
+    function getUrl($file_name){
+        if(env('APP_ENV') == 'production'){
+            return env('AWS_URL') . '/public' . '/' . $file_name;
+        }else {
+            return url('storage', $file_name);
+        }
+    }
+@endphp
     <h4 class="page-title"><span class="la la-clipboard"></span> จัดการผู้ใช้งาน</h4>
     <div class="row">
         <div class="col-md-12 bg-light border border-primary rounded p-2">
@@ -176,7 +185,7 @@
                 let url = "{{url('/user_detail_by_id')}}";
                 let rootUrl = "{{url('/')}}";
                 $.get(url+"?user_id="+id, function(data, status){
-                    $('#modal-image').attr('src', getUrl(data.pictureName);
+                    $('#modal-image').attr('src', getUrl(data.pictureName));
                     $('#modal-name').html(sanitarize(data.firstName) + " " + sanitarize(data.lastName));
                     $('#modal-id').html(data.id);
                     $('#modal-username').html(sanitarize(data.username));
@@ -280,5 +289,4 @@
             }
         }
     </script>
-
 @endsection

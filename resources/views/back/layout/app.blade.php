@@ -17,6 +17,15 @@
             margin: 0;  /* this affects the margin in the printer settings */
         }
     </style>
+    {{-- @php
+    function getUrl($file_name){
+        if(env('APP_ENV') == 'production'){
+            return env('AWS_URL') . '/public' . '/' . $file_name;
+        }else {
+            return url('storage', $file_name);
+        }
+    }
+    @endphp --}}
     <script>
         function getUrl(image_name) {
             if('{{env('APP_ENV')}}' == 'production'){
@@ -45,11 +54,11 @@
 					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
 
 						<li class="nav-item dropdown">
-							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="{{url('storage',[Auth::user()->picture_name])}}" alt="user-img" width="36" class="img-circle"><span >{{ Auth::user()->first_name}} {{ Auth::user()->last_name}}</span></span> </a>
+							<a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="{{getUrl(Auth::user()->picture_name)}}" alt="user-img" width="36" class="img-circle"><span >{{ Auth::user()->first_name}} {{ Auth::user()->last_name}}</span></span> </a>
 							<ul class="dropdown-menu dropdown-user">
 								<li>
 									<div class="user-box">
-										<div class="u-img"><img src="{{url('storage',[Auth::user()->picture_name])}}" alt="user"></div>
+										<div class="u-img"><img src="{{getUrl(Auth::user()->picture_name)}}" alt="user"></div>
 										<div class="u-text">
 											<h4>{{ Auth::user()->first_name}} {{ Auth::user()->last_name}}</h4>
 											<p class="text-muted">{{ Auth::user()->email}}</p></div>
@@ -73,7 +82,7 @@
 				<div class="scrollbar-inner sidebar-wrapper">
 					<div class="user">
 						<div class="photo">
-							<img src="{{url('storage',[Auth::user()->picture_name])}}">
+							<img src="{{getUrl(Auth::user()->picture_name)}}">
 						</div>
 						<div class="info">
 							<a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">

@@ -6,6 +6,15 @@
         text-decoration: none;
     }
 </style>
+@php
+function getUrl($file_name){
+    if(env('APP_ENV') == 'production'){
+        return env('AWS_URL') . '/public' . '/' . $file_name;
+    }else {
+        return url('storage', $file_name);
+    }
+}
+@endphp
 <h4 class="page-title"><span class="la la-truck"></span> การจัดส่ง</h4>
 <div class="row">
     <div class="col-md-12 bg-light border rounded p-2">
@@ -192,7 +201,7 @@
     // Enable pusher logging - don't include this in production
     //Pusher.logToConsole = true;
 
-    var pusher = new Pusher('8aa55b1cf27e9a794548', {
+    var pusher = new Pusher("{{env('PUSHER_APP_KEY')}}", {
         cluster: 'ap1',
         forceTLS: true
     });

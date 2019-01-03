@@ -134,7 +134,7 @@
                             <div class="form-group">
                                 <label for="user_image">รูปประจำตัว </label>
                                 <input type="file" name="image" id="user_image" accept="image/png, image/jpeg">
-                                <img id="blah" src="{{getUrl($user->picture_name}}" alt="your image" width="256px" height="256px" />
+                                <img id="blah" src="{{getUrl($user->picture_name)}}" alt="your image" width="256px" height="256px" />
                             </div>
 
                             @if($errors->any())
