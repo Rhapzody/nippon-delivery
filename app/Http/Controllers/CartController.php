@@ -54,7 +54,7 @@ class CartController extends Controller
             $newCartList = Cart::create([
                 'user_id'=>Auth::user()->id,
                 'menu_id'=>$id,
-                'quantity'=>1
+                'quantity'=>$req->input('quantity')
             ]);
         } else {
             DB::table('cart')
