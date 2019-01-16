@@ -7,7 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
     use HasRoles;
@@ -21,7 +21,7 @@ class User extends Authenticatable
         'name', 'email', 'password', 'first_name',
         'last_name', 'road', 'alley','village_number',
         'house_number', 'additional_address','sub_district_id',
-        'picture_name','tel_number'
+        'picture_name','tel_number' ,'email_verified_at'
     ];
 
     /**

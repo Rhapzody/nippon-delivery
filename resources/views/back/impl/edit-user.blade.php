@@ -162,7 +162,6 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         $(document).ready(function () {
-            // <script>alert("hello");</script>
             //get districts when province selected
             $('#province').change(function () {
                 $('#sub_district').empty().append(`<option value="-1">เลือกตำบล</option>`);
@@ -400,8 +399,5 @@
 
             });
         });
-
-
-    </script>
-
+        </script>
 @endsection

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Storage;
-
+use Carbon\Carbon;
 class UserBackController extends Controller
 {
 
@@ -103,6 +103,7 @@ class UserBackController extends Controller
             'additional_address' => $req->input('additional_address'),
             'picture_name' => $image_name,
             'tel_number' => $req->input('tel_number'),
+            'email_verified_at'=>Carbon::now()->toDateTimeString()
         ]);
 
         $role = Role::find($req->input('role'));

@@ -1,7 +1,15 @@
 @extends('back.layout.app')
 {{-- img --}}
 @section('content')
-
+@php
+function getUrl($file_name){
+    if(env('APP_ENV') == 'production'){
+        return env('AWS_URL') . '/public' . '/' . $file_name;
+    }else {
+        return url('storage', $file_name);
+    }
+}
+@endphp
 <h4 class="page-title"><span class="la la-file-text"></span> การสั่งซื้อ</h4>
 <div class="row">
     <div class="col-md-12 bg-light border rounded pt-4">
@@ -83,9 +91,15 @@
                                     @foreach ($district_orders as $order)
                                         <div class="list-group-item">
                                             <div>ออเดอร์หมายเลข: {{$order->id}} | ที่อยู่: {{$order->address}} | เบอร์โทร: {{$order->user->tel_number}}</div>
-                                            <button class="btn btn-danger pull-right btn-sm" onclick="document.getElementById('district-'+{{$order->id}}).submit();">รับ</button>
+                                            <br>
+                                            <button class="btn btn-success pull-right btn-sm  mx-1" onclick="document.getElementById('district-'+{{$order->id}}).submit();">รับ</button>
+                                            <button class="btn btn-danger pull-right btn-sm" onclick="document.getElementById('cdistrict-'+{{$order->id}}).submit();">ยกเลิก</button>
                                         </div>
                                         <form action="{{url('staff/order/addToBranch')}}" method="post" id="{{'district-'.$order->id}}">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{$order->id}}">
+                                        </form>
+                                        <form action="{{url('staff/order/cancle')}}" method="post" id="{{'cdistrict-'.$order->id}}">
                                             @csrf
                                             <input type="hidden" name="id" value="{{$order->id}}">
                                         </form>
@@ -105,9 +119,15 @@
                                     @foreach ($province_orders as $order)
                                         <div class="list-group-item">
                                             <span>ออเดอร์หมายเลข: {{$order->id}} | ที่อยู่: {{$order->address}} | เบอร์โทร: {{$order->user->tel_number}}</span>
-                                            <button class="btn btn-danger pull-right btn-sm" onclick="document.getElementById('province-'+{{$order->id}}).submit();">รับ</button>
+                                            <br>
+                                            <button class="btn btn-success pull-right btn-sm mx-1" onclick="document.getElementById('province-'+{{$order->id}}).submit();">รับ</button>
+                                            <button class="btn btn-danger pull-right btn-sm" onclick="document.getElementById('cprovince-'+{{$order->id}}).submit();">ยกเลิก</button>
                                         </div>
                                         <form action="{{url('staff/order/addToBranch')}}" method="post" id="{{'province-'.$order->id}}">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{$order->id}}">
+                                        </form>
+                                        <form action="{{url('staff/order/cancle')}}" method="post" id="{{'cprovince-'.$order->id}}">
                                             @csrf
                                             <input type="hidden" name="id" value="{{$order->id}}">
                                         </form>
@@ -127,9 +147,15 @@
                                     @foreach ($out_province_orders as $order)
                                         <div class="list-group-item">
                                             <div>ออเดอร์หมายเลข: {{$order->id}} | ที่อยู่: {{$order->address}} | เบอร์โทร: {{$order->user->tel_number}}</div>
-                                            <button class="btn btn-danger pull-right btn-sm" onclick="document.getElementById('nprovince-'+{{$order->id}}).submit();">รับ</button>
+                                            <br>
+                                            <button class="btn btn-success pull-right btn-sm mx-1" onclick="document.getElementById('nprovince-'+{{$order->id}}).submit();">รับ</button>
+                                            <button class="btn btn-danger pull-right btn-sm" onclick="document.getElementById('cnprovince-'+{{$order->id}}).submit();">ยกเลิก</button>
                                         </div>
                                         <form action="{{url('staff/order/addToBranch')}}" method="post" id="{{'nprovince-'.$order->id}}">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{$order->id}}">
+                                        </form>
+                                        <form action="{{url('staff/order/cancle')}}" method="post" id="{{'cnprovince-'.$order->id}}">
                                             @csrf
                                             <input type="hidden" name="id" value="{{$order->id}}">
                                         </form>
