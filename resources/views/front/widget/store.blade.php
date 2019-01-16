@@ -8,7 +8,7 @@
             <div class="col-md-4">
                 <div class="product">
                     <div class="product-img">
-                        <img src="{{url('/storage',[$menu->menuPictures[0]->name])}}" alt="" >
+                        <img src="{{ getUrl($menu->menuPictures[0]->name) }}" alt="" >
                         <div class="product-label">
                             {{-- <span class="sale">-30%</span>
                             <span class="new">NEW</span> --}}

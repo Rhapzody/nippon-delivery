@@ -1,6 +1,15 @@
 @extends('back.layout.app')
-
+{{-- img image --}}
 @section('content')
+@php
+    function getUrl($file_name){
+        if(env('APP_ENV') == 'production'){
+            return env('AWS_URL') . '/public' . '/' . $file_name;
+        }else {
+            return url('storage', $file_name);
+        }
+    }
+@endphp
     <style>
         .my-img-container {
             position: relative;
@@ -194,12 +203,12 @@
                 data.menu_pictures.forEach(ele => {
                     let img = `
                                 <div class="my-img-container pull-left mr-2 mt-2 old-image" style="width:150px;height:150px;" id="old-img-${ele.id}">
-                                    <img src="${myRootUrl + '/storage/' + ele.name}" alt="product" width="150px" height="150px">
+                                    <img src="${getUrl(ele.name)}" alt="product" width="150px" height="150px">
                                     <button type="button" class="my-img-btn btn-sm" href="#menu-img-group" onclick="deleteOldImg(${ele.id})">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                        `;
+                            `;
                     $("#menu-img-group").append(img);
                 });
                 $('#old_image_id').val(JSON.stringify(oldImgArr));

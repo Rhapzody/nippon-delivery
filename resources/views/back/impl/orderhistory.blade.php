@@ -1,6 +1,15 @@
 @extends('back.layout.app')
-
+{{-- img image --}}
 @section('content')
+@php
+    function getUrl($file_name){
+        if(env('APP_ENV') == 'production'){
+            return env('AWS_URL') . '/public' . '/' . $file_name;
+        }else {
+            return url('storage', $file_name);
+        }
+    }
+@endphp
 <link href="{{url('css/progress-wizard.min.css')}}" rel="stylesheet">
 <h4 class="page-title"><span class="la la-clipboard"></span> ประวัติการสั่งซื้อ</h4>
 <div class="row">
@@ -56,7 +65,7 @@
                                 <tbody>
                                     @forelse ($menus as $menu)
                                         <tr>
-                                            <td style="vertical-align: middle;" class="text-center"><img src={{url('storage',[$menu->menu->menuPictures->first()->name])}} alt="" width="50px" height="50px"></td>
+                                            <td style="vertical-align: middle;" class="text-center"><img src={{getUrl($menu->menu->menuPictures->first()->name)}} alt="" width="50px" height="50px"></td>
                                             <td style="vertical-align: middle;" class="text-center"><a href={{url('product',[$menu->menu_id])}}>{{$menu->menu->name}}</a></td>
                                             <td style="vertical-align: middle;" class="text-center">{{$menu->quantity}}</td>
                                             <td style="vertical-align: middle;" class="text-center">{{$menu->menu->price}}</td>

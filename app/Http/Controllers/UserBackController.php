@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
-
+use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 class UserBackController extends Controller
 {
 
@@ -78,14 +79,12 @@ class UserBackController extends Controller
 
     public function addUserProcess(AddUserRequest $req)
     {
-
+        $disk = (env('APP_ENV') == 'production')?'s3':'local';
         $image_name = 'man.png';
         if ($req->hasFile('image')) {
             $image_filename = $req->file('image')->getClientOriginalName();
             $image_name = date('Y_m_d_His_') . $image_filename;
-            $storage = '/storage/app/public/';
-            $destination = base_path() . $storage;
-            $req->file('image')->move($destination, $image_name);
+            Storage::disk($disk)->putFileAs('public', $req->file('image'), $image_name, 'public');
         }
 
         $user = User::create([
@@ -104,6 +103,7 @@ class UserBackController extends Controller
             'additional_address' => $req->input('additional_address'),
             'picture_name' => $image_name,
             'tel_number' => $req->input('tel_number'),
+            'email_verified_at'=>Carbon::now()->toDateTimeString()
         ]);
 
         $role = Role::find($req->input('role'));
@@ -135,15 +135,15 @@ class UserBackController extends Controller
 
     public function editUserProcess(EditUserRequest $req)
     {
+        $disk = (env('APP_ENV') == 'production')?'s3':'local';
         $user = User::with('roles')->find($req->input('user_id'));
         if ($req->hasFile('image')) {
             $image_filename = $req->file('image')->getClientOriginalName();
             $image_name = date('Y_m_d_His_') . $image_filename;
-            $storage = '/storage/app/public/';
-            $destination = base_path() . $storage;
-            $req->file('image')->move($destination, $image_name);
+            Storage::disk($disk)->putFileAs('public', $req->file('image'), $image_name, 'public');
             if($user->picture_name != 'man.png'){
-                File::delete(base_path() . $storage . $user->picture_name);
+                Storage::disk($disk)->delete('public/'. $user->picture_name);
+                //File::delete(base_path() . $storage . $user->picture_name);
             }
             $user->picture_name = $image_name;
         }

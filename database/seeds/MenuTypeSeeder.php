@@ -13,15 +13,13 @@ class MenuTypeSeeder extends Seeder
     public function run()
     {
         $types = [
-            ['name'=>'ซูชิ'],
-            ['name'=>'ทอด'],
-            ['name'=>'ย่าง'],
-            ['name'=>'เส้น'],
-            ['name'=>'ข้าว'],
-            ['name'=>'ซาชิมิ'],
-            ['name'=>'ซุป'],
+            ['name'=>'เมนูทานเล่น'],
+            ['name'=>'เมนูเซ็ท'],
+            ['name'=>'ข้าวกล่อง'],
+            ['name'=>'เมนูเส้น'],
+            ['name'=>'ข้าวหน้า'],
             ['name'=>'ของหวาน'],
-            ['name'=>'เครื่องดื่ม'],
+            ['name'=>'เครื่องดื่ม']
         ];
 
         MenuType::insert($types);

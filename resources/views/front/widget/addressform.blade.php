@@ -103,11 +103,10 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-
                     <div class="form-group">
                         <label for="user_image">รูปประจำตัว </label>
                         <input type="file" name="image" id="user_image" accept="image/png, image/jpeg">
-                        <img id="blah" src="{{url('/storage/man.png')}}" alt="your image" width="256px" height="256px" style="position:relative;left:15%"/>
+                        <img id="blah" src="{{ getUrl('man.png') }}" alt="your image" width="256px" height="256px" style="position:relative;left:15%"/>
                     </div>
 
                     <div class="input-checkbox">

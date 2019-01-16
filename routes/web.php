@@ -14,7 +14,7 @@ Route::get('/', function () {
     return redirect('home');
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 //staff dispatcher
 Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน|ผู้จัดการสาขา|พ่อครัว/แม่ครัว|คนส่งสินค้า']], function () {
@@ -73,6 +73,7 @@ Route::group(['middleware' => ['auth', 'role:พ่อครัว/แม่ค�
     Route::post('staff/order/2to3', 'OrderReceptionController@twoToThree');
     Route::post('staff/order/addToBranch', 'OrderReceptionController@addToBranch');
     Route::post('staff/order/return', 'OrderReceptionController@remove');
+    Route::post('staff/order/cancle', 'OrderReceptionController@cancle');
 });
 
 //sales
@@ -108,9 +109,10 @@ Route::get('store/{type?}', 'StoreController@store');
 //product
 Route::get('product/{id}', 'ProductController@product');
 
+
 //checkout
-Route::post('user/checkout', 'CheckoutController@checkout')->middleware('auth');
-Route::post('user/checkout/process', 'CheckoutController@process')->middleware('auth');
+Route::post('user/checkout', 'CheckoutController@checkout')->middleware(['auth', 'verified']);
+Route::post('user/checkout/process', 'CheckoutController@process')->middleware(['auth', 'verified']);
 
 //cart
 Route::get('cart', 'CartController@cartList')->middleware('auth');
@@ -129,11 +131,11 @@ Route::get('user/history/order/{id}', 'HistoryController@order')->middleware('au
 Route::get('user/history/{code}', 'HistoryController@statSearch')->where(['code' => '[0-9]+'])->middleware('auth');
 
 //user
-Route::get('user/edit', 'UserFrontController@edit')->middleware('auth');
-Route::post('user/edit/process', 'UserFrontController@editProcess')->middleware('auth');
 Route::get('user/whishlist', 'WhishListController@whish')->middleware('auth');
 Route::get('user/cart', 'CartController@cart')->middleware('auth');
 Route::get('user/history', 'HistoryController@history')->middleware('auth');
+Route::get('user/edit', 'UserFrontController@edit')->middleware('auth');
+Route::post('user/edit/process', 'UserFrontController@editProcess')->middleware('auth');
 
 //notification
 Route::get('noti/test', 'NotificationController@testTriggerNoti'); //->middleware('auth');

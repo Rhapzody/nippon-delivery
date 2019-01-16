@@ -1,7 +1,7 @@
 @extends('front.layout.app')
 
 @section('content')
-
+{{-- img --}}
 <!-- BREADCRUMB -->
 @include('front.widget.breadcrumb',[
 'header'=>$header

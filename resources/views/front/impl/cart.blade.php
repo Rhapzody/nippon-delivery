@@ -1,12 +1,19 @@
 @extends('front.layout.app')
 
 @section('content')
-
 <!-- BREADCRUMB -->
 @include('front.widget.breadcrumb',[
 'header'=>$header
 ])
-
+@php
+    function getUrl($file_name){
+        if(env('APP_ENV') == 'production'){
+            return env('AWS_URL') . '/public' . '/' . $file_name;
+        }else {
+            return url('storage', $file_name);
+        }
+    }
+@endphp
 <div class="section">
     <div class="container">
         <div class="row">
@@ -34,7 +41,7 @@
                         <tbody>
                             @forelse ($menus as $menu)
                                 <tr>
-                                    <td style="vertical-align: middle;" class="text-center"><img src={{url('storage',[$menu->menu->menuPictures->first()->name])}} alt="" width="50px" height="50px"></td>
+                                    <td style="vertical-align: middle;" class="text-center"><img src="{{ getUrl($menu->menu->menuPictures[0]->name) }}" alt="" width="50px" height="50px"></td>
                                     <td style="vertical-align: middle;" class="text-center"><a href={{url('product',[$menu->menu_id])}}>{{$menu->menu->name}}</a></td>
                                     <td style="vertical-align: middle;" class="text-center">{{$menu->quantity}}</td>
                                     <td style="vertical-align: middle;" class="text-center">{{$menu->menu->price}}</td>

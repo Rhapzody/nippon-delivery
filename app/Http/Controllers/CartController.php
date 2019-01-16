@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Cart;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class CartController extends Controller
 {
@@ -36,10 +37,14 @@ class CartController extends Controller
     }
 
     public function cartList(){
+        $disk = (env('APP_ENV') == 'production')?'s3':'local';
         $user_id = Auth::user()->id;
         $product = Cart::with(['menu', 'menu.menuPictures', 'menu.menuType'])
         ->where('user_id', '=', $user_id)
         ->get();
+        foreach ($product as $key => $value) {
+            $product[$key]['image_url'] = Storage::disk($disk)->url($value->menu->menuPictures->first()->name);
+        }
         return response($product);
     }
 
@@ -49,7 +54,7 @@ class CartController extends Controller
             $newCartList = Cart::create([
                 'user_id'=>Auth::user()->id,
                 'menu_id'=>$id,
-                'quantity'=>1
+                'quantity'=>$req->input('quantity')
             ]);
         } else {
             DB::table('cart')

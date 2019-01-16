@@ -1,6 +1,15 @@
 @extends('back.layout.app')
-
+{{-- img image --}}
 @section('content')
+@php
+function getUrl($file_name){
+    if(env('APP_ENV') == 'production'){
+        return env('AWS_URL') . '/public' . '/' . $file_name;
+    }else {
+        return url('storage', $file_name);
+    }
+}
+@endphp
     <h4 class="page-title"> <span class="la la-clipboard"></span>จัดการสินค้า</h4>
     <div class="row">
         <div class="col-md-12 bg-light border border-primary rounded p-2">
@@ -241,7 +250,7 @@
                         let isActive = (index == 0)?"active":"";
                         picEle.append(`
                             <div class="carousel-item ${isActive}">
-                                <img src="${rootUrl + '/storage/' + ele.name}" alt="" style="display: block;margin-left: auto;margin-right: auto;width:480px;height:480px;"
+                                <img src="${getUrl(ele.name)}" alt="" style="display: block;margin-left: auto;margin-right: auto;width:480px;height:480px;"
                             </div>
                         `);
                         indiEle.append(`

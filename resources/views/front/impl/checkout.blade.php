@@ -1,12 +1,19 @@
 @extends('front.layout.app')
-
+{{-- img --}}
 @section('content')
-
+@php
+    function getUrl($file_name){
+        if(env('APP_ENV') == 'production'){
+            return env('AWS_URL') . '/public' . '/' . $file_name;
+        }else {
+            return url('storage', $file_name);
+        }
+    }
+@endphp
 <!-- BREADCRUMB -->
 @include('front.widget.breadcrumb',[
     'header'=>$header
 ])
-
 <div class="section">
     <div class="container">
         <div class="row">
