@@ -9,7 +9,7 @@
                 <div id="product-main-img">
                     @foreach ($product->menuPictures as $pic)
                         <div class="product-preview">
-                            <img src="{{url('storage', [$pic->name])}}" alt="">
+                            <img src="{{ getUrl($pic->name) }}" alt="">
                         </div>
                     @endforeach
 
@@ -22,7 +22,7 @@
                 <div id="product-imgs">
                     @foreach ($product->menuPictures as $pic)
                         <div class="product-preview">
-                            <img src="{{url('storage', [$pic->name])}}" alt="">
+                            <img src="{{ getUrl($pic->name) }}" alt="">
                         </div>
                     @endforeach
                 </div>

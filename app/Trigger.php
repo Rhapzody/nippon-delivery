@@ -11,9 +11,9 @@ class Trigger {
           );
 
         $pusher = new Pusher(
-            '8aa55b1cf27e9a794548',
-            '3d55b39dca6f8ecb66c6',
-            '657201',
+            env('PUSHER_APP_KEY'),
+            env('PUSHER_APP_SECRET'),
+            env('PUSHER_APP_ID'),
             $options
         );
         $data[$key] = $message;

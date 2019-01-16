@@ -1,6 +1,15 @@
 @extends('back.layout.app')
-
+{{-- img image --}}
 @section('content')
+    @php
+        function getUrl($file_name){
+            if(env('APP_ENV') == 'production'){
+                return env('AWS_URL') . '/public' . '/' . $file_name;
+            }else {
+                return url('storage', $file_name);
+            }
+        }
+    @endphp
     <h4 class="page-title"><span class="la la-clipboard"></span> จัดการผู้ใช้งาน</h4>
     <div class="row">
         <div class="col-md-12 bg-light border border-primary rounded p-2">
@@ -125,7 +134,7 @@
                             <div class="form-group">
                                 <label for="user_image">รูปประจำตัว </label>
                                 <input type="file" name="image" id="user_image" accept="image/png, image/jpeg">
-                                <img id="blah" src="{{url('/storage/') . "/" . $user->picture_name}}" alt="your image" width="256px" height="256px" />
+                                <img id="blah" src="{{getUrl($user->picture_name)}}" alt="your image" width="256px" height="256px" />
                             </div>
 
                             @if($errors->any())
@@ -153,7 +162,6 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         $(document).ready(function () {
-
             //get districts when province selected
             $('#province').change(function () {
                 $('#sub_district').empty().append(`<option value="-1">เลือกตำบล</option>`);
@@ -391,8 +399,5 @@
 
             });
         });
-
-
-    </script>
-
+        </script>
 @endsection

@@ -107,4 +107,12 @@ class OrderReceptionController extends Controller
         (new Trigger())->send('order', 'my-event', 'message', $order_id);
         return redirect('staff/order');
     }
+
+    public function cancle(Request $req){
+        $order_id = $req->input('id');
+        $order = Order::find($order_id);
+        $order->delete();
+        (new Trigger())->send('order', 'my-event', 'message', $order_id);
+        return redirect('staff/order');
+    }
 }

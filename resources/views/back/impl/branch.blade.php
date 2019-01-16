@@ -1,6 +1,15 @@
 @extends('back.layout.app')
-
+{{-- img --}}
 @section('content')
+@php
+    function getUrl($file_name){
+        if(env('APP_ENV') == 'production'){
+            return env('AWS_URL') . '/public' . '/' . $file_name;
+        }else {
+            return url('storage', $file_name);
+        }
+    }
+@endphp
 <style>
     /* Always set the map height explicitly to define the size of the div
         * element that contains the map. */
@@ -185,7 +194,7 @@
                             }
 
                         </script>
-                        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCUqxyKsLRJ8ByM6LiCdfGMi-smKmmJlSI&libraries=places&callback=initMap"
+                        <script src="https://maps.googleapis.com/maps/api/js?key={{env('GOOGLE_MAP_API_KEY')}}&libraries=places&callback=initMap"
                             async defer></script>
 
                     </div>

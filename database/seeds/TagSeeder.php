@@ -15,19 +15,6 @@ class TagSeeder extends Seeder
     public function run()
     {
         $tags = [
-            ['name'=>'แซลมอน'],
-            ['name'=>'ซาชิมิ'],
-            ['name'=>'ซูชิ'],
-            ['name'=>'ราเมน'],
-            ['name'=>'ข้าว'],
-            ['name'=>'เทมปุระ'],
-            ['name'=>'เนื้อ'],
-            ['name'=>'หมู'],
-            ['name'=>'ปลา'],
-            ['name'=>'ไก่'],
-            ['name'=>'เครืองดื่ม'],
-            ['name'=>'ทานเล่น'],
-            ['name'=>'ปลาหมึก']
         ];
 
         Tag::insert($tags);

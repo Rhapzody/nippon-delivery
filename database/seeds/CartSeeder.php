@@ -13,16 +13,16 @@ class CartSeeder extends Seeder
     public function run()
     {
         $lists = [
-            [
-                'menu_id'=>2,
-                'user_id'=>1,
-                'quantity'=>10
-            ],
-            [
-                'menu_id'=>4,
-                'user_id'=>1,
-                'quantity'=>5
-            ]
+            // [
+            //     'menu_id'=>2,
+            //     'user_id'=>1,
+            //     'quantity'=>10
+            // ],
+            // [
+            //     'menu_id'=>4,
+            //     'user_id'=>1,
+            //     'quantity'=>5
+            // ]
         ];
 
         Cart::insert($lists);

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Storage;
 
 class UserFrontController extends Controller
 {
@@ -30,15 +31,19 @@ class UserFrontController extends Controller
 
     public function editProcess(ChangeUserDetailRequest $req)
     {
+        $disk = (env('APP_ENV') == 'production')?'s3':'local';
         $user = User::find($req->input('user_id'));
         if ($req->hasFile('image')) {
             $image_filename = $req->file('image')->getClientOriginalName();
             $image_name = date('Y_m_d_His_') . $image_filename;
-            $storage = '/storage/app/public/';
-            $destination = base_path() . $storage;
-            $req->file('image')->move($destination, $image_name);
+            Storage::disk($disk)->putFileAs('public', $req->file('image'), $image_name, 'public');
+
+            // $storage = '/storage/app/public/';
+            // $destination = base_path() . $storage;
+            // $req->file('image')->move($destination, $image_name);
             if($user->picture_name != 'man.png'){
-                File::delete(base_path() . $storage . $user->picture_name);
+                Storage::disk($disk)->delete('public/'. $user->picture_name);
+                // File::delete(base_path() . $storage . $user->picture_name);
             }
             $user->picture_name = $image_name;
         }

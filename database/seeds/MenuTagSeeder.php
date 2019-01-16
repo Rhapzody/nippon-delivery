@@ -14,15 +14,15 @@ class MenuTagSeeder extends Seeder
      */
     public function run()
     {
-        $menus = MenuType::find(1)->menus;
+        // $menus = MenuType::find(1)->menus;
 
-        $sushiTag = Tag::where('name', '=', 'ซูชิ')
-            ->orWhere( 'name', '=', 'ปลา')
-            ->get();
+        // $sushiTag = Tag::where('name', '=', 'ซูชิ')
+        //     ->orWhere( 'name', '=', 'ปลา')
+        //     ->get();
 
-        foreach ($menus as $key => $value) {
-            # code...
-            $value->tags()->saveMany($sushiTag);
-        }
+        // foreach ($menus as $key => $value) {
+        //     # code...
+        //     $value->tags()->saveMany($sushiTag);
+        // }
     }
 }

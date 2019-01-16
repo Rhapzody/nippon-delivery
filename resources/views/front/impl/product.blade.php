@@ -1,6 +1,16 @@
 @extends('front.layout.app')
-
+{{-- img --}}
 @section('content')
+@php
+function getUrl($file_name){
+    if(env('APP_ENV') == 'production'){
+        return env('AWS_URL') . '/public' . '/' . $file_name;
+    }else {
+        return url('storage', $file_name);
+    }
+}
+@endphp
+
     <!-- BREADCRUMB -->
     <div id="breadcrumb" class="section">
         <!-- container -->
@@ -89,7 +99,7 @@
                                     let element =`
                                         <div class="product-widget">
                                             <div class="product-img">
-                                                <img src=${storageUrl+ele.menu.menu_pictures[0].name} alt="">
+                                                <img src="${getUrl(ele.menu.menu_pictures[0].name)}" alt="">
                                             </div>
                                             <div class="product-body">
                                                 <h3 class="product-name"><a href=${productUrl+ele.menu.id}>${ele.menu.name}</a></h3>

@@ -10,6 +10,7 @@ use App\MenuType;
 use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class ProductBackController extends Controller
 {
@@ -87,6 +88,7 @@ class ProductBackController extends Controller
 
     public function addProductProcess(AddProductRequest $req)
     {
+        $disk = (env('APP_ENV') == 'production')?'s3':'local';
         $name = $req->input('name');
         $price = $req->input('price');
         $typeId = $req->input('type');
@@ -130,9 +132,7 @@ class ProductBackController extends Controller
                 $image_filename = $file->getClientOriginalName();
                 if (in_array($image_filename, $picName)) {
                     $image_name = date('Y_m_d_His_') . $image_filename;
-                    $storage = '/storage/app/public/';
-                    $destination = base_path() . $storage;
-                    $file->move($destination, $image_name);
+                    Storage::disk($disk)->putFileAs('public', $file, $image_name, 'public');
                     $new_img = new MenuPicture();
                     $new_img->name = $image_name;
                     $menu->menuPictures()->saveMany([$new_img]);
@@ -167,6 +167,7 @@ class ProductBackController extends Controller
 
     public function editProductProcess(EditProductRequest $req)
     {
+        $disk = (env('APP_ENV') == 'production')?'s3':'local';
         $id = $req->input('id');
         $menu = Menu::with('tags', 'menuPictures', 'menuType')->find($id);
         $menu->name = $req->input('name');
@@ -201,9 +202,7 @@ class ProductBackController extends Controller
                 $image_filename = $file->getClientOriginalName();
                 if (in_array($image_filename, $picName)) {
                     $image_name = date('Y_m_d_His_') . $image_filename;
-                    $storage = '/storage/app/public/';
-                    $destination = base_path() . $storage;
-                    $file->move($destination, $image_name);
+                    Storage::disk($disk)->putFileAs('public', $file, $image_name, 'public');
                     $new_img = new MenuPicture();
                     $new_img->name = $image_name;
                     $menu->menuPictures()->saveMany([$new_img]);
@@ -216,7 +215,7 @@ class ProductBackController extends Controller
             $img = MenuPicture::find($value);
             $name = $img->name;
             if ($name != 'man.png') {
-                File::delete(base_path() . $storage . $name);
+                Storage::disk($disk)->delete('public/'.$name);
             }
             $img->delete();
         }

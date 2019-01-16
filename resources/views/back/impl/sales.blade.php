@@ -1,7 +1,15 @@
 @extends('back.layout.app')
-
+{{-- img image --}}
 @section('content')
-
+@php
+    function getUrl($file_name){
+        if(env('APP_ENV') == 'production'){
+            return env('AWS_URL') . '/public' . '/' . $file_name;
+        }else {
+            return url('storage', $file_name);
+        }
+    }
+@endphp
 <h4 class="page-title"><span class="la la-clipboard"></span> ยอดขาย</h4>
 <div class="row">
     <div class="col-md-12 bg-light border rounded p-2">
@@ -83,7 +91,7 @@
                                                 @forelse ($top_menu as $key=>$menu)
                                                     <tr>
                                                         <td>#{{$key+1}}</td>
-                                                        <td style="vertical-align: middle;" class="text-center"><img src="{{url('/storage',[$menu->menuPictures[0]->name])}}" alt="" width="50px" height="50px"></td>
+                                                        <td style="vertical-align: middle;" class="text-center"><img src="{{getUrl($menu->menuPictures[0]->name)}}" alt="" width="50px" height="50px"></td>
                                                         <td style="vertical-align: middle;" class="text-center"><a href="{{url('product',[$menu->id])}}">{{$menu->name}}</a></td>
                                                         <td style="vertical-align: middle;" class="text-center">{{$menu->price}} บาท</td>
 

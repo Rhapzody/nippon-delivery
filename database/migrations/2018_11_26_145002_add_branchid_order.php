@@ -27,6 +27,7 @@ class AddBranchidOrder extends Migration
     public function down()
     {
         Schema::table('order', function (Blueprint $table) {
+            $table->dropForeign(['branch_id']);
             $table->dropColumn('branch_id');
         });
 

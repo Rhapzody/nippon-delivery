@@ -13,8 +13,19 @@ class BranchSeeder extends Seeder
     public function run()
     {
         $branches = [
-            ['name'=>'pakkred'],
-            ['name'=>'kamphaeng saen']
+            [
+                'name'=>'Pakkred',
+                'lat'=>13.912645352688644,
+                'long'=>100.49585080127144,
+                'status'=>1,
+
+            ],
+            [
+                'name'=>'Kamphaeng saen',
+                'lat'=>14.029381693917161,
+                'long'=>99.95429992675783,
+                'status'=>1,
+            ]
         ];
         Branch::insert($branches);
     }

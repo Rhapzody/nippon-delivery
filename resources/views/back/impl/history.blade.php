@@ -1,7 +1,15 @@
 @extends('back.layout.app')
-
+{{-- img --}}
 @section('content')
-
+@php
+    function getUrl($file_name){
+        if(env('APP_ENV') == 'production'){
+            return env('AWS_URL') . '/public' . '/' . $file_name;
+        }else {
+            return url('storage', $file_name);
+        }
+    }
+@endphp
 <h4 class="page-title"><span class="la la-clipboard"></span> ประวัติการสั่งซื้อ</h4>
 <div class="row">
     <div class="col-md-12 bg-light border rounded p-2">
