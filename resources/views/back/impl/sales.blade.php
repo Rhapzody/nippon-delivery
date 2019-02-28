@@ -18,11 +18,6 @@
                 <div class="card">
                     <div class="card-header row">
                         <span class="card-title col-md-1">สาขา: </span>
-                        @hasrole('ผู้จัดการสาขา')
-                            <select name="branch" id="branch" class="form-control col-md-4">
-                                <option value="{{Auth::user()->subDistrict->branch_id}}">{{Auth::user()->subDistrict->branch->name}}</option>
-                            </select>
-                        @endhasrole
                         @hasrole('เจ้าของร้าน')
                             <select name="branch" id="branch" class="form-control col-md-4">
                                 <option value="-1">ทั้งหมด</option>

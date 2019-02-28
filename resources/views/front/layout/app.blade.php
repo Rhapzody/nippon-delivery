@@ -147,10 +147,11 @@
 						</div>
 						<!-- /SEARCH BAR -->
 
-						@auth
-                            <!-- ACCOUNT -->
-						    <div class="col-md-4 clearfix">
-                                <div class="header-ctn">
+
+                        <!-- ACCOUNT -->
+                        <div class="col-md-4 clearfix">
+                            <div class="header-ctn">
+                                @auth
                                     <!-- Wishlist -->
                                     <div>
                                         <a href="{{url('user/whishlist')}}">
@@ -197,18 +198,19 @@
                                     @else
                                     @endunlessrole
 
-                                    <!-- Menu Toogle -->
-                                    <div class="menu-toggle">
-                                        <a href="#">
-                                            <i class="fa fa-bars"></i>
-                                            <span>Menu</span>
-                                        </a>
-                                    </div>
-                                    <!-- /Menu Toogle -->
+                                @endauth
+                                <!-- Menu Toogle -->
+                                <div class="menu-toggle float-rigth">
+                                    <a href="#">
+                                        <i class="fa fa-bars"></i>
+                                        <span>Menu</span>
+                                    </a>
                                 </div>
+                                <!-- /Menu Toogle -->
                             </div>
-                            <!-- /ACCOUNT -->
-                        @endauth
+                        </div>
+                        <!-- /ACCOUNT -->
+
 					</div>
 					<!-- row -->
 				</div>

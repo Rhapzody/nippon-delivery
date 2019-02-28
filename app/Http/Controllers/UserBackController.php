@@ -25,6 +25,9 @@ class UserBackController extends Controller
                     ->where('id', '=', $search_text)
                     ->orWhere('first_name', 'like', $search_text . '%')
                     ->orWhere('email', 'like', $search_text . '%')
+                    ->orWhereHas('roles', function ($query) use ($search_text){
+                        $query->where('name', 'like', $search_text . '%');
+                    })
                     ->paginate(5);
                 break;
 
@@ -33,16 +36,19 @@ class UserBackController extends Controller
                 break;
 
             case '2':
-                $role = Role::where('name', 'like', $search_text . '%')->first();
-                if ($role == null) {
-                    $users = User::with('roles')->where('id', '=', -99)->paginate(5);
-                } else {
-                    $users = $role->users()->with('roles')->paginate(5);
-                }
+                $users = User::with('roles')
+                    ->whereHas('roles', function ($query) use ($search_text){
+                        $query->where('name', 'like', $search_text . '%');
+                    })
+                    ->paginate(5);
                 break;
 
             case '3':
-                $users = User::with('roles')->where('id', '=', $search_text)->paginate(5);
+                if (trim($search_text) != ''){
+                    $users = User::with('roles')->where('id', '=', $search_text)->paginate(5);
+                }else{
+                    $users = User::with('roles')->paginate(5);
+                }
                 break;
 
             case '4':

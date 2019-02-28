@@ -208,7 +208,6 @@
                     <div class="card-body">
                         <form action="{{url('staff/branch')}}" method="GET" class="row mx-4 mb-2">
                             <select name="find_mode" id="" class="form-control col-md-1 mr-1">
-                                <option value="-1">---</option>
                                 <option value="1" {{($find_mode == 1)?"selected":""}}>ID</option>
                                 <option value="2" {{($find_mode == 2)?"selected":""}}>ชื่อ</option>
                             </select>

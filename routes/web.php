@@ -17,12 +17,12 @@ Route::get('/', function () {
 Auth::routes(['verify' => true]);
 
 //staff dispatcher
-Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน|ผู้จัดการสาขา|พ่อครัว/แม่ครัว|คนส่งสินค้า']], function () {
+Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน|พนักงานรับออเดอร์|พนักงานส่งสินค้า']], function () {
     Route::get('staff/dispatch', 'IndexController@staffDispatch');
 });
 
 //user management
-Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน|ผู้จัดการสาขา']], function () {
+Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน']], function () {
     Route::get('staff/user/{search_mode?}/{search_text?}', 'UserBackController@searchUser')->where([
         'search_mode' => '[0-9]+',
         'search_text' => '.*',
@@ -41,7 +41,7 @@ Route::get('sub_district_by_district_id', 'UserBackController@getSubDistrictsByP
 Route::get('provinces', 'UserBackController@getAllProvinces');
 
 // product management
-Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน|ผู้จัดการสาขา']], function () {
+Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน']], function () {
     Route::get('staff/product/{search_mode?}/{search_text?}', 'ProductBackController@searchProduct')->where([
         'search_mode' => '[0-9]+',
         'search_text' => '.*',
@@ -67,7 +67,7 @@ Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน']
 Route::get('staff/branch/all', 'BranchController@all');
 
 // order reception
-Route::group(['middleware' => ['auth', 'role:พ่อครัว/แม่ครัว']], function () {
+Route::group(['middleware' => ['auth', 'role:พนักงานรับออเดอร์']], function () {
     Route::get('staff/order', 'OrderReceptionController@showPage');
     Route::post('staff/order/1to2', 'OrderReceptionController@oneToTwo');
     Route::post('staff/order/2to3', 'OrderReceptionController@twoToThree');
@@ -77,14 +77,14 @@ Route::group(['middleware' => ['auth', 'role:พ่อครัว/แม่ค�
 });
 
 //sales
-Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน|ผู้จัดการสาขา']], function () {
+Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน']], function () {
     Route::get('staff/sales', 'SalesController@show');
     Route::get('staff/sales/data', 'SalesController@data');
     Route::get('staff/sales/todayStat', 'SalesController@todayStat');
 });
 
 //history
-Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน|ผู้จัดการสาขา']], function () {
+Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน']], function () {
     Route::get('staff/history', 'HistoryBackController@show');
     Route::get('staff/history/find', 'HistoryBackController@find');
     Route::get('staff/history/{branch_id}/{status_code}/{from}/{to}', 'HistoryBackController@search');
@@ -92,7 +92,7 @@ Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน|�
 });
 
 //delivery
-Route::group(['middleware' => ['auth', 'role:คนส่งสินค้า']], function () {
+Route::group(['middleware' => ['auth', 'role:พนักงานส่งสินค้า']], function () {
     Route::get('staff/deliver', 'DeliverController@show');
     Route::post('staff/deliver/3to4', 'DeliverController@threeToFour');
     Route::post('staff/deliver/4to5', 'DeliverController@fourToFive');

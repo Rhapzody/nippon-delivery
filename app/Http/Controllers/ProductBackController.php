@@ -37,25 +37,25 @@ class ProductBackController extends Controller
                 break;
 
             case '2':
-                $thisType = MenuType::with('menus')->where('name', 'like', $search_text . '%')->first();
-                if ($thisType == null) {
-                    $menus = Menu::with('tags', 'menuPictures', 'menuType')->where('id', '=', -99)->paginate(5);
-                } else {
-                    $menus = $thisType->menus()->paginate(5);
-                }
+                $menus = Menu::with('tags', 'menuPictures', 'menuType')
+                    ->whereHas('menuType', function ($q) use ($search_text) {
+                        $q->where('name', 'like', $search_text . '%');
+                    })->paginate(5);
                 break;
 
             case '3':
-                $menus = Menu::with('tags', 'menuPictures', 'menuType')->where('id', '=', $search_text)->paginate(5);
+                if (trim($search_text) != ''){
+                    $menus = Menu::with('tags', 'menuPictures', 'menuType')->where('id', '=', $search_text)->paginate(5);
+                }else{
+                    $menus = Menu::with('tags', 'menuPictures', 'menuType')->paginate(5);
+                }
                 break;
 
             case '4':
-                $thisTag = Tag::with('menus')->where('name', 'like', $search_text . '%')->first();
-                if ($thisTag == null) {
-                    $menus = Menu::with('tags', 'menuPictures', 'menuType')->where('id', '=', -99)->paginate(5);
-                } else {
-                    $menus = $thisTag->menus()->paginate(5);
-                }
+                $menus = Menu::with('tags', 'menuPictures', 'menuType')
+                    ->whereHas('tags', function ($q) use ($search_text) {
+                        $q->where('name', 'like', $search_text . '%');
+                    })->paginate(5);
                 break;
 
             default:

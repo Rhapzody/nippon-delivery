@@ -106,7 +106,7 @@
 						</div>
 					</div>
 					<ul class="nav">
-                        @hasanyrole('เจ้าของร้าน|ผู้จัดการสาขา')
+                        @hasanyrole('เจ้าของร้าน')
                             <li class="nav-item {{($unav=='user')?'active':''}}">
                                 <a href={{url('/staff/user/')}}>
                                     <i class="la la-group"></i>
@@ -134,7 +134,7 @@
                                 </a>
                             </li>
                         @endhasanyrole
-                        @hasrole('พ่อครัว/แม่ครัว')
+                        @hasrole('พนักงานรับออเดอร์')
                             <li class="nav-item {{($unav=='order')?'active':''}}">
                                 <a href={{url('/staff/order/')}}>
                                     <i class="la la-file-text"></i>
@@ -143,7 +143,7 @@
                                 </a>
                             </li>
                         @endhasrole
-                        @hasrole('คนส่งสินค้า')
+                        @hasrole('พนักงานส่งสินค้า')
                             <li class="nav-item {{($unav=='deliver')?'active':''}}">
                                 <a href={{url('/staff/deliver/')}}>
                                     <i class="la la-truck"></i>
