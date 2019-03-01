@@ -43,7 +43,7 @@ function getUrl($file_name){
 
                                 <div id="wait-{{$order->id}}" class="collapse" >
                                     <div class="card-body">
-                                        <span class="pull-left h6">คุณ {{$order->user->name}}</span>
+                                        <span class="pull-left h6">คุณ {{$order->user->first_name . " " . $order->user->last_name}}</span>
                                         <span class="pull-right h6">สั่งเมื่อ {{$order->created_at}}</span>
                                         <table class="table table-hover align-middle">
                                             <thead>
@@ -59,8 +59,8 @@ function getUrl($file_name){
                                                     <tr>
                                                         <td style="vertical-align: middle;" class="text-center">{{$menu->menu->name}}</td>
                                                         <td style="vertical-align: middle;" class="text-center">{{$menu->quantity}}</td>
-                                                        <td style="vertical-align: middle;" class="text-center">{{$menu->menu->price}}</td>
-                                                        <td style="vertical-align: middle;" class="text-center">{{$menu->quantity * $menu->menu->price}}</td>
+                                                        <td style="vertical-align: middle;" class="text-center">{{$menu->price}}</td>
+                                                        <td style="vertical-align: middle;" class="text-center">{{$menu->quantity * $menu->price}}</td>
                                                     </tr>
                                                 @empty
                                                 @endforelse
@@ -80,7 +80,7 @@ function getUrl($file_name){
                                                     $ship_cost = 60;
                                                     foreach ($menus as $key => $value) {
                                                         $sum_qty += $value->quantity;
-                                                        $sum_price += $value->menu->price * $value->quantity;
+                                                        $sum_price += $value->price * $value->quantity;
                                                     }
                                                     if($sum_price >= 500) $ship_cost = 0;
                                                 @endphp
@@ -123,7 +123,7 @@ function getUrl($file_name){
 
                                 <div id="deliver-{{$order->id}}" class="collapse" >
                                     <div class="card-body">
-                                        <span class="pull-left h6">คุณ {{$order->user->name}}</span>
+                                        <span class="pull-left h6">คุณ {{$order->user->first_name . " " . $order->user->last_name}}</span>
                                         <span class="pull-right h6">สั่งเมื่อ {{$order->created_at}}</span>
 
                                         <table class="table table-hover align-middle">
@@ -140,8 +140,8 @@ function getUrl($file_name){
                                                     <tr>
                                                         <td style="vertical-align: middle;" class="text-center">{{$menu->menu->name}}</td>
                                                         <td style="vertical-align: middle;" class="text-center">{{$menu->quantity}}</td>
-                                                        <td style="vertical-align: middle;" class="text-center">{{$menu->menu->price}}</td>
-                                                        <td style="vertical-align: middle;" class="text-center">{{$menu->quantity * $menu->menu->price}}</td>
+                                                        <td style="vertical-align: middle;" class="text-center">{{$menu->price}}</td>
+                                                        <td style="vertical-align: middle;" class="text-center">{{$menu->quantity * $menu->price}}</td>
                                                     </tr>
                                                 @empty
                                                 @endforelse
@@ -161,7 +161,7 @@ function getUrl($file_name){
                                                     $ship_cost = 60;
                                                     foreach ($menus as $key => $value) {
                                                         $sum_qty += $value->quantity;
-                                                        $sum_price += $value->menu->price * $value->quantity;
+                                                        $sum_price += $value->price * $value->quantity;
                                                     }
                                                     if($sum_price >= 500) $ship_cost = 0;
                                                 @endphp

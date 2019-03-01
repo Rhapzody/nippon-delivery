@@ -63,7 +63,7 @@ class HistoryController extends Controller
         $ship_cost = 60;
         foreach ($menus as $key => $value) {
             $sum_qty += $value->quantity;
-            $sum_price += $value->menu->price * $value->quantity;
+            $sum_price += $value->price * $value->quantity;
         }
         if($sum_price >= 500) $ship_cost = 0;
 

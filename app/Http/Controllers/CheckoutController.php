@@ -10,6 +10,7 @@ use App\District;
 use App\SubDistrict;
 use App\Order;
 use App\OrderMenu;
+use App\RestaurantDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Validator;
@@ -70,6 +71,17 @@ class CheckoutController extends Controller
         if($product->isEmpty()) return redirect('/');
         $insert = [];
 
+        $promotion = RestaurantDetail::find(1);
+        $shipCost = $promotion->shipping_cost;
+
+        $sumPrice = 0;
+        foreach ($product as $key => $menu) {
+            $sumPrice += $menu->quantity * $menu->menu->price;
+        }
+        if ($sumPrice >= $promotion->sum_price_discount) {
+            $shipCost = 0;
+        }
+
         if ($req->input('address_option') == "origin") {
             $sub_district = SubDistrict::find($req->input('sub_district_id'));
             $branch_id;
@@ -82,6 +94,9 @@ class CheckoutController extends Controller
             }else{
                 $branch_id = null;
             }
+            if ($branch_id != null) {
+                $shipCost = 0;
+            }
 
             $address = $req->input('origin_address');
             $order = Order::create([
@@ -89,14 +104,16 @@ class CheckoutController extends Controller
                 "status_code"=>1,
                 "address"=>$address,
                 "branch_id"=>$branch_id,
-                "sub_district_id"=>$req->input('sub_district_id')
+                "sub_district_id"=>$req->input('sub_district_id'),
+                "shipping_cost"=>$shipCost
             ]);
             foreach ($product as $key => $menu) {
                 $insert[] = [
                     'order_id'=>$order->id,
                     'menu_id'=>$menu->menu->id,
                     'status_code'=>1,
-                    'quantity'=>$menu->quantity
+                    'quantity'=>$menu->quantity,
+                    'price'=>$menu->menu->price,
                 ];
             }
             OrderMenu::insert($insert);
@@ -125,6 +142,10 @@ class CheckoutController extends Controller
             }else{
                 $branch_id = null;
             }
+            if ($branch_id != null) {
+                $shipCost = 0;
+            }
+
             $address = (
                 "บ้านเลขที่ " . $req->input('house_number') . ", " .
                 "หมู่ที่ " . $req->input('village_number') . ", " .
@@ -140,14 +161,16 @@ class CheckoutController extends Controller
                 "status_code"=>1,
                 "address"=>$address,
                 "branch_id"=>$branch_id,
-                "sub_district_id"=>$req->input('sub_district')
+                "sub_district_id"=>$req->input('sub_district'),
+                "shipping_cost"=>$shipCost
             ]);
             foreach ($product as $key => $menu) {
                 $insert[] = [
                     'order_id'=>$order->id,
                     'menu_id'=>$menu->menu->id,
                     'status_code'=>1,
-                    'quantity'=>$menu->quantity
+                    'quantity'=>$menu->quantity,
+                    'price'=>$menu->menu->price,
                 ];
             }
             OrderMenu::insert($insert);
