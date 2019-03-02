@@ -25,12 +25,12 @@ class CheckoutController extends Controller
             ->get();
         if($product->isEmpty()) return redirect('/');
 
+        $promotion = RestaurantDetail::find(1);
         $provinces = Province::all();
         $user = User::with(['subDistrict', 'subDistrict.district', 'subDistrict.district.province'])
             ->find($user_id);
         $sum_qty = 0;
         $sum_price = 0;
-        $ship_cost = 60;
         $is_cart_empty = false;
         $user_address = (
             "บ้านเลขที่ " . $user->house_number . ", " .
@@ -47,18 +47,17 @@ class CheckoutController extends Controller
             $sum_qty += $value->quantity;
             $sum_price += $value->menu->price * $value->quantity;
         }
-        if($sum_price >= 500) $ship_cost = 0;
 
         return view('front.impl.checkout',[
             'header'=>'ดำเนินการสั่งซื้อ',
             'menus'=>$product,
             'sum_qty'=>$sum_qty,
             'sum_price'=>$sum_price,
-            'ship_cost'=>$ship_cost,
             'is_cart_empty'=>$is_cart_empty,
             'user_address'=>$user_address,
             'provinces'=>$provinces,
-            'sub_district'=>$user->subDistrict
+            'sub_district'=>$user->subDistrict,
+            'promotion'=>$promotion
         ]);
     }
 

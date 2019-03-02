@@ -141,8 +141,11 @@
                         }
 
                         ele.order_menus.forEach(list => {
-                            sum += list.quantity * list.menu.price;
+                            console.log(list)
+                            sum += list.quantity * list.price;
                         });
+                        console.log(ele)
+                        sum += parseFloat(ele.shipping_cost);
 
                         if(index == response.length - 1){
                             my_label.push(first_date);
@@ -191,8 +194,10 @@
                     let date = (new Date(data[0]['created_at']).toDateString());
                     data.forEach(ele => {
                         ele.order_menus.forEach(list => {
-                            sum_income += list.quantity * list.menu.price;
+                            sum_income += list.quantity * list.price;
                         });
+                        console.log(sum_income, ele.shipping_cost)
+                        sum_income += parseFloat(ele.shipping_cost);
                     });
                     $('#today').html(date);
                     $('#number_order').html(sum_order);

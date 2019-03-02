@@ -61,12 +61,11 @@ class HistoryBackController extends Controller
         $status = $order->orderStatus;
         $sum_qty = 0;
         $sum_price = 0;
-        $ship_cost = 60;
+        $ship_cost = $order->shipping_cost;
         foreach ($menus as $key => $value) {
             $sum_qty += $value->quantity;
             $sum_price += $value->price * $value->quantity;
         }
-        if($sum_price >= 500) $ship_cost = 0;
 
         return view('back.impl.orderhistory', [
             'unav'=>'history',

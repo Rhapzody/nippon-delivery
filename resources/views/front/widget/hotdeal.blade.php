@@ -35,7 +35,8 @@
                         </script>
                     </ul>
                     <h1 class="text-uppercase">ฟรี ค่า จัด ส่ง</h1>
-                    <p>> > > เมื่อสั่งครบ 500 บาท < < <</p>
+                    <p>> > > เมื่อสั่งครบ {{$promotion->sum_price_discount}} บาท < < <</p>
+                    <p>หรือภายในเขตที่สาขาดูแลอยู่</p>
                     <a class="primary-btn cta-btn h3" href="{{url('store')}}">สั่งเลย!</a>
                 </div>
             </div>

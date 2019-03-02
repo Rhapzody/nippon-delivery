@@ -77,12 +77,11 @@ function getUrl($file_name){
                                                     $status = $order->orderStatus;
                                                     $sum_qty = 0;
                                                     $sum_price = 0;
-                                                    $ship_cost = 60;
+                                                    $ship_cost = $order->shipping_cost;
                                                     foreach ($menus as $key => $value) {
                                                         $sum_qty += $value->quantity;
                                                         $sum_price += $value->price * $value->quantity;
                                                     }
-                                                    if($sum_price >= 500) $ship_cost = 0;
                                                 @endphp
                                                 <div>จำนวนทั้งหมด: <span class="pull-right">{{$sum_qty}} ชิ้น</span></div>
                                                 <div>ราคารวม: <span class="pull-right">{{$sum_price}} บาท</span></div>
@@ -158,12 +157,11 @@ function getUrl($file_name){
                                                     $status = $order->orderStatus;
                                                     $sum_qty = 0;
                                                     $sum_price = 0;
-                                                    $ship_cost = 60;
+                                                    $ship_cost = $order->shipping_cost;
                                                     foreach ($menus as $key => $value) {
                                                         $sum_qty += $value->quantity;
                                                         $sum_price += $value->price * $value->quantity;
                                                     }
-                                                    if($sum_price >= 500) $ship_cost = 0;
                                                 @endphp
                                                 <div>จำนวนทั้งหมด: <span class="pull-right">{{$sum_qty}} ชิ้น</span></div>
                                                 <div>ราคารวม: <span class="pull-right">{{$sum_price}} บาท</span></div>

@@ -33,6 +33,7 @@ class SalesController extends Controller
             $branch_id = 1;
         }
         $orders = Order::with(['orderStatus', 'orderMenus', 'orderMenus.menu'])
+                ->where('status_code', '=', 5)
                 ->where('created_at', '>=', date($from . '00:00:00'))
                 ->where('created_at', '<=', date($to . '23:59:59'))
                 ->where('branch_id', $compare, $branch_id)
@@ -49,6 +50,7 @@ class SalesController extends Controller
         }
         $today_orders = Order::with(['orderStatus', 'orderMenus', 'orderMenus.menu'])
                 ->where('created_at', '>=', date('Y-m-d'))
+                ->where('status_code', '=', 5)
                 ->where('branch_id', $compare, $branch_id)
                 ->get();
         return response($today_orders);
