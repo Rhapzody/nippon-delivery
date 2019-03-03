@@ -21,6 +21,7 @@ class ProductBackController extends Controller
         switch ($search_mode) {
             case '0':
                 $menus = Menu::with('tags', 'menuPictures', 'menuType')
+                    ->withTrashed()
                     ->where('name', 'like', $search_text . '%')
                     ->orWhere('id', '=', $search_text)
                     ->orWhereHas('tags', function ($q) use ($search_text) {
@@ -33,11 +34,15 @@ class ProductBackController extends Controller
                 break;
 
             case '1':
-                $menus = Menu::with('tags', 'menuPictures', 'menuType')->where('name', 'like', $search_text . '%')->paginate(5);
+                $menus = Menu::with('tags', 'menuPictures', 'menuType')
+                    ->withTrashed()
+                    ->where('name', 'like', $search_text . '%')
+                    ->paginate(5);
                 break;
 
             case '2':
                 $menus = Menu::with('tags', 'menuPictures', 'menuType')
+                    ->withTrashed()
                     ->whereHas('menuType', function ($q) use ($search_text) {
                         $q->where('name', 'like', $search_text . '%');
                     })->paginate(5);
@@ -45,21 +50,22 @@ class ProductBackController extends Controller
 
             case '3':
                 if (trim($search_text) != ''){
-                    $menus = Menu::with('tags', 'menuPictures', 'menuType')->where('id', '=', $search_text)->paginate(5);
+                    $menus = Menu::with('tags', 'menuPictures', 'menuType')->withTrashed()->where('id', '=', $search_text)->paginate(5);
                 }else{
-                    $menus = Menu::with('tags', 'menuPictures', 'menuType')->paginate(5);
+                    $menus = Menu::with('tags', 'menuPictures', 'menuType')->withTrashed()->paginate(5);
                 }
                 break;
 
             case '4':
                 $menus = Menu::with('tags', 'menuPictures', 'menuType')
+                    ->withTrashed()
                     ->whereHas('tags', function ($q) use ($search_text) {
                         $q->where('name', 'like', $search_text . '%');
                     })->paginate(5);
                 break;
 
             default:
-                $menus = Menu::with('tags', 'menuPictures', 'menuType')->paginate(5);
+                $menus = Menu::with('tags', 'menuPictures', 'menuType')->withTrashed()->paginate(5);
                 break;
         }
 
@@ -152,7 +158,7 @@ class ProductBackController extends Controller
 
     public function editProduct($id)
     {
-        $menu = Menu::with('tags', 'menuPictures', 'menuType')->find($id);
+        $menu = Menu::with('tags', 'menuPictures', 'menuType')->withTrashed()->find($id);
         $types = MenuType::all();
         $tags = Tag::all();
 
@@ -169,7 +175,7 @@ class ProductBackController extends Controller
     {
         $disk = (env('APP_ENV') == 'production')?'s3':'local';
         $id = $req->input('id');
-        $menu = Menu::with('tags', 'menuPictures', 'menuType')->find($id);
+        $menu = Menu::with('tags', 'menuPictures', 'menuType')->withTrashed()->find($id);
         $menu->name = $req->input('name');
         $menu->price = $req->input('price');
         $menu->type_id = $req->input('type');
@@ -234,7 +240,7 @@ class ProductBackController extends Controller
         if ($id <= 0 || !is_numeric($id)) {
             abort(404);
         }
-        $menu = Menu::with('tags', 'menuPictures', 'menuType')->find($id);
+        $menu = Menu::with('tags', 'menuPictures', 'menuType')->withTrashed()->find($id);
         return response()->json($menu->toArray());
     }
 
@@ -244,7 +250,7 @@ class ProductBackController extends Controller
         if ($id <= 0 || !is_numeric($id)) {
             abort(404);
         }
-        $menu = Menu::with('tags')->find($id);
+        $menu = Menu::with('tags')->withTrashed()->find($id);
         return response()->json($menu->toArray());
     }
 
@@ -254,7 +260,11 @@ class ProductBackController extends Controller
         if ($id <= 0 || !is_numeric($id)) {
             abort(404);
         }
-        $menu = Menu::with('menuPictures')->find($id);
+        $menu = Menu::with('menuPictures')->withTrashed()->find($id);
         return response()->json($menu->toArray());
+    }
+
+    public function unDelete($id ,Request $req){
+        Menu::withTrashed()->find($id)->restore();
     }
 }

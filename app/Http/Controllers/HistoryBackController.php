@@ -52,7 +52,9 @@ class HistoryBackController extends Controller
     }
 
     public function order($id){
-        $order = Order::with(['orderStatus', 'user', 'orderMenus', 'orderMenus.menu', 'orderMenus.menu.menuPictures'])
+        $order = Order::with(['orderStatus', 'user', 'orderMenus', 'orderMenus.menu'=> function ($query) {
+                $query->withTrashed();
+            }, 'orderMenus.menu.menuPictures'])
             ->where('id', "=", $id)
             ->first();
         if (!$order) abort(404);

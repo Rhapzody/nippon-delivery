@@ -49,7 +49,8 @@ Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน']
     Route::get('staff/product/add', 'ProductBackController@addProduct');
     Route::post('staff/product/add/process', 'ProductBackController@addProductProcess');
     Route::get('staff/product/edit', 'ProductBackController@editProduct');
-    Route::delete('staff/product/{id}', 'ProductBackController@deleteProduct')->where(['id' => '[0-9]+']);
+    Route::delete('staff/product/delete/{id}', 'ProductBackController@deleteProduct')->where(['id' => '[0-9]+']);
+    Route::post('staff/product/undelete/{id}', 'ProductBackController@unDelete')->where(['id' => '[0-9]+']);
     Route::get('staff/product/product_detail_by_id', 'ProductBackController@getProductDetailById');
     Route::get('staff/product/edit/{id}', 'ProductBackController@editProduct')->where(['id' => '[0-9]+']);
     Route::post('staff/product/edit/process', 'ProductBackController@editProductProcess');

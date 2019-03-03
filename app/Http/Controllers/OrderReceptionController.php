@@ -17,7 +17,9 @@ class OrderReceptionController extends Controller
             ->where('branch_id', '=', Auth::user()->subDistrict->branch_id)
             ->get();
 
-        $second_orders = Order::with(['orderMenus', 'orderMenus.menu', 'orderStatus'])
+        $second_orders = Order::with(['orderMenus', 'orderMenus.menu'=> function ($query) {
+                $query->withTrashed();
+            }, 'orderStatus'])
             ->where('status_code', '=', 2)
             ->where('branch_id', '=', Auth::user()->subDistrict->branch_id)
             ->get();

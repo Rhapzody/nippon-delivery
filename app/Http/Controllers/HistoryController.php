@@ -50,7 +50,9 @@ class HistoryController extends Controller
 
     public function order($id){
         $user_id = Auth::user()->id;
-        $order = Order::with(['orderStatus', 'user', 'orderMenus', 'orderMenus.menu', 'orderMenus.menu.menuPictures'])
+        $order = Order::with(['orderStatus', 'user', 'orderMenus', 'orderMenus.menu'=> function ($query) {
+                $query->withTrashed();
+            }, 'orderMenus.menu.menuPictures'])
             ->where('user_id', '=', $user_id)
             ->where('id', "=", $id)
             ->first();

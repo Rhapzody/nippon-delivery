@@ -20,7 +20,9 @@ class CheckoutController extends Controller
 {
     public function checkout(){
         $user_id = Auth::user()->id;
-        $product = Cart::with(['menu'])
+        $product = Cart::with(['menu'=> function ($query) {
+                $query->withTrashed();
+            }])
             ->where('user_id', '=', $user_id)
             ->get();
         if($product->isEmpty()) return redirect('/');
@@ -64,7 +66,9 @@ class CheckoutController extends Controller
     public function process(Request $req){
 
         $user_id = Auth::user()->id;
-        $product = Cart::with(['menu'])
+        $product = Cart::with(['menu'=> function ($query) {
+                $query->withTrashed();
+            }])
             ->where('user_id', '=', $user_id)
             ->get();
         if($product->isEmpty()) return redirect('/');
