@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Branch;
 use App\Province;
 use App\SubDistrict;
+use App\RestaurantDetail;
 
 class BranchController extends Controller
 {
@@ -29,7 +30,8 @@ class BranchController extends Controller
             'branches'=>$branches,
             'find_mode'=>$check,
             'search'=>$search,
-            'provinces'=>Province::all()
+            'provinces'=>Province::all(),
+            'promo'=>RestaurantDetail::find(1)
         ]);
     }
 
@@ -80,5 +82,16 @@ class BranchController extends Controller
         }
 
         return redirect('staff/branch');
+    }
+
+    public function changePromotion(Request $req){
+        $res = RestaurantDetail::find(1);
+        $res->sum_price_discount = $req->input('sumCost');
+        $res->shipping_cost = $req->input('shippingCost');
+        $res->save();
+    }
+
+    public function getSubdistrictBranch(){
+        return response(SubDistrict::whereNotNull('branch_id')->get());
     }
 }

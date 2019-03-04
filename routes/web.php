@@ -33,6 +33,7 @@ Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน']
     Route::post('staff/user/edit/changePassword', 'UserBackController@editPassword');
     Route::post('staff/user/edit/process', 'UserBackController@editUserProcess');
     Route::delete('staff/user/{id}', 'UserBackController@deleteUser')->where(['id' => '[0-9]+']);
+    Route::post('staff/user/undelete/{id}', 'UserBackController@unDeleteUser')->where(['id' => '[0-9]+']);
     Route::get('user_detail_by_id', 'UserBackController@getUserDetailById');
 });
 Route::post('staff/user/edit/changePassword', 'UserBackController@editPassword')->middleware('auth');
@@ -64,8 +65,10 @@ Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน']
     Route::post('staff/branch/close', 'BranchController@close');
     Route::post('staff/branch/open', 'BranchController@open');
     Route::post('staff/branch/create', 'BranchController@create');
+    Route::post('staff/branch/changePromotion', 'BranchController@changePromotion');
 });
 Route::get('staff/branch/all', 'BranchController@all');
+Route::get('staff/branch/subdistrict', 'BranchController@getSubdistrictBranch');
 
 // order reception
 Route::group(['middleware' => ['auth', 'role:พนักงานรับออเดอร์']], function () {

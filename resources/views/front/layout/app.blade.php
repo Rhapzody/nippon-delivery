@@ -284,6 +284,14 @@
                             </div>
                         </div>
                         @endguest
+                        <div class="col-md-3 col-xs-6">
+                            <div class="footer">
+                                <h3 class="footer-title">ตำบลที่อยู่ในเขตให้บริการ</h3>
+                                <select id="subdis" style="color: black;">
+                                    <option value="">--ตรวจสอบ--</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <!-- /row -->
                 </div>
@@ -405,8 +413,14 @@
 
                 }
 
+                $.get("{{url('staff/branch/subdistrict')}}", function(data) {
+                    let subdis = $('#subdis');
+                    data.forEach(function(ele) {
+                        subdis.append(`<option value="">${ele.name}</option>`);
+                    })
+                });
 
-            })
+            });
         </script>
 
 	</body>

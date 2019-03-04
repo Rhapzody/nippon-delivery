@@ -259,6 +259,30 @@
                 </div>
 
                 <div class="card">
+                    {{-- สาขาทั้งหมด --}}
+                    <div class="card-header">
+                        <div class="card-title">โปรโมชัน ค่าจัดส่ง</div>
+                    </div>
+                    <div class="card-body">
+                        <form class="row">
+                            <div class="form-group col-md-4">
+                                <label for="shipping_cost">ค่าจัดส่ง</label>
+                                <input type="number" name="shipping_cost" id="shipping_cost" step="0.01" class="form-control" value="{{$promo->shipping_cost}}">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="sum_cost">จัดส่งฟรีเมื่อซื้อครบ</label>
+                                <input type="number" name="sum_cost" id="sum_cost" step="0.01" class="form-control" value="{{$promo->sum_price_discount}}">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div style="visibility: hidden;" class="mt-2">label</div>
+                                <button class="btn btn-primary" type="button" onclick="changePromotion();">บันทึก</button>
+                            </div>
+                        </form>
+                        <label for="" class="text-success" id="change-promotion-result"></label>
+                    </div>
+                </div>
+
+                <div class="card">
                     {{-- เพิ่มสาขา --}}
                     <div class="card-header">
                         <div class="card-title">เพิ่มสาขาใหม่</div>
@@ -347,6 +371,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
+        let changePromotion;
         let switchBranch;
         let createBranch;
         $(function() {
@@ -518,6 +543,27 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $('#create_branch').submit();
+                    }
+                });
+            }
+
+            changePromotion = function() {
+                let shippingCost = $('#shipping_cost').val();
+                let sumCost = $('#sum_cost').val();
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    url: "{{url('staff/branch/changePromotion')}}",
+                    type: 'POST',
+                    data: {
+                        shippingCost: shippingCost,
+                        sumCost: sumCost
+                    },
+                    success: function(result) {
+                        $('#change-promotion-result').html('บันทึกสำเร็จ');
                     }
                 });
             }

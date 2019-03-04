@@ -22,6 +22,7 @@ class UserBackController extends Controller
         switch ($search_mode) {
             case '0':
                 $users = User::with('roles')
+                    ->withTrashed()
                     ->where('id', '=', $search_text)
                     ->orWhere('first_name', 'like', $search_text . '%')
                     ->orWhere('email', 'like', $search_text . '%')
@@ -32,11 +33,15 @@ class UserBackController extends Controller
                 break;
 
             case '1':
-                $users = User::with('roles')->where('first_name', 'like', $search_text . '%')->paginate(5);
+                $users = User::with('roles')
+                    ->withTrashed()
+                    ->where('first_name', 'like', $search_text . '%')
+                    ->paginate(5);
                 break;
 
             case '2':
                 $users = User::with('roles')
+                    ->withTrashed()
                     ->whereHas('roles', function ($query) use ($search_text){
                         $query->where('name', 'like', $search_text . '%');
                     })
@@ -45,18 +50,28 @@ class UserBackController extends Controller
 
             case '3':
                 if (trim($search_text) != ''){
-                    $users = User::with('roles')->where('id', '=', $search_text)->paginate(5);
+                    $users = User::with('roles')
+                        ->withTrashed()
+                        ->where('id', '=', $search_text)
+                        ->paginate(5);
                 }else{
-                    $users = User::with('roles')->paginate(5);
+                    $users = User::with('roles')
+                        ->withTrashed()
+                        ->paginate(5);
                 }
                 break;
 
             case '4':
-                $users = User::with('roles')->where('email', 'like', $search_text . '%')->paginate(5);
+                $users = User::with('roles')
+                    ->withTrashed()
+                    ->where('email', 'like', $search_text . '%')
+                    ->paginate(5);
                 break;
 
             default:
-                $users = User::with('roles')->paginate(5);
+                $users = User::with('roles')
+                    ->withTrashed()
+                    ->paginate(5);
                 break;
         }
 
@@ -124,7 +139,7 @@ class UserBackController extends Controller
     public function editUser($id)
     {
 
-        $user = User::with('roles')->find($id);
+        $user = User::with('roles')->withTrashed()->find($id);
         $provinces = Province::all();
         $roles = Role::all();
         $my_role = ($user->roles)[0];
@@ -142,7 +157,7 @@ class UserBackController extends Controller
     public function editUserProcess(EditUserRequest $req)
     {
         $disk = (env('APP_ENV') == 'production')?'s3':'local';
-        $user = User::with('roles')->find($req->input('user_id'));
+        $user = User::with('roles')->withTrashed()->find($req->input('user_id'));
         if ($req->hasFile('image')) {
             $image_filename = $req->file('image')->getClientOriginalName();
             $image_name = date('Y_m_d_His_') . $image_filename;
@@ -219,7 +234,7 @@ class UserBackController extends Controller
             abort(404);
         }
 
-        $user = User::find($req->input('user_id'));
+        $user = User::withTrashed()->find($req->input('user_id'));
         $roles = [];
         foreach ($user->roles as $key => $role) {
             $roles[] = $role->name;
@@ -254,7 +269,7 @@ class UserBackController extends Controller
             'password_2' => 'required|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/|max:255|same:password_1',
         ]);
 
-        $user = User::find($req->input('user_id'));
+        $user = User::withTrashed()->find($req->input('user_id'));
         $exist = Hash::check($req->input('password_old'), $user->password);
 
         if ($validator->fails() || !$exist) {
@@ -274,5 +289,9 @@ class UserBackController extends Controller
     public function deleteUser($id)
     {
         User::find($id)->delete();
+    }
+
+    public function unDeleteUser($id){
+        User::withTrashed()->find($id)->restore();
     }
 }

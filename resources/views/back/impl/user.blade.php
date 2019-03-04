@@ -54,7 +54,7 @@
                         @foreach ($users as $user)
                             <tr>
                                 <td>{{$user->id}}</td>
-                                <td>{{$user->first_name . " " . $user->last_name}}</td>
+                                <td>{{$user->first_name . " " . $user->last_name}} {!!($user->trashed())?'<span style="color:red;"> (ถูกลบ)</span>':""!!}</td>
                                 <td>{{$user->email}}</td>
                                 <td>
                                     @foreach ($user->roles as $role)
@@ -68,7 +68,11 @@
                                     <a href={{url('/staff/user/edit/') . "/" . $user->id}} class="btn btn-outline-primary btn-s big-icon" ><span class="la la-pencil-square"></span></a>
                                 </td>
                                 <td>
-                                    <button class="btn btn-outline-danger btn-s big-icon" onclick="deleteConfirm({{$user->id}})"><span class="la la-trash"></span></button>
+                                    @if ($user->trashed())
+                                        <button class="btn btn-outline-danger btn-s big-icon" title="นำกลับ" onclick="unDelete({{$user->id}})"><span class="la la-reply"></span></button>
+                                    @else
+                                        <button class="btn btn-outline-danger btn-s big-icon" onclick="deleteConfirm({{$user->id}})"><span class="la la-trash"></span></button>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -179,6 +183,8 @@
         //alert when delete user
         let deleteConfirm;
 
+        let unDelete;
+
         $(function(){
 
             getUserDetail =  function(id){
@@ -267,6 +273,21 @@
                         align: placementAlign
                     },
                     time: 1000,
+                });
+            }
+
+            unDelete = function (id) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    url: "{{url('staff/user/undelete')}}" + "/" + id,
+                    type: 'POST',
+                    success: function(result) {
+                        location.reload();
+                    }
                 });
             }
 
