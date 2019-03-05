@@ -221,8 +221,8 @@
                                     <th>สาขา</th>
                                     <th>ประจำตำบล</th>
                                     <th>พิกัด (lat, long)</th>
-                                    <th>สถานะ</th>
-                                    <th>เปิด/ปิด</th>
+                                    {{-- <th>สถานะ</th>
+                                    <th>เปิด/ปิด</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -232,7 +232,7 @@
                                         <td>{{$branch->name}}</td>
                                         <td>{{($branch->subDistrict == null)?"**ปิดถาวร**":$branch->subDistrict->name}}</td>
                                         <td>{{$branch->lat . ", " . $branch->long}}</td>
-                                        <td>{{($branch->status == 1)?"เปิด":"ปิด"}}</td>
+                                        {{-- <td>{{($branch->status == 1)?"เปิด":"ปิด"}}</td>
                                         <td>
                                             @if ($branch->status == 1)
                                                 <form action="{{url('staff/branch/close')}}" method="POST" id="{{'switch' . $branch->id}}">
@@ -248,7 +248,7 @@
                                                 </form>
                                             @endif
                                         </td>
-                                    </tr>
+                                    </tr> --}}
                                 @endforeach
                             </tbody>
                         </table>
@@ -285,7 +285,7 @@
                 <div class="card">
                     {{-- เพิ่มสาขา --}}
                     <div class="card-header">
-                        <div class="card-title">เพิ่มสาขาใหม่</div>
+                        <div class="card-title">เพิ่มสาขาใหม่/แก้ไขสาขาเดิม</div>
                     </div>
                     <div class="card-body">
                             <form action="{{url('staff/branch/create')}}" method="post" id="create_branch">
@@ -351,9 +351,7 @@
                                 </div>
                                 <label for="">***สามารถดับเบิลคลิกที่แผนที่ด้านบนเพื่อระบุตำแหน่งทางภูมิศาสตร์ของสาขาได้</label>
                                 <div class="form-group">
-                                    <label for="branch_status"><span class="text-danger">*</span>สถานะ</label>
-                                    <select name="status" id="branch_status">
-                                        <option value="0">ปิดไว้ก่อน</option>
+                                    <select name="status" id="branch_status" style="visibility: hidden;">
                                         <option value="1">เปิดทันที</option>
                                     </select>
                                 </div>
@@ -535,7 +533,7 @@
             createBranch = function() {
                 swal({
                     title: "แน่ใจหรือไม่",
-                    text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง และให้แน่ใจว่าสาขาใหม่ จะไม่ทับสาขาเก่าในตำบลเดิม หากทับ สาขาเก่าจะถูกปิดตัว",
+                    text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง สำหรับเพิ่มสาขาใหม่ หรือแก้ไขสาขาเดิม",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
