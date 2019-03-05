@@ -208,7 +208,6 @@
                     <div class="card-body">
                         <form action="{{url('staff/branch')}}" method="GET" class="row mx-4 mb-2">
                             <select name="find_mode" id="" class="form-control col-md-1 mr-1">
-                                <option value="-1">---</option>
                                 <option value="1" {{($find_mode == 1)?"selected":""}}>ID</option>
                                 <option value="2" {{($find_mode == 2)?"selected":""}}>ชื่อ</option>
                             </select>
@@ -222,8 +221,8 @@
                                     <th>สาขา</th>
                                     <th>ประจำตำบล</th>
                                     <th>พิกัด (lat, long)</th>
-                                    <th>สถานะ</th>
-                                    <th>เปิด/ปิด</th>
+                                    {{-- <th>สถานะ</th>
+                                    <th>เปิด/ปิด</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -233,7 +232,7 @@
                                         <td>{{$branch->name}}</td>
                                         <td>{{($branch->subDistrict == null)?"**ปิดถาวร**":$branch->subDistrict->name}}</td>
                                         <td>{{$branch->lat . ", " . $branch->long}}</td>
-                                        <td>{{($branch->status == 1)?"เปิด":"ปิด"}}</td>
+                                        {{-- <td>{{($branch->status == 1)?"เปิด":"ปิด"}}</td>
                                         <td>
                                             @if ($branch->status == 1)
                                                 <form action="{{url('staff/branch/close')}}" method="POST" id="{{'switch' . $branch->id}}">
@@ -249,7 +248,7 @@
                                                 </form>
                                             @endif
                                         </td>
-                                    </tr>
+                                    </tr> --}}
                                 @endforeach
                             </tbody>
                         </table>
@@ -260,9 +259,33 @@
                 </div>
 
                 <div class="card">
+                    {{-- สาขาทั้งหมด --}}
+                    <div class="card-header">
+                        <div class="card-title">โปรโมชัน ค่าจัดส่ง</div>
+                    </div>
+                    <div class="card-body">
+                        <form class="row">
+                            <div class="form-group col-md-4">
+                                <label for="shipping_cost">ค่าจัดส่ง</label>
+                                <input type="number" name="shipping_cost" id="shipping_cost" step="0.01" class="form-control" value="{{$promo->shipping_cost}}">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="sum_cost">จัดส่งฟรีเมื่อซื้อครบ</label>
+                                <input type="number" name="sum_cost" id="sum_cost" step="0.01" class="form-control" value="{{$promo->sum_price_discount}}">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <div style="visibility: hidden;" class="mt-2">label</div>
+                                <button class="btn btn-primary" type="button" onclick="changePromotion();">บันทึก</button>
+                            </div>
+                        </form>
+                        <label for="" class="text-success" id="change-promotion-result"></label>
+                    </div>
+                </div>
+
+                <div class="card">
                     {{-- เพิ่มสาขา --}}
                     <div class="card-header">
-                        <div class="card-title">เพิ่มสาขาใหม่</div>
+                        <div class="card-title">เพิ่มสาขาใหม่/แก้ไขสาขาเดิม</div>
                     </div>
                     <div class="card-body">
                             <form action="{{url('staff/branch/create')}}" method="post" id="create_branch">
@@ -328,9 +351,7 @@
                                 </div>
                                 <label for="">***สามารถดับเบิลคลิกที่แผนที่ด้านบนเพื่อระบุตำแหน่งทางภูมิศาสตร์ของสาขาได้</label>
                                 <div class="form-group">
-                                    <label for="branch_status"><span class="text-danger">*</span>สถานะ</label>
-                                    <select name="status" id="branch_status">
-                                        <option value="0">ปิดไว้ก่อน</option>
+                                    <select name="status" id="branch_status" style="visibility: hidden;">
                                         <option value="1">เปิดทันที</option>
                                     </select>
                                 </div>
@@ -348,6 +369,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
+        let changePromotion;
         let switchBranch;
         let createBranch;
         $(function() {
@@ -511,7 +533,7 @@
             createBranch = function() {
                 swal({
                     title: "แน่ใจหรือไม่",
-                    text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง และให้แน่ใจว่าสาขาใหม่ จะไม่ทับสาขาเก่าในตำบลเดิม หากทับ สาขาเก่าจะถูกปิดตัว",
+                    text: "กรุณาตรวจสอบข้อมูลให้ถูกต้อง สำหรับเพิ่มสาขาใหม่ หรือแก้ไขสาขาเดิม",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
@@ -519,6 +541,27 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $('#create_branch').submit();
+                    }
+                });
+            }
+
+            changePromotion = function() {
+                let shippingCost = $('#shipping_cost').val();
+                let sumCost = $('#sum_cost').val();
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    url: "{{url('staff/branch/changePromotion')}}",
+                    type: 'POST',
+                    data: {
+                        shippingCost: shippingCost,
+                        sumCost: sumCost
+                    },
+                    success: function(result) {
+                        $('#change-promotion-result').html('บันทึกสำเร็จ');
                     }
                 });
             }

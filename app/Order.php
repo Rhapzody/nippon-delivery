@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $table = 'order';
-    protected $fillable = ['user_id', 'status_code', 'address', 'sub_district_id' ,'branch_id'];
+    protected $fillable = ['user_id', 'status_code', 'address', 'sub_district_id' ,'branch_id', 'shipping_cost'];
 
     //set field to Carbon object
     protected $date = ['created_at', 'updated_at'];

@@ -29,7 +29,9 @@ class DatabaseSeeder extends Seeder
             OrderMenuSeeder::class,
             WhishListSeeder::class,
             CartSeeder::class,
-            AddBranchSeeder::class
+            AddBranchSeeder::class,
+            ChangeRoleSeeder::class,
+            SetPromotionSeeder::class
         ]);
     }
 }

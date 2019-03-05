@@ -73,13 +73,13 @@
                                 <span class="qty-down" id="qty-down">-</span>
                             </div>
                         </div>
-                        <button class="add-to-cart-btn" style="font-size:20px" onclick="addToCart({{$product->id}}, getQty());">
+                        <button class="add-to-cart-btn" style="font-size:20px" onclick="addToCart({{$product->id}}, getQty());" {{($product->trashed())?"disabled":""}}>
                             <i class="fa fa-shopping-cart"></i> เพิ่มลงตะกร้า
                         </button>
                     </div>
 
                     <ul class="product-btns">
-                        <li><a href="#product-name" style="font-size:20px;text-decoration: underline;" onclick="addWhishList({{$product->id}})">
+                        <li><a href="#product-name" style="font-size:20px;text-decoration: underline;" {{($product->trashed())?"":'onclick=addWhishList(' . $product->id . ')' }}>
                             <i class="fa fa-heart-o" id="whish-icon"></i> เพิ่มในรายการที่ชอบ</a>
                         </li>
                     </ul>

@@ -11,12 +11,26 @@ class DeliverController extends Controller
 {
     public function show(){
         $user = Auth::user();
-        $third_orders = Order::with(['orderStatus','user','orderMenus','orderMenus.menu'])
+        $third_orders = Order::with(['orderStatus',
+            'user'=> function ($query) {
+                $query->withTrashed();
+            },
+            'orderMenus',
+            'orderMenus.menu'=> function ($query) {
+                $query->withTrashed();
+            }])
             ->where('branch_id','=',$user->subDistrict->branch_id)
             ->where('status_code','=',3)
             ->get();
 
-        $fourth_orders = Order::with(['orderStatus','user','orderMenus','orderMenus.menu'])
+        $fourth_orders = Order::with(['orderStatus',
+            'user'=> function ($query) {
+                $query->withTrashed();
+            },
+            'orderMenus',
+            'orderMenus.menu'=> function ($query) {
+                $query->withTrashed();
+            }])
             ->where('branch_id','=',$user->subDistrict->branch_id)
             ->where('status_code','=',4)
             ->get();

@@ -147,10 +147,11 @@
 						</div>
 						<!-- /SEARCH BAR -->
 
-						@auth
-                            <!-- ACCOUNT -->
-						    <div class="col-md-4 clearfix">
-                                <div class="header-ctn">
+
+                        <!-- ACCOUNT -->
+                        <div class="col-md-4 clearfix">
+                            <div class="header-ctn">
+                                @auth
                                     <!-- Wishlist -->
                                     <div>
                                         <a href="{{url('user/whishlist')}}">
@@ -197,18 +198,19 @@
                                     @else
                                     @endunlessrole
 
-                                    <!-- Menu Toogle -->
-                                    <div class="menu-toggle">
-                                        <a href="#">
-                                            <i class="fa fa-bars"></i>
-                                            <span>Menu</span>
-                                        </a>
-                                    </div>
-                                    <!-- /Menu Toogle -->
+                                @endauth
+                                <!-- Menu Toogle -->
+                                <div class="menu-toggle float-rigth">
+                                    <a href="#">
+                                        <i class="fa fa-bars"></i>
+                                        <span>Menu</span>
+                                    </a>
                                 </div>
+                                <!-- /Menu Toogle -->
                             </div>
-                            <!-- /ACCOUNT -->
-                        @endauth
+                        </div>
+                        <!-- /ACCOUNT -->
+
 					</div>
 					<!-- row -->
 				</div>
@@ -282,6 +284,14 @@
                             </div>
                         </div>
                         @endguest
+                        <div class="col-md-3 col-xs-6">
+                            <div class="footer">
+                                <h3 class="footer-title">ตำบลที่อยู่ในเขตให้บริการ</h3>
+                                <select id="subdis" style="color: black;">
+                                    <option value="">--ตรวจสอบ--</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <!-- /row -->
                 </div>
@@ -403,8 +413,14 @@
 
                 }
 
+                $.get("{{url('staff/branch/subdistrict')}}", function(data) {
+                    let subdis = $('#subdis');
+                    data.forEach(function(ele) {
+                        subdis.append(`<option value="">${ele.name}</option>`);
+                    })
+                });
 
-            })
+            });
         </script>
 
 	</body>

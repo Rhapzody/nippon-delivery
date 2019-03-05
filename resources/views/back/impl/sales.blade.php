@@ -18,11 +18,6 @@
                 <div class="card">
                     <div class="card-header row">
                         <span class="card-title col-md-1">สาขา: </span>
-                        @hasrole('ผู้จัดการสาขา')
-                            <select name="branch" id="branch" class="form-control col-md-4">
-                                <option value="{{Auth::user()->subDistrict->branch_id}}">{{Auth::user()->subDistrict->branch->name}}</option>
-                            </select>
-                        @endhasrole
                         @hasrole('เจ้าของร้าน')
                             <select name="branch" id="branch" class="form-control col-md-4">
                                 <option value="-1">ทั้งหมด</option>
@@ -65,7 +60,12 @@
                                         <span>ถึง</span>
                                         <input type="date" name="to" id="to" class="form-control" value="{{$to}}">
                                     </div>
+                                    <div class="col">
+                                        <label for="" id="">ยอดรวม:</label>
+                                        <input type="text" class="form-control" id="summy" disabled style="color: black; background-color: coral;">
+                                    </div>
                                 </div>
+
                                 <div class="card-body" id="chart-box">
                                     <canvas id="myChart" width="100%" height="45px"></canvas>
                                 </div>
@@ -135,26 +135,28 @@
                     let my_data = [];
                     //console.log(response)
                     let first_date = (new Date(response[0]['created_at']).toDateString());
-                    let sum = 0;
+                    let mysum = 0;
+                    let allmysum = 0;
                     response.forEach((ele ,index) => {
-                        //console.log(ele)
-                        if(first_date != (new Date(ele.created_at).toDateString())){
+                        if((new Date(first_date).toDateString()) !== (new Date(ele.created_at).toDateString())){
+                            allmysum += mysum;
                             my_label.push(first_date);
-                            my_data.push(sum);
-                            sum = 0;
+                            my_data.push(mysum);
+                            mysum = 0;
                             first_date = (new Date(ele.created_at).toDateString());
                         }
 
                         ele.order_menus.forEach(list => {
-                            sum += list.quantity * list.menu.price;
+                            mysum += list.quantity * list.price;
                         });
+
+                        mysum += parseFloat(ele.shipping_cost);
 
                         if(index == response.length - 1){
                             my_label.push(first_date);
-                            my_data.push(sum);
+                            my_data.push(mysum);
+                            allmysum += mysum;
                         }
-
-
                     });
 
                     let myChart = new Chart(ctx, {
@@ -174,6 +176,9 @@
                             }
                         }
                     });
+
+                    $('#summy').val(allmysum + " " + "บาท");
+
                 },
                 error: function(xhr) {
                     //Do Something to handle error
@@ -196,8 +201,10 @@
                     let date = (new Date(data[0]['created_at']).toDateString());
                     data.forEach(ele => {
                         ele.order_menus.forEach(list => {
-                            sum_income += list.quantity * list.menu.price;
+                            sum_income += list.quantity * list.price;
                         });
+                        console.log(sum_income, ele.shipping_cost)
+                        sum_income += parseFloat(ele.shipping_cost);
                     });
                     $('#today').html(date);
                     $('#number_order').html(sum_order);

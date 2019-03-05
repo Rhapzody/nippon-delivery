@@ -12,9 +12,11 @@ class CartController extends Controller
 {
     public function cart(){
         $user_id = Auth::user()->id;
-        $product = Cart::with(['menu', 'menu.menuPictures'])
-        ->where('user_id', '=', $user_id)
-        ->get();
+        $product = Cart::with(['menu'=> function ($query) {
+                $query->withTrashed();
+            }, 'menu.menuPictures'])
+            ->where('user_id', '=', $user_id)
+            ->get();
         $sum_qty = 0;
         $sum_price = 0;
         $ship_cost = 60;
@@ -39,9 +41,11 @@ class CartController extends Controller
     public function cartList(){
         $disk = (env('APP_ENV') == 'production')?'s3':'local';
         $user_id = Auth::user()->id;
-        $product = Cart::with(['menu', 'menu.menuPictures', 'menu.menuType'])
-        ->where('user_id', '=', $user_id)
-        ->get();
+        $product = Cart::with(['menu'=> function ($query) {
+                $query->withTrashed();
+            }, 'menu.menuPictures', 'menu.menuType'])
+            ->where('user_id', '=', $user_id)
+            ->get();
         foreach ($product as $key => $value) {
             $product[$key]['image_url'] = Storage::disk($disk)->url($value->menu->menuPictures->first()->name);
         }

@@ -31,8 +31,10 @@ class HistoryBackController extends Controller
     public function find(Request $req){
         $status = OrderStatus::orderBy('code', 'asc')->get();
         $branches = Branch::all();
+        $selectOperator = (trim($req->input('order_id')) == '')?'>=': '=';
+        $selectId = (trim($req->input('order_id')) == '')?0: $req->input('order_id');
         $orders = Order::with(['orderStatus'])
-            ->where('id', '=', $req->input('order_id'))
+            ->where('id', $selectOperator, $selectId)
             ->orderBy('created_at', 'DESC')
             ->paginate(10);
 
@@ -50,7 +52,9 @@ class HistoryBackController extends Controller
     }
 
     public function order($id){
-        $order = Order::with(['orderStatus', 'user', 'orderMenus', 'orderMenus.menu', 'orderMenus.menu.menuPictures'])
+        $order = Order::with(['orderStatus', 'user', 'orderMenus', 'orderMenus.menu'=> function ($query) {
+                $query->withTrashed();
+            }, 'orderMenus.menu.menuPictures'])
             ->where('id', "=", $id)
             ->first();
         if (!$order) abort(404);
@@ -59,12 +63,11 @@ class HistoryBackController extends Controller
         $status = $order->orderStatus;
         $sum_qty = 0;
         $sum_price = 0;
-        $ship_cost = 60;
+        $ship_cost = $order->shipping_cost;
         foreach ($menus as $key => $value) {
             $sum_qty += $value->quantity;
-            $sum_price += $value->menu->price * $value->quantity;
+            $sum_price += $value->price * $value->quantity;
         }
-        if($sum_price >= 500) $ship_cost = 0;
 
         return view('back.impl.orderhistory', [
             'unav'=>'history',
@@ -83,7 +86,7 @@ class HistoryBackController extends Controller
         $branches = Branch::all();
 
         $all_status_code = [];
-        if ($status_code > 0) {
+        if ($status_code != -1) {
             $all_status_code[] = $status_code;
         }else {
             foreach ($status as $key => $value) {
@@ -92,7 +95,7 @@ class HistoryBackController extends Controller
         }
 
         $all_branch_id = [];
-        if ($branch_id > 0) {
+        if ($branch_id != -1) {
             $all_branch_id[] = $branch_id;
         } else {
             foreach ($branches as $key => $value) {
@@ -103,7 +106,7 @@ class HistoryBackController extends Controller
         $orders = Order::with(['orderStatus'])
             ->whereIn('status_code', $all_status_code)
             ->where(function($q) use($branch_id, $all_branch_id){
-                if ($branch_id > 0) {
+                if ($branch_id != -1) {
                     $q->where('branch_id', '=', $branch_id);
                 } else {
                     $q->whereIn('branch_id',$all_branch_id)

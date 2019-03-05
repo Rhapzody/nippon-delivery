@@ -44,7 +44,9 @@ class WhishListController extends Controller
     }
 
     public function count(){
-        $number = Auth::user()->whishLists->count();
+        $number = Menu::whereHas('whishLists', function ($q) {
+                $q->where('user_id', '=', Auth::user()->id);
+            })->count();
         return response()->json([
             'count'=>$number
         ]);

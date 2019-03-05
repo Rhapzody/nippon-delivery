@@ -54,7 +54,7 @@ function getUrl($file_name){
                         @foreach ($menus as $menu)
                         <tr>
                             <td>{{$menu->id}}</td>
-                            <td>{{$menu->name}}</td>
+                            <td>{{$menu->name}} {!!($menu->trashed())?'<span style="color:red;"> (ถูกลบ)</span>':""!!}</td>
                             <td><a href="{{url('staff/product',['2',$menu->menuType->name])}}">{{$menu->menuType->name}}</a></td>
                             <td>
                                 @foreach ($menu->tags as $tag)
@@ -68,7 +68,11 @@ function getUrl($file_name){
                                 <a href={{url('/staff/product/edit/') . "/" . $menu->id}} class="btn btn-outline-primary btn-s big-icon" ><span class="la la-pencil-square"></span></a>
                             </td>
                             <td>
-                                <button class="btn btn-outline-danger btn-s big-icon" onclick="deleteConfirm({{$menu->id}})"><span class="la la-trash"></span></button>
+                                @if ($menu->trashed())
+                                    <button class="btn btn-outline-danger btn-s big-icon" title="นำกลับ" onclick="unDelete({{$menu->id}})"><span class="la la-reply"></span></button>
+                                @else
+                                    <button class="btn btn-outline-danger btn-s big-icon" onclick="deleteConfirm({{$menu->id}})"><span class="la la-trash"></span></button>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
@@ -135,6 +139,7 @@ function getUrl($file_name){
 
         let deleteConfirm;
         let getProductDetail;
+        let unDelete;
 
         $(function(){
 
@@ -185,7 +190,7 @@ function getUrl($file_name){
                 })
                 .then((willDelete) => {
                     if (willDelete) {
-                        let delUrl = "{{url('/staff/product/')}}";
+                        let delUrl = "{{url('/staff/product/delete')}}";
                         $.ajaxSetup({
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -212,7 +217,7 @@ function getUrl($file_name){
                 $.get(url+"?product_id="+id, function(data, status){
                     let id = data.id;
                     let name = sanitarize(data.name);
-                    let descript = sanitarize(data.description);
+                    let descript = sanitarize(data.description) + "";
                     let price = data.price;
                     let tags = []; //[] .id .name
                     data.tags.forEach(element => {
@@ -258,6 +263,21 @@ function getUrl($file_name){
                         `);
                     });
                     $('#my-modal').modal();
+                });
+            }
+
+            unDelete = function (id) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    url: "{{url('staff/product/undelete')}}" + "/" + id,
+                    type: 'POST',
+                    success: function(result) {
+                        location.reload();
+                    }
                 });
             }
 

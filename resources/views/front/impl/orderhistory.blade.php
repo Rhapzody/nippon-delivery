@@ -75,8 +75,8 @@
                                     <td style="vertical-align: middle;" class="text-center"><img src="{{ getUrl($menu->menu->menuPictures[0]->name) }}"  alt="" width="50px" height="50px"></td>
                                     <td style="vertical-align: middle;" class="text-center"><a href={{url('product',[$menu->menu_id])}}>{{$menu->menu->name}}</a></td>
                                     <td style="vertical-align: middle;" class="text-center">{{$menu->quantity}}</td>
-                                    <td style="vertical-align: middle;" class="text-center">{{$menu->menu->price}}</td>
-                                    <td style="vertical-align: middle;" class="text-center">{{$menu->quantity * $menu->menu->price}}</td>
+                                    <td style="vertical-align: middle;" class="text-center">{{$menu->price}}</td>
+                                    <td style="vertical-align: middle;" class="text-center">{{$menu->quantity * $menu->price}}</td>
                                 </tr>
                             @empty
                                 <h1>ไม่มีสินค้าอยู่ในตะกร้า</h1>

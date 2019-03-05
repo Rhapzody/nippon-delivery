@@ -32,7 +32,10 @@ class SalesController extends Controller
             $compare = '>=';
             $branch_id = 1;
         }
-        $orders = Order::with(['orderStatus', 'orderMenus', 'orderMenus.menu'])
+        $orders = Order::with(['orderStatus', 'orderMenus', 'orderMenus.menu'=> function ($query) {
+                    $query->withTrashed();
+                }])
+                ->where('status_code', '=', 5)
                 ->where('created_at', '>=', date($from . '00:00:00'))
                 ->where('created_at', '<=', date($to . '23:59:59'))
                 ->where('branch_id', $compare, $branch_id)
@@ -47,8 +50,11 @@ class SalesController extends Controller
             $compare = '>=';
             $branch_id = 1;
         }
-        $today_orders = Order::with(['orderStatus', 'orderMenus', 'orderMenus.menu'])
+        $today_orders = Order::with(['orderStatus', 'orderMenus', 'orderMenus.menu'=> function ($query) {
+                    $query->withTrashed();
+                }])
                 ->where('created_at', '>=', date('Y-m-d'))
+                ->where('status_code', '=', 5)
                 ->where('branch_id', $compare, $branch_id)
                 ->get();
         return response($today_orders);

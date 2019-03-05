@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\MenuType;
 use App\Menu;
 use Illuminate\Support\Facades\Auth;
+use App\RestaurantDetail;
 
 class IndexController extends Controller
 {
@@ -13,13 +14,15 @@ class IndexController extends Controller
 
         $new_menu = Menu::with('menuPictures', 'menuType')->orderBy('updated_at', 'desc')->take(6)->get();
         $top_menu= Menu::with('menuPictures', 'menuType')->orderBy('hits', 'desc')->take(6)->get();
+        $promotion = RestaurantDetail::find(1);
 
         return view('front.impl.index',[
             'new_menu'=>$new_menu,
             'top_menu'=>$top_menu,
             'nav'=>'home',
             'search'=>"",
-            'search_type_id'=>0
+            'search_type_id'=>0,
+            'promotion'=>$promotion
         ]);
     }
 
@@ -27,7 +30,7 @@ class IndexController extends Controller
         $user = Auth::user();
         if($user->hasRole('เจ้าของร้าน')) return redirect('staff/sales');
         if($user->hasRole('ผู้จัดการสาขา')) return redirect('staff/sales');
-        if($user->hasRole('พ่อครัว/แม่ครัว')) return redirect('staff/order');
-        if($user->hasRole('คนส่งสินค้า')) return redirect('staff/deliver');
+        if($user->hasRole('พนักงานรับออเดอร์')) return redirect('staff/order');
+        if($user->hasRole('พนักงานส่งสินค้า')) return redirect('staff/deliver');
     }
 }

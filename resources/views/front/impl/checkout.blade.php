@@ -37,12 +37,14 @@
                         @endforeach
                     </div>
                     <div class="order-col">
-                        <div>ค่าจัดส่ง</div>
-                        <div><strong>{{$ship_cost}}</strong></div>
-                    </div>
-                    <div class="order-col">
                         <div><strong>รวมทั้งสิ้น</strong></div>
-                        <div><strong class="order-total">{{$ship_cost + $sum_price}}</strong></div>
+                        <div><strong class="order-total">{{$sum_price}}</strong></div>
+                    </div>
+                    <div>
+                        <strong>
+                            - <span style="color:red;">ฟรีค่าจัดส่ง</span> หากสถานที่จัดส่งของท่านลูกค้าอยู่ภายใต้เขตที่มีสาขาดูแลอยู่<br/>
+                            - <span style="color:red;">คิดค่าจัดส่ง</span> {{$promotion->shipping_cost}} บาท หากสถานที่จัดส่งของท่านลูกค้า<span style="color:red;">ไม่</span>อยู่ภายใต้เขตที่มีสาขาดูแลอยู่ และสั่ง<span style="color:red;">ไม่ถึง</span> {{$promotion->sum_price_discount}} บาท
+                        </strong>
                     </div>
                 </div>
                 <form action="{{url('user/checkout/process')}}" method="post" id="checkout-from">
