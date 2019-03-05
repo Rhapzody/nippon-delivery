@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class OrderMenu extends Model
 {
     protected $table = 'order_menu';
-    protected $fillable = ['quantity', 'menu_id', 'order_id', 'status_code'];
+    protected $fillable = ['quantity', 'menu_id', 'order_id', 'status_code', 'price'];
 
     public function orderMenuStatus(){
         return $this->belongsTo('App\OrderMenuStatus', 'status_code');

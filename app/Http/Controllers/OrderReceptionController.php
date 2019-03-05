@@ -17,12 +17,17 @@ class OrderReceptionController extends Controller
             ->where('branch_id', '=', Auth::user()->subDistrict->branch_id)
             ->get();
 
-        $second_orders = Order::with(['orderMenus', 'orderMenus.menu', 'orderStatus'])
+        $second_orders = Order::with(['orderMenus', 'orderMenus.menu'=> function ($query) {
+                $query->withTrashed();
+            }, 'orderStatus'])
             ->where('status_code', '=', 2)
             ->where('branch_id', '=', Auth::user()->subDistrict->branch_id)
             ->get();
 
-        $district_orders = Order::with(['orderStatus', 'subDistrict', 'subDistrict.district', 'user'])
+        $district_orders = Order::with(['orderStatus', 'subDistrict', 'subDistrict.district',
+            'user'=> function ($query) {
+                $query->withTrashed();
+            }])
             ->whereHas('subDistrict.district', function ($q) {
                 $q->where('id', '=', Auth::user()->subDistrict->district->id);
             })
@@ -30,7 +35,10 @@ class OrderReceptionController extends Controller
             ->where('branch_id','=', null)
             ->get();
 
-        $province_orders = Order::with(['orderStatus', 'subDistrict', 'subDistrict.district', 'subDistrict.district.province', 'user'])
+        $province_orders = Order::with(['orderStatus', 'subDistrict', 'subDistrict.district', 'subDistrict.district.province',
+            'user'=> function ($query) {
+                $query->withTrashed();
+            }])
             ->whereHas('subDistrict.district', function ($q) {
                 $q->where('id', '!=', Auth::user()->subDistrict->district->id);
             })
@@ -51,7 +59,10 @@ class OrderReceptionController extends Controller
         $have_branch_province_id = array_unique($have_branch_province_id);
         $all_province_id = Province::all()->pluck('id')->toArray();
         $no_branch_province_id = array_values(array_diff($all_province_id, $have_branch_province_id));
-        $out_province_orders = Order::with(['orderStatus', 'subDistrict', 'subDistrict.district', 'subDistrict.district.province', 'user'])
+        $out_province_orders = Order::with(['orderStatus', 'subDistrict', 'subDistrict.district', 'subDistrict.district.province',
+            'user'=> function ($query) {
+                $query->withTrashed();
+            }])
             ->whereHas('subDistrict.district.province', function ($q) use($no_branch_province_id) {
                 $q->where('id', '!=', Auth::user()->subDistrict->district->province->id)
                   ->whereIn('id', $no_branch_province_id);

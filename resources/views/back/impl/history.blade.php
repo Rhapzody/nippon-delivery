@@ -19,28 +19,15 @@
                     <div class="card-body">
 
                         <div class="row mb-2">
-                            @hasrole('เจ้าของร้าน')
-                                <div class="col">
-                                    <span>สาขา: </span>
-                                    <select name="branch" id="branch" class="form-control">
-                                        <option value="-1">ทั้งหมด</option>
-                                        @foreach ($branches as $item)
-                                            <option value="{{$item->id}}" {{($item->id == $branch_id)?"selected":""}}>{{$item->name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            @endhasrole
-                            @hasrole('ผู้จัดการสาขา')
-                                <div class="col">
-                                    <span>สาขา: </span>
-                                    <select name="branch" id="branch" class="form-control">
-                                        <option value="-1">ทั้งหมด</option>
-                                        <option value="{{Auth::user()->subDistrict->branch_id}}" {{(Auth::user()->subDistrict->branch_id == $branch_id)?"selected":""}}>
-                                            {{Auth::user()->subDistrict->branch->name}}
-                                        </option>
-                                    </select>
-                                </div>
-                            @endhasrole
+                            <div class="col">
+                                <span>สาขา: </span>
+                                <select name="branch" id="branch" class="form-control">
+                                    <option value="-1">ทั้งหมด</option>
+                                    @foreach ($branches as $item)
+                                        <option value="{{$item->id}}" {{($item->id == $branch_id)?"selected":""}}>{{$item->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="col">
                                 <span>สถานะ: </span>
                                 <select name="status" id="status" class="form-control">

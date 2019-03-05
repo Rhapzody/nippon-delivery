@@ -50,7 +50,9 @@ class HistoryController extends Controller
 
     public function order($id){
         $user_id = Auth::user()->id;
-        $order = Order::with(['orderStatus', 'user', 'orderMenus', 'orderMenus.menu', 'orderMenus.menu.menuPictures'])
+        $order = Order::with(['orderStatus', 'user', 'orderMenus', 'orderMenus.menu'=> function ($query) {
+                $query->withTrashed();
+            }, 'orderMenus.menu.menuPictures'])
             ->where('user_id', '=', $user_id)
             ->where('id', "=", $id)
             ->first();
@@ -60,12 +62,11 @@ class HistoryController extends Controller
         $status = $order->orderStatus;
         $sum_qty = 0;
         $sum_price = 0;
-        $ship_cost = 60;
+        $ship_cost = $order->shipping_cost;
         foreach ($menus as $key => $value) {
             $sum_qty += $value->quantity;
-            $sum_price += $value->menu->price * $value->quantity;
+            $sum_price += $value->price * $value->quantity;
         }
-        if($sum_price >= 500) $ship_cost = 0;
 
         return view('front.impl.orderhistory', [
             'unav'=>'history',
