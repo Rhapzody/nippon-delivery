@@ -2,7 +2,7 @@
 
 @section('content')
 @include('front.widget.breadcrumb',[
-        'header'=>'เข้าสู้ระบบ'
+        'header'=>'เข้าสู่ระบบ'
     ])
 <div class="container">
     <div class="row justify-content-center">
