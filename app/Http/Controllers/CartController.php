@@ -4,14 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Cart;
+use App\Branch;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\RestaurantDetail;
 
 class CartController extends Controller
 {
     public function cart(){
-        $user_id = Auth::user()->id;
+        $user = Auth::user();
+        $user_id = $user->id;
+        $promotion = RestaurantDetail::find(1);
         $product = Cart::with(['menu'=> function ($query) {
                 $query->withTrashed();
             }, 'menu.menuPictures'])
@@ -19,14 +23,14 @@ class CartController extends Controller
             ->get();
         $sum_qty = 0;
         $sum_price = 0;
-        $ship_cost = 60;
+        $ship_cost = $promotion->shipping_cost;
         $is_cart_empty = false;
         if($product->isEmpty()) $is_cart_empty = true;
         foreach ($product as $key => $value) {
             $sum_qty += $value->quantity;
             $sum_price += $value->menu->price * $value->quantity;
         }
-        if($sum_price >= 500) $ship_cost = 0;
+        if($sum_price >= $promotion->sum_price_discount || $user->subDistrict->branch_id != null) $ship_cost = 0;
         return view('front.impl.cart',[
             'unav'=>'cart',
             'header'=>'สินค้าในตะกร้า',

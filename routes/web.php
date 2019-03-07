@@ -67,6 +67,7 @@ Route::group(['middleware' => ['auth', 'role:เจ้าของร้าน']
     Route::post('staff/branch/create', 'BranchController@create');
     Route::post('staff/branch/changePromotion', 'BranchController@changePromotion');
 });
+Route::get('staff/branch/getBranchBySubDistrictId', 'BranchController@getBranchBySubDistrictId');
 Route::get('staff/branch/all', 'BranchController@all');
 Route::get('staff/branch/subdistrict', 'BranchController@getSubdistrictBranch');
 
