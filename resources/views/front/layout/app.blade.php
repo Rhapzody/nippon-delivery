@@ -415,8 +415,12 @@
 
                 $.get("{{url('staff/branch/subdistrict')}}", function(data) {
                     let subdis = $('#subdis');
+                    let subdiss = $('#subdiss');
                     data.forEach(function(ele) {
                         subdis.append(`<option value="">${ele.name}</option>`);
+                        if(subdiss){
+                            subdiss.append(`<option value="">${ele.name}</option>`);
+                        }
                     })
                 });
 

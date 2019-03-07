@@ -100,6 +100,10 @@
     let viewOrder;
     $(function() {
 
+        setInterval(function () {
+            window.location.reload(true);
+        }, 10000);
+
         $('#branch').change(search);
         $('#status').change(search);
         $('#from').change(search);

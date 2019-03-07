@@ -122,4 +122,8 @@ class BranchController extends Controller
     public function getSubdistrictBranch(){
         return response(SubDistrict::whereNotNull('branch_id')->get());
     }
+
+    public function getBranchBySubDistrictId(Request $req){
+        return SubDistrict::find($req->input('branchId'));
+    }
 }

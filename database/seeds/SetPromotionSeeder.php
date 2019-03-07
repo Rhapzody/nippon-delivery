@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\RestaurantDetail;
 
 class SetPromotionSeeder extends Seeder
 {
@@ -12,11 +13,10 @@ class SetPromotionSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('restaurant_detail')
-            ->where('id', 1)
-            ->update([
-                'sum_price_discount' => 500,
-                'shipping_cost' => 60
-            ]);
+        RestaurantDetail::where('id', '>=', 0)->delete();
+        $pro = new RestaurantDetail();
+        $pro->sum_price_discount = 500;
+        $pro->shipping_cost = 60;
+        $pro->save();
     }
 }

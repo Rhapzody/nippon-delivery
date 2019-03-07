@@ -37,13 +37,25 @@
                         @endforeach
                     </div>
                     <div class="order-col">
+                        <div>ราคารวม</div>
+                        <div id="">{{$sum_price}}</div>
+                    </div>
+                    <div class="order-col">
+                        <div>ค่าจัดส่ง</div>
+                        <div id="cus-shipping-cost"></div>
+                    </div>
+                    <div class="order-col">
                         <div><strong>รวมทั้งสิ้น</strong></div>
-                        <div><strong class="order-total">{{$sum_price}}</strong></div>
+                        <div><strong class="order-total" id="final-cost"></strong></div>
                     </div>
                     <div>
                         <strong>
                             - <span style="color:red;">ฟรีค่าจัดส่ง</span> หากสถานที่จัดส่งของท่านลูกค้าอยู่ภายใต้เขตที่มีสาขาดูแลอยู่<br/>
-                            - <span style="color:red;">คิดค่าจัดส่ง</span> {{$promotion->shipping_cost}} บาท หากสถานที่จัดส่งของท่านลูกค้า<span style="color:red;">ไม่</span>อยู่ภายใต้เขตที่มีสาขาดูแลอยู่ และสั่ง<span style="color:red;">ไม่ถึง</span> {{$promotion->sum_price_discount}} บาท
+                            - <span style="color:red;">คิดค่าจัดส่ง</span> {{$promotion->shipping_cost}} บาท หากสถานที่จัดส่งของท่านลูกค้า<span style="color:red;">ไม่</span>อยู่ภายใต้เขตที่มีสาขาดูแลอยู่ และสั่ง<span style="color:red;">ไม่ถึง</span> {{$promotion->sum_price_discount}} บาท <br/>
+                            - <span>ท่านสามารถตรวจสอบเขตที่มีสาขาดูแลอยู่ได้ที่นี่: </span>
+                            <select id="subdiss" style="color: black; border-radius: 5px">
+                                <option value="">--ตรวจสอบ--</option>
+                            </select>
                         </strong>
                     </div>
                 </div>
@@ -56,9 +68,12 @@
                                 ที่อยู่เดิม
                             </label>
                             <div class="caption">
-                                <p>{{$user_address}}</p>
+                                <p>{{$user_address}} <span class="" id="is-inbranch"></span></p>
+                                <input type="hidden" id="sum-cost" value="{{$sum_price}}">
+                                <input type="hidden" id="shipping-cost" value="{{$promotion->shipping_cost}}">
+                                <input type="hidden" id="sum-price-discount" value="{{$promotion->sum_price_discount}}">
                                 <input type="hidden" name="origin_address" value="{{$user_address}}" id="origin_address">
-                                <input type="hidden" name="sub_district_id" value="{{$sub_district->id}}">
+                                <input type="hidden" name="sub_district_id" id="old_sub_district_id" value="{{$sub_district->id}}">
                             </div>
                         </div>
                         <div class="input-radio">
@@ -133,6 +148,36 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
         $(document).ready(function () {
+
+            function checkSubDistrict() {
+                let oldSubdistrictId = $('#old_sub_district_id').val();
+                let url = "{{url('/staff/branch/getBranchBySubDistrictId')}}";
+                let sumCost = $('#sum-cost').val();
+                let shippingCost = $('#shipping-cost').val();
+                let sumPriceDiscount = $('#sum-price-discount').val();
+                let showShippingCost = $('#cus-shipping-cost');
+                let finalCost = $('#final-cost');
+                $.get(url + "?branchId=" + oldSubdistrictId, function (data, status) {
+                    console.log(data.branch_id)
+                    if (data.branch_id == null) {
+                        $('#is-inbranch').html('<strong style="color:red;">(ไม่อยู่ภายใต้เขตที่มีสาขาดูแลอยู่)</strong>');
+                        if (sumCost >= sumPriceDiscount) {
+                            showShippingCost.html(0);
+                            finalCost.html(sumCost);
+                        } else {
+                            showShippingCost.html(shippingCost);
+                            finalCost.html( parseFloat(sumCost) + parseFloat(shippingCost));
+                        }
+                    }else {
+                        $('#is-inbranch').html('<strong style="color:green;">(อยู่ภายใต้เขตที่มีสาขาดูแลอยู่)</strong>');
+                        showShippingCost.html(0);
+                        finalCost.html(sumCost);
+                    }
+                });
+            }
+            checkSubDistrict();
+
+            $('#address_option_1').click(checkSubDistrict);
 
             //validate instance
             let valid;
@@ -241,7 +286,47 @@
                 }
             });
 
+            let subDistrictId;
 
+            function checkNewSubDistrict(event) {
+                if (event.type == "change") {
+                    subDistrictId = $(this).val();
+                }
+                if(subDistrictId){
+                    let url = "{{url('/staff/branch/getBranchBySubDistrictId')}}";
+                    let sumCost = $('#sum-cost').val();
+                    let shippingCost = $('#shipping-cost').val();
+                    let sumPriceDiscount = $('#sum-price-discount').val();
+                    let showShippingCost = $('#cus-shipping-cost');
+                    let finalCost = $('#final-cost');
+
+                    $.get(url + "?branchId=" + subDistrictId, function (data, status) {
+                        console.log(" selected subdis id:" + data.branch_id)
+                        if (data.branch_id == null) {
+                            swal({
+                                title: "ที่อยู่ของท่านไม่อยู่ภายใต้เขตที่มีสาขาดูแลอยู่",
+                                icon: "warning",
+                            });
+                            if (sumCost >= sumPriceDiscount) {
+                                showShippingCost.html(0);
+                                finalCost.html(sumCost);
+                            } else {
+                                showShippingCost.html(shippingCost);
+                                finalCost.html( parseFloat(sumCost) + parseFloat(shippingCost));
+                            }
+                        }else{
+                            swal({
+                                title: "ที่อยู่ของท่านอยู่ภายใต้เขตที่มีสาขาดูแลอยู่",
+                                icon: "success",
+                            });
+                            showShippingCost.html(0);
+                            finalCost.html(sumCost);
+                        }
+                    });
+                }
+            }
+            $('#sub_district').change(checkNewSubDistrict);
+            $('#address_option_2').click(checkNewSubDistrict);
 
         //end jq
         });

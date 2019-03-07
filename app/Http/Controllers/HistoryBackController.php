@@ -12,6 +12,8 @@ class HistoryBackController extends Controller
         $status = OrderStatus::orderBy('code', 'asc')->get();
         $branches = Branch::all();
         $orders = Order::with(['orderStatus'])
+            ->whereDate('created_at', '>=',date(date('Y-m-d') . ' 00:00:00'))
+            ->whereDate('created_at', '<=', date(date('Y-m-d') . ' 23:59:59'))
             ->orderBy('created_at', 'DESC')
             ->paginate(10);
 
@@ -23,7 +25,7 @@ class HistoryBackController extends Controller
             'code'=>'',
             'order_id'=>'',
             'branch_id'=>'',
-            'from'=>date('Y-m-d', strtotime("1995-07-05")),
+            'from'=>date('Y-m-d'),
             'to'=>date('Y-m-d')
         ]);
     }

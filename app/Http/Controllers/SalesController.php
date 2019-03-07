@@ -18,7 +18,7 @@ class SalesController extends Controller
             'branches'=>$branches,
             'branch_id'=>'',
             'top_menu'=>$top_menu,
-            'from'=>date('Y-m-d', strtotime("1995-07-05")),
+            'from'=>date('Y-m-d', strtotime('-5 days')),
             'to'=>date('Y-m-d')
         ]);
     }
@@ -36,8 +36,8 @@ class SalesController extends Controller
                     $query->withTrashed();
                 }])
                 ->where('status_code', '=', 5)
-                ->where('created_at', '>=', date($from . '00:00:00'))
-                ->where('created_at', '<=', date($to . '23:59:59'))
+                ->where('created_at', '>=', date($from . ' 00:00:00'))
+                ->where('created_at', '<=', date($to . ' 23:59:59'))
                 ->where('branch_id', $compare, $branch_id)
                 ->get();
         return response($orders);

@@ -149,7 +149,7 @@ function getUrl($file_name){
                                             <div>ออเดอร์หมายเลข: {{$order->id}} | ที่อยู่: {{$order->address}} | เบอร์โทร: {{$order->user->tel_number}}</div>
                                             <br>
                                             <button class="btn btn-success pull-right btn-sm mx-1" onclick="document.getElementById('nprovince-'+{{$order->id}}).submit();">รับ</button>
-                                            <button class="btn btn-danger pull-right btn-sm" onclick="document.getElementById('cnprovince-'+{{$order->id}}).submit();">ยกเลิก</button>
+                                            <button class="btn btn-danger pull-right btn-sm" onclick="cancleOrder({{$order->id}}, '{{$order->user->tel_number}}')">ยกเลิก</button>
                                         </div>
                                         <form action="{{url('staff/order/addToBranch')}}" method="post" id="{{'nprovince-'.$order->id}}">
                                             @csrf
@@ -216,6 +216,8 @@ function getUrl($file_name){
         forceTLS: true
     });
 
+    let cancleOrder;
+
     $(function() {
         var allders = JSON.parse($('#allders').val());
         console.log(allders)
@@ -225,6 +227,23 @@ function getUrl($file_name){
                 location.reload();
             }
         });
+        cancleOrder = function (id, tel) {
+            swal({
+                title: "แน่ใจหรือไม่",
+                text: "คำสั่งซื้อหมายเลข " + id + " จะถูกยกเลิก กรุณาโทรแจ้งลูกค้าที่เบอร์: " + tel,
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    document.getElementById('cnprovince-'+id).submit();
+                    swal("ยกเลิกคำสั่งซื้อเรียบร้อย", {
+                        icon: "success"
+                    });
+                }
+            });
+        }
     })
 </script>
 @endsection
